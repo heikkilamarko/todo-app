@@ -29,34 +29,40 @@ namespace NotificationService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Application running");
-
-            var cf = new ConnectionFactory();
-            var c = cf.CreateConnection(_natsOptions.Url);
-
-            EventHandler<MsgHandlerEventArgs> h = async (sender, args) =>
+            try
             {
-                _logger.LogInformation("Message received ({subject})", args.Message.Subject);
+                _logger.LogInformation("Application started");
 
-                try
+                var connectionFactory = new ConnectionFactory();
+                var connection = connectionFactory.CreateConnection(_natsOptions.Url);
+
+                connection.SubscribeAsync("todo.processed", async (_, args) =>
                 {
-                    var todo = JsonSerializer.Deserialize<Todo>(args.Message.Data);
-                    await _apiGatewayClient.SendNotification(todo);
-                }
-                catch (Exception exception)
+                    _logger.LogInformation("Message received ({Subject})", args.Message.Subject);
+
+                    try
+                    {
+                        var todo = JsonSerializer.Deserialize<Todo>(args.Message.Data);
+                        await _apiGatewayClient.SendNotification(todo);
+                    }
+                    catch (Exception exception)
+                    {
+                        _logger.LogError(exception, "Message handling failed");
+                    }
+                });
+
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    _logger.LogError(exception, "Todo handling failed");
+                    await Task.Delay(5000, stoppingToken);
                 }
-            };
 
-            var s = c.SubscribeAsync("todo.processed", h);
-
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                await Task.Delay(5000, stoppingToken);
+                _logger.LogInformation("Application shutdown");
             }
-
-            _logger.LogInformation("Application shutdown.");
+            catch (Exception exception)
+            {
+                _logger.LogCritical(exception, "Critical error");
+                throw;
+            }
         }
     }
 }

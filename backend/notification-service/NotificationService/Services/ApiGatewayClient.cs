@@ -9,18 +9,19 @@ using Polly;
 
 namespace NotificationService.Services
 {
+    public class ApiGatewayClientOptions
+    {
+        public string Url { get; set; }
+    }
+
     public class ApiGatewayClient
     {
-        private readonly ApiGatewayOptions _options;
         private readonly HttpClient _httpClient;
 
-        public ApiGatewayClient(IOptions<ApiGatewayOptions> options, HttpClient httpClient)
+        public ApiGatewayClient(HttpClient httpClient, IOptions<ApiGatewayClientOptions> options)
         {
-            _options = options.Value;
-
-            httpClient.BaseAddress = new Uri(_options.Url);
-
             _httpClient = httpClient;
+            _httpClient.BaseAddress = new Uri(options.Value.Url);
         }
 
         public async Task SendNotification(Todo todo)
@@ -32,13 +33,13 @@ namespace NotificationService.Services
 
     public static class ApiGatewayClientServiceCollectionExtensions
     {
-        public static IServiceCollection AddApiGatewayClient(this IServiceCollection services,
-            Action<ApiGatewayOptions> setupAction)
+        public static IServiceCollection AddApiGatewayClient(
+            this IServiceCollection services,
+            Action<ApiGatewayClientOptions> setupAction)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = setupAction ?? throw new ArgumentNullException(nameof(setupAction));
 
-            services.AddOptions();
             services.Configure(setupAction);
 
             services.AddHttpClient<ApiGatewayClient>()

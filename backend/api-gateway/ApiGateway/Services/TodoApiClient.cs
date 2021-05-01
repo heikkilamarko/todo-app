@@ -16,16 +16,12 @@ namespace ApiGateway.Services
 
     public class TodoApiClient
     {
-        private readonly TodoApiClientOptions _options;
         private readonly HttpClient _httpClient;
 
-        public TodoApiClient(IOptions<TodoApiClientOptions> options, HttpClient httpClient)
+        public TodoApiClient(HttpClient httpClient, IOptions<TodoApiClientOptions> options)
         {
-            _options = options.Value;
-
-            httpClient.BaseAddress = new Uri(_options.Url);
-
             _httpClient = httpClient;
+            _httpClient.BaseAddress = new Uri(options.Value.Url);
         }
 
         public async Task<GetTodosResponse> GetTodos(string queryString)
@@ -42,13 +38,13 @@ namespace ApiGateway.Services
 
     public static class TodoApiClientServiceCollectionExtensions
     {
-        public static IServiceCollection AddTodoApiClient(this IServiceCollection services,
+        public static IServiceCollection AddTodoApiClient(
+            this IServiceCollection services,
             Action<TodoApiClientOptions> setupAction)
         {
             _ = services ?? throw new ArgumentNullException(nameof(services));
             _ = setupAction ?? throw new ArgumentNullException(nameof(setupAction));
 
-            services.AddOptions();
             services.Configure(setupAction);
 
             services.AddHttpClient<TodoApiClient>()
