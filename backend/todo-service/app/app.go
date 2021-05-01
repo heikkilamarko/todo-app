@@ -4,18 +4,25 @@ package app
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"os"
 	"os/signal"
 	"time"
 	"todo-service/app/config"
 	"todo-service/app/todos"
 
+	_ "embed"
+
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
+	"github.com/xeipuuv/gojsonschema"
 
 	// PostgreSQL driver
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
+
+//go:embed schemas/new-todo.json
+var newTodoSchema string
 
 // App struct
 type App struct {
@@ -31,8 +38,6 @@ func New(c *config.Config, l *zerolog.Logger) *App {
 // Run method
 func (a *App) Run() {
 	a.Logger.Info().Msgf("Application running")
-
-	// Init database
 
 	db, err := sql.Open("pgx", a.Config.DBConnectionString)
 	if err != nil {
@@ -50,18 +55,38 @@ func (a *App) Run() {
 
 	r := todos.NewSQLRepository(db, a.Logger)
 
-	// Message handling
+	schemaLoader := gojsonschema.NewStringLoader(newTodoSchema)
 
 	nc, err := nats.Connect(a.Config.NATSUrl)
 	if err != nil {
 		a.Logger.Fatal().Err(err).Send()
 	}
 
-	c, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
-	defer c.Close()
+	nc.Subscribe("todo.created", func(m *nats.Msg) {
 
-	c.Subscribe("todo.created", func(todo *todos.Todo) {
-		a.Logger.Info().Msgf("Received a person: %+v\n", todo)
+		a.Logger.Info().Msgf("Message received (%s)", m.Subject)
+
+		todoLoader := gojsonschema.NewStringLoader(string(m.Data))
+
+		result, err := gojsonschema.Validate(schemaLoader, todoLoader)
+		if err != nil {
+			a.Logger.Warn().Err(err).Send()
+		}
+
+		if !result.Valid() {
+			a.Logger.Warn().Msg("Invalid input")
+			for _, ve := range result.Errors() {
+				a.Logger.Warn().Msgf("Validation error: %s", ve)
+			}
+			return
+		}
+
+		todo := &todos.Todo{}
+
+		if err := json.Unmarshal(m.Data, todo); err != nil {
+			a.Logger.Error().Err(err).Send()
+			return
+		}
 
 		command := &todos.CreateTodoCommand{Todo: todo}
 
@@ -70,7 +95,14 @@ func (a *App) Run() {
 			return
 		}
 
-		if err := c.Publish("todo.processed", todo); err != nil {
+		todoBytes, err := json.Marshal(todo)
+
+		if err != nil {
+			a.Logger.Error().Err(err).Send()
+			return
+		}
+
+		if err := nc.Publish("todo.processed", todoBytes); err != nil {
 			a.Logger.Error().Err(err).Send()
 			return
 		}
@@ -80,14 +112,10 @@ func (a *App) Run() {
 	signal.Notify(cs, os.Interrupt)
 	<-cs
 
-	a.Logger.Info().Msg("Draining...")
-
 	err = nc.Drain()
 	if err != nil {
 		a.Logger.Warn().Err(err).Send()
 	}
-
-	a.Logger.Info().Msg("Closing...")
 
 	nc.Close()
 
