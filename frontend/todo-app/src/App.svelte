@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import Notification from "./Notification.svelte";
   import {
     getTodos,
     getSignalRConnection,
@@ -28,31 +29,21 @@
 
     return () => connection.stop();
   });
-
-  $: connection = isConnected ? "CONNECTED" : "NO CONNECTION";
-  $: formattedNotifications = notifications.map((n) =>
-    JSON.stringify(n, null, 2)
-  );
 </script>
 
 <main class="container">
   <h1 class="display-3 mt-2">
-    Todo App <span class="badge bg-secondary" class:bg-success={isConnected}
-      >{connection}</span
-    >
+    Todo App
+    {#if isConnected}
+      <span class="badge bg-success">CONNECTED</span>
+    {/if}
   </h1>
 
   <section>
-    {#each formattedNotifications as notification}
-      <div class="p-2 my-4 shadow-sm rounded border">
-        <pre>{notification}</pre>
+    {#each notifications as notification (notification.id)}
+      <div>
+        <Notification {notification} />
       </div>
     {/each}
   </section>
 </main>
-
-<style>
-  pre {
-    margin: 0;
-  }
-</style>
