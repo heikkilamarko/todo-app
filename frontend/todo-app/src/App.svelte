@@ -3,7 +3,7 @@
   import {
     getTodos,
     getSignalRConnection,
-    SIGNALR_RECEIVE_NOTIFICATION,
+    NOTIFICATION_METHOD_NAME,
   } from "./utils";
 
   let notifications = [];
@@ -14,7 +14,7 @@
 
     let connection = getSignalRConnection();
 
-    connection.on(SIGNALR_RECEIVE_NOTIFICATION, (data) => {
+    connection.on(NOTIFICATION_METHOD_NAME, (data) => {
       notifications = [data, ...notifications];
     });
 

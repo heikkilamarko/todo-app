@@ -1,11 +1,18 @@
 import axios from "axios";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 
-export const SIGNALR_RECEIVE_NOTIFICATION = "ReceiveNotification";
+const API_URL = import.meta.env.VITE_PUBLIC_API_URL;
+
+export const NOTIFICATION_METHOD_NAME = import.meta.env
+  .VITE_PUBLIC_NOTIFICATION_METHOD_NAME;
+
+const api = axios.create();
+// @ts-ignore
+api.defaults.baseURL = API_URL;
 
 export async function getTodos() {
   try {
-    var response = await axios.get("http://localhost:8080/todos");
+    var response = await api.get("/todos");
     return response?.data?.data ?? [];
   } catch (e) {
     console.error(e);
@@ -14,6 +21,6 @@ export async function getTodos() {
 
 export function getSignalRConnection() {
   return new HubConnectionBuilder()
-    .withUrl("http://localhost:8080/push/notifications")
+    .withUrl(`${API_URL}/push/notifications`)
     .build();
 }
