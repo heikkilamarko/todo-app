@@ -1,5 +1,4 @@
 using ApiGateway.Hubs;
-using ApiGateway.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,8 +9,6 @@ namespace ApiGateway
 {
     public class Startup
     {
-        private readonly string AllowAllOrigins = "AllowAllOrigins";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -23,7 +20,7 @@ namespace ApiGateway
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(AllowAllOrigins,
+                options.AddDefaultPolicy(
                     builder =>
                     {
                         builder
@@ -34,9 +31,10 @@ namespace ApiGateway
             });
 
             services.AddControllers();
-            services.AddSignalR();
+            services.AddReverseProxy()
+                .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
 
-            services.AddTodoApiClient(o => Configuration.Bind("TodoApi", o));
+            services.AddSignalR();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -46,16 +44,15 @@ namespace ApiGateway
                 app.UseDeveloperExceptionPage();
             }
 
-            // app.UseHttpsRedirection();
-
             app.UseRouting();
 
-            app.UseCors(AllowAllOrigins);
+            app.UseCors();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapReverseProxy();
                 endpoints.MapControllers();
                 endpoints.MapHub<NotificationsHub>("/push/notifications");
             });
