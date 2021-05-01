@@ -45,9 +45,7 @@
   <section>
     {#each formattedNotifications as notification}
       <div class="p-2 my-4 shadow-sm rounded border">
-        <pre>
-        {notification}
-      </pre>
+        <pre>{notification}</pre>
       </div>
     {/each}
   </section>
