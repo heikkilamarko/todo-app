@@ -41,7 +41,7 @@ func (a *App) Run() {
 
 	db, err := sql.Open("pgx", a.Config.DBConnectionString)
 	if err != nil {
-		panic(err)
+		a.Logger.Fatal().Err(err).Send()
 	}
 
 	db.SetMaxOpenConns(25)
@@ -50,7 +50,7 @@ func (a *App) Run() {
 	db.SetConnMaxIdleTime(5 * time.Minute)
 
 	if err := db.Ping(); err != nil {
-		panic(err)
+		a.Logger.Fatal().Err(err).Send()
 	}
 
 	r := todos.NewSQLRepository(db, a.Logger)
@@ -71,6 +71,7 @@ func (a *App) Run() {
 		result, err := gojsonschema.Validate(schemaLoader, todoLoader)
 		if err != nil {
 			a.Logger.Warn().Err(err).Send()
+			return
 		}
 
 		if !result.Valid() {
