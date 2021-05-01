@@ -8,7 +8,7 @@
 
 <div
   class="p-2 my-4 shadow-sm rounded border"
-  in:fly={{ x: 100, duration: 800, intro: true }}
+  in:fly={{ x: 100, duration: 800 }}
 >
   <pre>{json}</pre>
 </div>
