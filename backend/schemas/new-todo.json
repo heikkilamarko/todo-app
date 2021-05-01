@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "description": "Todo's name",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "description": {
+      "anyOf": [
+        {
+          "description": "Todo's description",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        { "type": "null" }
+      ]
+    }
+  },
+  "required": ["name"]
+}

@@ -1,0 +1,7 @@
+node_modules
+dist
+README.md
+.dockerignore
+.gitignore
+Dockerfile
+docker-compose.yml
