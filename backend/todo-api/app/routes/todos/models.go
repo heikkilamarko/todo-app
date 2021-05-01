@@ -28,5 +28,4 @@ type CreateTodoCommand struct {
 // Repository interface
 type Repository interface {
 	GetTodos(context.Context, *GetTodosQuery) ([]*Todo, error)
-	CreateTodo(context.Context, *CreateTodoCommand) error
 }

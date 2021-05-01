@@ -17,17 +17,12 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if err := c.Repository.CreateTodo(r.Context(), command); err != nil {
-	// 	goutils.WriteInternalError(w, nil)
-	// 	return
-	// }
-
 	err = c.nc.Publish("todo.created", command.Todo)
 	if err != nil {
 		goutils.WriteInternalError(w, nil)
 	}
 
-	goutils.WriteOK(w, command.Todo, nil)
+	goutils.WriteResponse(w, http.StatusOK, nil)
 }
 
 func parseCreateTodoRequest(r *http.Request) (*CreateTodoCommand, error) {
