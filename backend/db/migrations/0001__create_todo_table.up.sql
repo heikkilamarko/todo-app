@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS todos.todos;
+DROP TABLE IF EXISTS todos;
 
-CREATE TABLE todos.todos (
+CREATE TABLE todos (
     id serial,
     name text NOT NULL,
     description text,
@@ -8,4 +8,3 @@ CREATE TABLE todos.todos (
     updated_at timestamptz NOT NULL,
     CONSTRAINT todos_pkey PRIMARY KEY (id)
 );
-

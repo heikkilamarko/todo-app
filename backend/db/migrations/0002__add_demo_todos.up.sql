@@ -1,4 +1,4 @@
-INSERT INTO todos.todos
+INSERT INTO todos
     (name, description, created_at, updated_at)
 VALUES
     ('Todo 1', 'Todo description 1', '2021-05-01T10:10:10', '2021-05-01T10:10:10'),

@@ -6,6 +6,8 @@ services:
     image: todo-app
     ports:
       - 8000:80
+    networks:
+      - todo-net
 
   api-gateway:
     build: ./backend/api-gateway
