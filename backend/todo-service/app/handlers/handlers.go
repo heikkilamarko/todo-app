@@ -41,7 +41,7 @@ func RegisterHandlers(config *config.Config, logger *zerolog.Logger) error {
 	)
 
 	if err := tc.HandleTodoCreated(); err != nil {
-		logger.Fatal().Err(err).Send()
+		return err
 	}
 
 	return nil
