@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export $(grep -v '^#' ../../../todo-app-secrets/postgres_migrate.env | xargs)
+export $(grep -v '^#' ../../env/migrate.env | xargs)
 
 docker run \
   --rm \

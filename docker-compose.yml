@@ -12,7 +12,7 @@ services:
     image: api-gateway
     restart: on-failure
     env_file:
-      - ../todo-app-secrets/api-gateway.env
+      - ./env/api-gateway.env
     ports:
       - 8080:80
     networks:
@@ -23,7 +23,7 @@ services:
     image: todo-api
     restart: on-failure
     env_file:
-      - ../todo-app-secrets/todo-api.env
+      - ./env/todo-api.env
     ports:
       - 8081:8081
     networks:
@@ -37,7 +37,7 @@ services:
     image: todo-service
     restart: on-failure
     env_file:
-      - ../todo-app-secrets/todo-service.env
+      - ./env/todo-service.env
     networks:
       - todo-net
     depends_on:
@@ -49,7 +49,7 @@ services:
     image: notification-service
     restart: on-failure
     env_file:
-      - ../todo-app-secrets/notification-service.env
+      - ./env/notification-service.env
     networks:
       - todo-net
     depends_on:
@@ -58,7 +58,7 @@ services:
   db:
     image: postgres:13.2
     env_file:
-      - ../todo-app-secrets/postgres.env
+      - ./env/postgres.env
     ports:
       - 5432:5432
     volumes:
@@ -68,8 +68,6 @@ services:
 
   nats:
     image: nats:2.2.2-alpine3.13
-    env_file:
-      - ../todo-app-secrets/nats.env
     ports:
       - 4222:4222
     networks:
