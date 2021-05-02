@@ -4,6 +4,7 @@
   import {
     getTodos,
     getSignalRConnection,
+    toNotification,
     NOTIFICATION_METHOD_NAME,
   } from "./utils";
 
@@ -15,8 +16,8 @@
 
     let connection = getSignalRConnection();
 
-    connection.on(NOTIFICATION_METHOD_NAME, (data) => {
-      notifications = [data, ...notifications];
+    connection.on(NOTIFICATION_METHOD_NAME, (notification) => {
+      notifications = [toNotification(notification), ...notifications];
     });
 
     try {
