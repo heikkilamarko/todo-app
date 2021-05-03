@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import Notification from "./Notification.svelte";
+  import TodoForm from "./TodoForm.svelte";
   import {
     getTodos,
     getSignalRConnection,
@@ -12,7 +13,11 @@
   let isConnected = false;
 
   onMount(async () => {
-    notifications = await getTodos();
+    try {
+      notifications = await getTodos();
+    } catch (e) {
+      alert(`Todo loading failed: ${e}`);
+    }
 
     let connection = getSignalRConnection();
 
@@ -39,6 +44,10 @@
       <span class="badge bg-success">CONNECTED</span>
     {/if}
   </h1>
+
+  <section>
+    <TodoForm />
+  </section>
 
   <section>
     {#each notifications as notification (notification.id)}

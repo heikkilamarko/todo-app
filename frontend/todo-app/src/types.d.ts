@@ -1,3 +1,8 @@
+export interface NewTodo {
+  name: string;
+  description?: string;
+}
+
 export interface ServerNotification {
   id: number;
   name: string;

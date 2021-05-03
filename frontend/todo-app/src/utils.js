@@ -22,6 +22,20 @@ export async function getTodos() {
     return notifications.map(toNotification);
   } catch (e) {
     console.error(e);
+    throw e;
+  }
+}
+
+/**
+ * Send the new todo to server.
+ * @param {import("./types").NewTodo} todo
+ */
+export async function createTodo(todo) {
+  try {
+    await api.post("/todos", todo);
+  } catch (e) {
+    console.error(e);
+    throw e;
   }
 }
 
