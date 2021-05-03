@@ -65,6 +65,7 @@ services:
       - 5432:5432
     volumes:
       - db-vol:/var/lib/postgresql/data
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - todo-net
 
