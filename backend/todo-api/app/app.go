@@ -25,6 +25,8 @@ func New(c *config.Config, l *zerolog.Logger) *App {
 
 // Run method
 func (a *App) Run() {
+	a.Logger.Info().Msg("application is starting up...")
+
 	router := mux.NewRouter()
 
 	router.Use(
@@ -44,11 +46,11 @@ func (a *App) Run() {
 		Addr:    a.Config.Address,
 		Handler: router})
 
-	a.Logger.Info().Msgf("Application running at %s", a.Config.Address)
+	a.Logger.Info().Msgf("application is running at %s", a.Config.Address)
 
 	if err := graceful.Graceful(server.ListenAndServe, server.Shutdown); err != nil {
 		a.Logger.Fatal().Err(err).Send()
 	}
 
-	a.Logger.Info().Msg("Application shutdown gracefully")
+	a.Logger.Info().Msg("application is shut down")
 }

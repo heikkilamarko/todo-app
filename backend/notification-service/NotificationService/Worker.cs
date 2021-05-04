@@ -31,14 +31,14 @@ namespace NotificationService
         {
             try
             {
-                _logger.LogInformation("Application started");
+                _logger.LogInformation("application is starting up...");
 
                 var connectionFactory = new ConnectionFactory();
                 var connection = connectionFactory.CreateConnection(_natsOptions.Url);
 
                 connection.SubscribeAsync("todo.processed", async (_, args) =>
                 {
-                    _logger.LogInformation("Message received ({Subject})", args.Message.Subject);
+                    _logger.LogInformation("message received ({Subject})", args.Message.Subject);
 
                     try
                     {
@@ -47,20 +47,33 @@ namespace NotificationService
                     }
                     catch (Exception exception)
                     {
-                        _logger.LogError(exception, "Message handling failed");
+                        _logger.LogError(exception, "message handling failed");
                     }
                 });
 
+                _logger.LogInformation("application is running");
+
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    await Task.Delay(5000, stoppingToken);
+                    try
+                    {
+                        await Task.Delay(5000, stoppingToken);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
 
-                _logger.LogInformation("Application shutdown");
+                _logger.LogInformation("application is shutting down...");
+
+                await connection.DrainAsync();
+
+                _logger.LogInformation("application is shut down");
             }
             catch (Exception exception)
             {
-                _logger.LogCritical(exception, "Critical error");
+                _logger.LogError(exception, "critical error");
                 throw;
             }
         }

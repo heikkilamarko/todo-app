@@ -7,9 +7,9 @@ import (
 
 // Controller struct
 type Controller struct {
-	Repository Repository
-	NatsConn   *nats.Conn
-	Logger     *zerolog.Logger
+	repository Repository
+	natsConn   *nats.Conn
+	logger     *zerolog.Logger
 }
 
 // NewController func
