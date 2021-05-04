@@ -21,6 +21,10 @@
 
     let connection = getSignalRConnection();
 
+    connection.onclose(() => (isConnected = false));
+    connection.onreconnecting(() => (isConnected = false));
+    connection.onreconnected(() => (isConnected = true));
+
     connection.on(NOTIFICATION_METHOD_NAME, (notification) => {
       notifications = [toNotification(notification), ...notifications];
     });
@@ -29,8 +33,7 @@
       await connection.start();
       isConnected = true;
     } catch (e) {
-      isConnected = false;
-      console.error(e);
+      alert(`Real-time connection failed: ${e}`);
     }
 
     return () => connection.stop();
@@ -42,6 +45,8 @@
     Todo App
     {#if isConnected}
       <span class="badge bg-success">CONNECTED</span>
+    {:else}
+      <span class="badge bg-danger">NO SIGNAL</span>
     {/if}
   </h1>
 

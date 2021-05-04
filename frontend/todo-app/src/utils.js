@@ -1,5 +1,9 @@
 import axios from "axios";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  LogLevel,
+} from "@microsoft/signalr";
 
 const API_URL = import.meta.env.VITE_PUBLIC_API_URL;
 
@@ -46,6 +50,10 @@ export async function createTodo(todo) {
 export function getSignalRConnection() {
   return new HubConnectionBuilder()
     .withUrl(`${API_URL}/push/notifications`)
+    .configureLogging(LogLevel.Critical)
+    .withAutomaticReconnect({
+      nextRetryDelayInMilliseconds: () => 5000,
+    })
     .build();
 }
 

@@ -6,7 +6,10 @@
 
   async function submit() {
     try {
-      await createTodo({ name, description });
+      await createTodo({
+        name,
+        description: description || null,
+      });
       name = "";
       description = "";
     } catch (e) {
