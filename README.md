@@ -5,6 +5,8 @@
 ## Running the app
 
 ```bash
+# Tested with Docker Desktop (Mac and Windows)
+
 # Build all docker images and run the app
 > docker compose up --build
 
