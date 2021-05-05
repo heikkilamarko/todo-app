@@ -27,6 +27,7 @@
 
     connection.on(NOTIFICATION_METHOD_NAME, (notification) => {
       notifications = [toNotification(notification), ...notifications];
+      window?.confetti();
     });
 
     try {

@@ -20,7 +20,7 @@ api.defaults.baseURL = API_URL;
  */
 export async function getTodos() {
   try {
-    var response = await api.get("/todos");
+    var response = await api.get("/todos?limit=10");
     /** @type {Array<import("./types").ServerNotification>} */
     var notifications = response?.data?.data ?? [];
     return notifications.map(toNotification);
