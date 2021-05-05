@@ -1,20 +1,20 @@
 <script>
   import { onMount } from "svelte";
-  import Notification from "./Notification.svelte";
+  import Todo from "./Todo.svelte";
   import TodoForm from "./TodoForm.svelte";
   import {
     getTodos,
     getSignalRConnection,
-    toNotification,
+    toTodo,
     NOTIFICATION_METHOD_NAME,
   } from "./utils";
 
-  let notifications = [];
+  let todos = [];
   let isConnected = false;
 
   onMount(async () => {
     try {
-      notifications = await getTodos();
+      todos = await getTodos();
     } catch (e) {
       alert(`Todo loading failed: ${e}`);
     }
@@ -25,8 +25,8 @@
     connection.onreconnecting(() => (isConnected = false));
     connection.onreconnected(() => (isConnected = true));
 
-    connection.on(NOTIFICATION_METHOD_NAME, (notification) => {
-      notifications = [toNotification(notification), ...notifications];
+    connection.on(NOTIFICATION_METHOD_NAME, (todo) => {
+      todos = [toTodo(todo), ...todos];
       window?.confetti();
     });
 
@@ -56,9 +56,9 @@
   </section>
 
   <section>
-    {#each notifications as notification (notification.id)}
+    {#each todos as todo (todo.id)}
       <div>
-        <Notification {notification} />
+        <Todo {todo} />
       </div>
     {/each}
   </section>

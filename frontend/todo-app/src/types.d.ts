@@ -3,7 +3,7 @@ export interface NewTodo {
   description?: string;
 }
 
-export interface ServerNotification {
+export interface ServerTodo {
   id: number;
   name: string;
   description?: string;
@@ -11,7 +11,7 @@ export interface ServerNotification {
   updated_at: string;
 }
 
-export interface Notification {
+export interface Todo {
   id: number;
   name: string;
   description?: string;

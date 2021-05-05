@@ -16,14 +16,14 @@ api.defaults.baseURL = API_URL;
 
 /**
  * Get todos from server.
- * @returns {Promise<Array<import("./types").Notification>>}
+ * @returns {Promise<Array<import("./types").Todo>>}
  */
 export async function getTodos() {
   try {
     var response = await api.get("/todos?limit=10");
-    /** @type {Array<import("./types").ServerNotification>} */
-    var notifications = response?.data?.data ?? [];
-    return notifications.map(toNotification);
+    /** @type {Array<import("./types").ServerTodo>} */
+    var todos = response?.data?.data ?? [];
+    return todos.map(toTodo);
   } catch (e) {
     console.error(e);
     throw e;
@@ -58,14 +58,14 @@ export function getSignalRConnection() {
 }
 
 /**
- * Maps a server notification to a client one.
- * @param {import("./types").ServerNotification} notification
- * @returns {import("./types").Notification}
+ * Maps a server todo to a client one.
+ * @param {import("./types").ServerTodo} todo
+ * @returns {import("./types").Todo}
  */
-export function toNotification(notification) {
+export function toTodo(todo) {
   return {
-    ...notification,
-    created_at: new Date(notification.created_at),
-    updated_at: new Date(notification.updated_at),
+    ...todo,
+    created_at: new Date(todo.created_at),
+    updated_at: new Date(todo.updated_at),
   };
 }
