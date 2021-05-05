@@ -9,22 +9,19 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// SQLRepository struct
-type SQLRepository struct {
+type repository struct {
 	db     *sql.DB
 	logger *zerolog.Logger
 }
 
-// NewSQLRepository func
-func NewSQLRepository(db *sql.DB, l *zerolog.Logger) *SQLRepository {
-	return &SQLRepository{db, l}
+func newRepository(db *sql.DB, logger *zerolog.Logger) *repository {
+	return &repository{db, logger}
 }
 
 //go:embed sql/get_todos.sql
 var qetTodosSQL string
 
-// GetTodos method
-func (r *SQLRepository) GetTodos(ctx context.Context, query *GetTodosQuery) ([]*Todo, error) {
+func (r *repository) getTodos(ctx context.Context, query *getTodosQuery) ([]*todo, error) {
 	rows, err := r.db.QueryContext(
 		ctx,
 		qetTodosSQL,
@@ -37,10 +34,10 @@ func (r *SQLRepository) GetTodos(ctx context.Context, query *GetTodosQuery) ([]*
 
 	defer rows.Close()
 
-	todos := []*Todo{}
+	todos := []*todo{}
 
 	for rows.Next() {
-		t := &Todo{}
+		t := &todo{}
 
 		err := rows.Scan(
 			&t.ID,

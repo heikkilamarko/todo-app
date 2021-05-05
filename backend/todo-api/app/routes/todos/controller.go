@@ -1,14 +1,25 @@
+// Package todos provides todo functionality.
 package todos
 
-import "github.com/nats-io/nats.go"
+import (
+	"database/sql"
+	"todo-api/app/config"
+
+	"github.com/nats-io/nats.go"
+	"github.com/rs/zerolog"
+)
 
 // Controller struct
 type Controller struct {
-	Repository Repository
-	nc         *nats.EncodedConn
+	config     *config.Config
+	logger     *zerolog.Logger
+	db         *sql.DB
+	natsConn   *nats.EncodedConn
+	repository *repository
 }
 
 // NewController func
-func NewController(r Repository, nc *nats.EncodedConn) *Controller {
-	return &Controller{r, nc}
+func NewController(config *config.Config, logger *zerolog.Logger, db *sql.DB, natsConn *nats.EncodedConn) *Controller {
+	repository := newRepository(db, logger)
+	return &Controller{config, logger, db, natsConn, repository}
 }

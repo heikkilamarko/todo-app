@@ -8,7 +8,7 @@ import (
 	"github.com/heikkilamarko/goutils"
 )
 
-// GetTodos query
+// GetTodos method
 func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 	query, err := parseGetTodosRequest(r)
 
@@ -17,7 +17,7 @@ func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	todos, err := c.Repository.GetTodos(r.Context(), query)
+	todos, err := c.repository.getTodos(r.Context(), query)
 
 	if err != nil {
 		goutils.WriteInternalError(w, nil)
@@ -27,7 +27,7 @@ func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 	goutils.WriteOK(w, todos, query)
 }
 
-func parseGetTodosRequest(r *http.Request) (*GetTodosQuery, error) {
+func parseGetTodosRequest(r *http.Request) (*getTodosQuery, error) {
 	validationErrors := map[string]string{}
 
 	var offset int = 0
@@ -53,5 +53,5 @@ func parseGetTodosRequest(r *http.Request) (*GetTodosQuery, error) {
 		return nil, goutils.NewValidationError(validationErrors)
 	}
 
-	return &GetTodosQuery{offset, limit}, nil
+	return &getTodosQuery{offset, limit}, nil
 }

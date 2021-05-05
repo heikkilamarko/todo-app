@@ -5,9 +5,6 @@ const (
 	// ErrCodeInvalidPayload constant
 	ErrCodeInvalidPayload = "invalid_payload"
 
-	// ErrCodeInvalidProductID constant
-	ErrCodeInvalidProductID = "invalid_product_id"
-
 	// ErrCodeInvalidOffset constant
 	ErrCodeInvalidOffset = "invalid_offset"
 
@@ -16,9 +13,6 @@ const (
 )
 
 const (
-	// FieldID constant
-	FieldID = "id"
-
 	// FieldPaginationOffset constant
 	FieldPaginationOffset = "offset"
 

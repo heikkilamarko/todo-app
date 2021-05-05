@@ -8,7 +8,7 @@ import (
 	"github.com/heikkilamarko/goutils"
 )
 
-// CreateTodo command
+// CreateTodo method
 func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	command, err := parseCreateTodoRequest(r)
 
@@ -17,7 +17,7 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = c.nc.Publish("todo.created", command.Todo)
+	err = c.natsConn.Publish("todo.created", command.Todo)
 	if err != nil {
 		goutils.WriteInternalError(w, nil)
 	}
@@ -25,10 +25,10 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	goutils.WriteResponse(w, http.StatusOK, nil)
 }
 
-func parseCreateTodoRequest(r *http.Request) (*CreateTodoCommand, error) {
+func parseCreateTodoRequest(r *http.Request) (*createTodoCommand, error) {
 	validationErrors := map[string]string{}
 
-	todo := &Todo{}
+	todo := &todo{}
 	if err := json.NewDecoder(r.Body).Decode(todo); err != nil {
 		validationErrors[constants.FieldRequestBody] = constants.ErrCodeInvalidPayload
 	}
@@ -37,5 +37,5 @@ func parseCreateTodoRequest(r *http.Request) (*CreateTodoCommand, error) {
 		return nil, goutils.NewValidationError(validationErrors)
 	}
 
-	return &CreateTodoCommand{todo}, nil
+	return &createTodoCommand{todo}, nil
 }
