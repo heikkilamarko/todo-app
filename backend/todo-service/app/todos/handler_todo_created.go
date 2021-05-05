@@ -4,7 +4,7 @@ import (
 	"context"
 	_ "embed"
 	"encoding/json"
-	"todo-service/app/handlers/todos/schemas"
+	"todo-service/app/utils"
 
 	"github.com/nats-io/nats.go"
 )
@@ -15,9 +15,9 @@ const subjectTodoProcessed = "todo.processed"
 //go:embed schemas/new-todo.json
 var newTodoSchema string
 
-func (c *Controller) HandleTodoCreated() error {
+func (c *Controller) handleTodoCreated() error {
 
-	validator := schemas.NewValidator(newTodoSchema)
+	validator := utils.NewJSONSchemaValidator(newTodoSchema)
 
 	_, err := c.natsConn.Subscribe(subjectTodoCreated, func(m *nats.Msg) {
 
@@ -38,16 +38,16 @@ func (c *Controller) HandleTodoCreated() error {
 			return
 		}
 
-		todo := &Todo{}
+		todo := &todo{}
 
 		if err := json.Unmarshal(m.Data, todo); err != nil {
 			c.logger.Error().Err(err).Send()
 			return
 		}
 
-		command := &CreateTodoCommand{Todo: todo}
+		command := &createTodoCommand{Todo: todo}
 
-		if err := c.repository.CreateTodo(context.Background(), command); err != nil {
+		if err := c.repository.createTodo(context.Background(), command); err != nil {
 			c.logger.Error().Err(err).Send()
 			return
 		}

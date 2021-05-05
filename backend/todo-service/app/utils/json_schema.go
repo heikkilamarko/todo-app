@@ -1,20 +1,22 @@
-// Package schemas provides schema validation functionality.
-package schemas
+// Package utils provides utility functionality.
+package utils
 
 import (
 	"github.com/xeipuuv/gojsonschema"
 )
 
-type Validator struct {
+// JSONSchemaValidator struct
+type JSONSchemaValidator struct {
 	sl gojsonschema.JSONLoader
 }
 
-func NewValidator(s string) *Validator {
+// NewJSONSchemaValidator func
+func NewJSONSchemaValidator(s string) *JSONSchemaValidator {
 	sl := gojsonschema.NewStringLoader(s)
-	return &Validator{sl}
+	return &JSONSchemaValidator{sl}
 }
 
-func (v *Validator) Validate(d string) ([]string, error) {
+func (v *JSONSchemaValidator) Validate(d string) ([]string, error) {
 	dl := gojsonschema.NewStringLoader(d)
 
 	result, err := gojsonschema.Validate(v.sl, dl)

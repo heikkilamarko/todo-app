@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 	"todo-service/app/config"
-	"todo-service/app/handlers/todos"
+	"todo-service/app/todos"
 
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
@@ -43,20 +43,13 @@ func (a *App) Run() {
 		a.logFatal(err)
 	}
 
-	tc := todos.NewController(
-		todos.NewSQLRepository(a.db, a.logger),
-		a.natsConn,
-		a.logger)
-
-	if err := tc.HandleTodoCreated(); err != nil {
+	if err := a.initControllers(); err != nil {
 		a.logFatal(err)
 	}
 
 	a.logInfo("application is running")
 
-	s := make(chan os.Signal, 1)
-	signal.Notify(s, os.Interrupt, syscall.SIGTERM)
-	<-s
+	a.wait()
 
 	a.logInfo("application is shutting down...")
 
@@ -102,6 +95,23 @@ func (a *App) initNATS() error {
 	a.natsConn = nc
 
 	return nil
+}
+
+func (a *App) initControllers() error {
+
+	c := todos.NewController(a.config, a.logger, a.db, a.natsConn)
+
+	if err := c.Run(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *App) wait() {
+	s := make(chan os.Signal, 1)
+	signal.Notify(s, os.Interrupt, syscall.SIGTERM)
+	<-s
 }
 
 func (a *App) close() {

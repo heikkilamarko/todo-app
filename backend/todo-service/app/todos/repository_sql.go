@@ -10,22 +10,19 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// SQLRepository struct
-type SQLRepository struct {
+type repository struct {
 	db     *sql.DB
 	logger *zerolog.Logger
 }
 
-// NewSQLRepository func
-func NewSQLRepository(db *sql.DB, l *zerolog.Logger) *SQLRepository {
-	return &SQLRepository{db, l}
+func newRepository(db *sql.DB, logger *zerolog.Logger) *repository {
+	return &repository{db, logger}
 }
 
 //go:embed sql/create_todo.sql
 var createTodoSQL string
 
-// CreateTodo method
-func (r *SQLRepository) CreateTodo(ctx context.Context, command *CreateTodoCommand) error {
+func (r *repository) createTodo(ctx context.Context, command *createTodoCommand) error {
 	t := command.Todo
 
 	n := time.Now()
