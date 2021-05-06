@@ -10,6 +10,8 @@ clients:
 
 scrape_configs:
   - job_name: containers
+    pipeline_stages:
+      - docker:
     static_configs:
       - targets:
           - localhost
