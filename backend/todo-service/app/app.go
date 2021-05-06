@@ -43,17 +43,13 @@ func (a *App) Run() {
 		a.logFatal(err)
 	}
 
-	if err := a.initControllers(); err != nil {
+	if err := a.registerRoutes(); err != nil {
 		a.logFatal(err)
 	}
 
-	a.logInfo("application is running")
-
-	a.wait()
-
-	a.logInfo("application is shutting down...")
-
-	a.close()
+	if err := a.serve(); err != nil {
+		a.logFatal(err)
+	}
 
 	a.logInfo("application is shut down")
 }
@@ -97,30 +93,44 @@ func (a *App) initNATS() error {
 	return nil
 }
 
-func (a *App) initControllers() error {
+func (a *App) registerRoutes() error {
 
 	c := todos.NewController(a.config, a.logger, a.db, a.natsConn)
 
-	if err := c.Run(); err != nil {
+	if err := c.Start(); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (a *App) wait() {
-	s := make(chan os.Signal, 1)
-	signal.Notify(s, os.Interrupt, syscall.SIGTERM)
-	<-s
+func (a *App) serve() error {
+
+	var (
+		s = make(chan os.Signal)
+		e = make(chan error)
+	)
+
+	go func() {
+		signal.Notify(s, os.Interrupt, syscall.SIGTERM)
+
+		<-s
+
+		a.logInfo("application is shutting down...")
+
+		_ = a.natsConn.Drain()
+		_ = a.db.Close()
+
+		e <- nil
+	}()
+
+	a.logInfo("application is running")
+
+	return <-e
 }
 
-func (a *App) close() {
-	_ = a.natsConn.Drain()
-	_ = a.db.Close()
-}
-
-func (a *App) logInfo(msg string) {
-	a.logger.Info().Msg(msg)
+func (a *App) logInfo(msg string, v ...interface{}) {
+	a.logger.Info().Msgf(msg, v...)
 }
 
 func (a *App) logFatal(err error) {

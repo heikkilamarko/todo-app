@@ -24,8 +24,8 @@ func NewController(config *config.Config, logger *zerolog.Logger, db *sql.DB, na
 	return &Controller{config, logger, db, natsConn, repository}
 }
 
-// Run method
-func (c *Controller) Run() error {
+// Start method
+func (c *Controller) Start() error {
 
 	if err := c.handleTodoCreated(); err != nil {
 		return err
