@@ -4,10 +4,11 @@ services:
   todo-app:
     build: ./frontend/todo-app
     image: todo-app
+    restart: on-failure
     ports:
       - 8000:80
     networks:
-      - todo-net
+      - frontend
 
   api-gateway:
     build: ./backend/api-gateway
@@ -18,7 +19,7 @@ services:
     ports:
       - 8080:80
     networks:
-      - todo-net
+      - backend
 
   todo-api:
     build: ./backend/todo-api
@@ -29,7 +30,7 @@ services:
     ports:
       - 8081:8081
     networks:
-      - todo-net
+      - backend
     depends_on:
       - db
       - nats
@@ -41,7 +42,7 @@ services:
     env_file:
       - ./env/todo-service.env
     networks:
-      - todo-net
+      - backend
     depends_on:
       - db
       - nats
@@ -53,31 +54,35 @@ services:
     env_file:
       - ./env/notification-service.env
     networks:
-      - todo-net
+      - backend
     depends_on:
       - nats
+      - api-gateway
 
   db:
     image: postgres:13.2
+    restart: on-failure
     env_file:
       - ./env/postgres.env
     ports:
       - 5432:5432
     volumes:
-      - db-vol:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
       - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - todo-net
+      - backend
 
   nats:
     image: nats:2.2.2-alpine3.13
+    restart: on-failure
     ports:
       - 4222:4222
     networks:
-      - todo-net
+      - backend
 
 networks:
-  todo-net:
+  frontend:
+  backend:
 
 volumes:
-  db-vol:
+  db:
