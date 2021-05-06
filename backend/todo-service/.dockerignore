@@ -1,9 +1,9 @@
-node_modules
-dist
 LICENSE
 README.md
 Dockerfile*
-npm-debug.log
+openapi.yaml
+asyncapi.yaml
+staticcheck.conf
 .git
 .gitignore
 .dockerignore
