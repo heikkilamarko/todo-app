@@ -7,9 +7,6 @@
 ```bash
 # Tested with Docker Desktop (Mac and Windows)
 
-# Create database and run migrations
-> docker compose -f docker-compose.yml -f docker-compose.migrate.yml run --rm migrate
-
 # Build and run the app
 > docker compose up --build
 
