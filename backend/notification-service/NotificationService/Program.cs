@@ -1,20 +1,51 @@
+using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NotificationService.Models;
 using NotificationService.Services;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Compact;
 
 namespace NotificationService
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Console(new RenderedCompactJsonFormatter())
+                .CreateBootstrapLogger();
+
+            try
+            {
+                Log.Information("starting host...");
+                CreateHostBuilder(args).Build().Run();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "host terminated unexpectedly");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog((_, _, configuration) =>
+                {
+                    configuration
+                        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                        .Enrich.FromLogContext()
+                        .WriteTo.Console(new RenderedCompactJsonFormatter());
+                })
                 .ConfigureServices((hostContext, services) =>
                 {
                     var c = hostContext.Configuration;
