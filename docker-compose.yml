@@ -93,9 +93,68 @@ services:
     depends_on:
       - db
 
+  minio:
+    image: minio/minio
+    restart: on-failure
+    command: server /data
+    env_file:
+      - ./env/minio.env
+    ports:
+      - 9000:9000
+    volumes:
+      - minio:/data
+    networks:
+      - monitor
+
+  loki:
+    image: grafana/loki
+    restart: on-failure
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./monitor/loki.yml:/etc/loki/config.yml
+    command: -config.file=/etc/loki/config.yml
+    networks:
+      - monitor
+    depends_on:
+      - minio
+
+  promtail:
+    image: grafana/promtail
+    restart: on-failure
+    volumes:
+      - promtail:/tmp/promtail
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - ./monitor/promtail.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - monitor
+      - backend
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./env/grafana.env
+    volumes:
+      - grafana:/var/lib/grafana
+    networks:
+      - monitor
+      - backend
+    depends_on:
+      - db
+
 networks:
   frontend:
   backend:
+  monitor:
 
 volumes:
   db:
+  minio:
+  grafana:
+  promtail:
