@@ -16,6 +16,7 @@ namespace NotificationService
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .Enrich.WithProperty("app", "notification-service")
                 .Enrich.FromLogContext()
                 .WriteTo.Console(new RenderedCompactJsonFormatter())
                 .CreateBootstrapLogger();

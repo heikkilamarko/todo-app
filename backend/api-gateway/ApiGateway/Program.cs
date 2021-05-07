@@ -13,6 +13,7 @@ namespace ApiGateway
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .Enrich.WithProperty("app", "api-gateway")
                 .Enrich.FromLogContext()
                 .WriteTo.Console(new RenderedCompactJsonFormatter())
                 .CreateBootstrapLogger();
