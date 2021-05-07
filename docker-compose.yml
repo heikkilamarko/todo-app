@@ -68,7 +68,7 @@ services:
       - backend
 
   db:
-    build: ./backend/database/postgres
+    build: ./backend/db/postgres
     image: db
     restart: on-failure
     env_file:
@@ -81,7 +81,7 @@ services:
       - backend
 
   db-migrate:
-    build: ./backend/database/migrate
+    build: ./backend/db/migrate
     image: db-migrate
     restart: on-failure
     env_file:
