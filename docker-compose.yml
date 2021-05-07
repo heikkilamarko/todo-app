@@ -59,6 +59,14 @@ services:
       - nats
       - api-gateway
 
+  nats:
+    image: nats:2.2.2-alpine3.13
+    restart: on-failure
+    ports:
+      - 4222:4222
+    networks:
+      - backend
+
   db:
     build: ./backend/database/postgres
     image: db
@@ -82,14 +90,6 @@ services:
       - backend
     depends_on:
       - db
-
-  nats:
-    image: nats:2.2.2-alpine3.13
-    restart: on-failure
-    ports:
-      - 4222:4222
-    networks:
-      - backend
 
   minio:
     image: minio/minio
@@ -117,7 +117,7 @@ services:
 
   loki:
     build: ./monitor/loki
-    image: monitor-loki
+    image: loki
     restart: on-failure
     ports:
       - "3100:3100"
@@ -128,7 +128,7 @@ services:
 
   promtail:
     build: ./monitor/promtail
-    image: monitor-promtail
+    image: promtail
     restart: on-failure
     volumes:
       - promtail:/tmp/promtail
