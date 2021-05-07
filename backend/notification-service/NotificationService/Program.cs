@@ -44,6 +44,7 @@ namespace NotificationService
                 {
                     configuration
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                        .Enrich.WithProperty("app", "notification-service")
                         .Enrich.FromLogContext()
                         .WriteTo.Console(new RenderedCompactJsonFormatter());
                 })
