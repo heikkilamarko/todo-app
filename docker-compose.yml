@@ -60,7 +60,8 @@ services:
       - api-gateway
 
   db:
-    image: postgres:13.2
+    build: ./backend/db
+    image: db
     restart: on-failure
     env_file:
       - ./env/postgres.env
@@ -68,7 +69,6 @@ services:
       - 5432:5432
     volumes:
       - db:/var/lib/postgresql/data
-      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - backend
 
@@ -121,26 +121,23 @@ services:
       - minio
 
   loki:
-    image: grafana/loki
+    build: ./monitor/loki
+    image: monitor-loki
     restart: on-failure
     ports:
       - "3100:3100"
-    volumes:
-      - ./monitor/loki.yml:/etc/loki/config.yml
-    command: -config.file=/etc/loki/config.yml
     networks:
       - monitor
     depends_on:
       - minio
 
   promtail:
-    image: grafana/promtail
+    build: ./monitor/promtail
+    image: monitor-promtail
     restart: on-failure
     volumes:
       - promtail:/tmp/promtail
       - /var/lib/docker/containers:/var/lib/docker/containers
-      - ./monitor/promtail.yml:/etc/promtail/config.yml
-    command: -config.file=/etc/promtail/config.yml
     networks:
       - monitor
       - backend
