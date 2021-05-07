@@ -60,7 +60,7 @@ services:
       - api-gateway
 
   db:
-    build: ./backend/db
+    build: ./backend/database/postgres
     image: db
     restart: on-failure
     env_file:
@@ -72,6 +72,17 @@ services:
     networks:
       - backend
 
+  db-migrate:
+    build: ./backend/database/migrate
+    image: db-migrate
+    restart: on-failure
+    env_file:
+      - ./env/migrate.env
+    networks:
+      - backend
+    depends_on:
+      - db
+
   nats:
     image: nats:2.2.2-alpine3.13
     restart: on-failure
@@ -79,20 +90,6 @@ services:
       - 4222:4222
     networks:
       - backend
-
-  migrate:
-    image: migrate/migrate
-    restart: on-failure
-    volumes:
-      - ./backend/db/migrations:/migrations
-      - ./backend/db/migrate.sh:/migrate.sh
-    env_file:
-      - ./env/migrate.env
-    entrypoint: /migrate.sh
-    networks:
-      - backend
-    depends_on:
-      - db
 
   minio:
     image: minio/minio
@@ -107,14 +104,12 @@ services:
     networks:
       - monitor
 
-  minio-mc:
-    image: minio/mc
+  minio-migrate:
+    build: ./monitor/minio/migrate
+    image: minio-migrate
     restart: on-failure
-    volumes:
-      - ./monitor/create_loki_bucket.sh:/create_loki_bucket.sh
     env_file:
       - ./env/minio.env
-    entrypoint: /create_loki_bucket.sh
     networks:
       - monitor
     depends_on:
