@@ -106,6 +106,18 @@ services:
     networks:
       - monitor
 
+  minio-mc:
+    image: minio/mc
+    volumes:
+      - ./monitor/create_loki_bucket.sh:/create_loki_bucket.sh
+    env_file:
+      - ./env/minio.env
+    entrypoint: /create_loki_bucket.sh
+    networks:
+      - monitor
+    depends_on:
+      - minio
+
   loki:
     image: grafana/loki
     restart: on-failure
