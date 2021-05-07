@@ -82,6 +82,7 @@ services:
 
   migrate:
     image: migrate/migrate
+    restart: on-failure
     volumes:
       - ./backend/db/migrations:/migrations
       - ./backend/db/migrate.sh:/migrate.sh
@@ -108,6 +109,7 @@ services:
 
   minio-mc:
     image: minio/mc
+    restart: on-failure
     volumes:
       - ./monitor/create_loki_bucket.sh:/create_loki_bucket.sh
     env_file:
