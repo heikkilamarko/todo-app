@@ -60,7 +60,7 @@ services:
       - api-gateway
 
   nats:
-    image: nats:2.2.2-alpine3.13
+    image: nats:2.2.3-alpine3.13
     restart: on-failure
     ports:
       - 4222:4222
