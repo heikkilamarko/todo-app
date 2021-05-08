@@ -1,0 +1,17 @@
+{
+  "uid": "loki",
+  "orgId": 1,
+  "name": "Loki",
+  "type": "loki",
+  "typeName": "Loki",
+  "typeLogoUrl": "public/app/plugins/datasource/loki/img/loki_icon.svg",
+  "access": "proxy",
+  "url": "loki:3100",
+  "password": "",
+  "user": "",
+  "database": "",
+  "basicAuth": false,
+  "isDefault": true,
+  "jsonData": {},
+  "readOnly": false
+}

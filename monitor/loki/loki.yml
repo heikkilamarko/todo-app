@@ -9,9 +9,6 @@ ingester:
       kvstore:
         store: memberlist
       replication_factor: 1
-    final_sleep: 0s
-  chunk_idle_period: 5m
-  chunk_retain_period: 30s
 
 schema_config:
   configs:

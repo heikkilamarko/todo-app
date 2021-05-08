@@ -1,0 +1,259 @@
+{
+  "folderId": 0,
+  "message": "Demo dashboard",
+  "overwrite": false,
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations \u0026 Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "links": [],
+    "panels": [
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": null,
+        "description": "",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 12,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "hiddenSeries": false,
+        "id": 4,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.5.5",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "sum by (host) (rate({job=\"containers\"} | json | app = \"api-gateway\" [10s]))",
+            "hide": false,
+            "legendFormat": "API Gateway",
+            "refId": "API Gateway"
+          },
+          {
+            "expr": "sum by (host) (rate({job=\"containers\"} | json | app = \"todo-api\" [10s]))",
+            "instant": false,
+            "legendFormat": "Todo API",
+            "range": true,
+            "refId": "Todo API"
+          },
+          {
+            "expr": "sum by (host) (rate({job=\"containers\"} | json | app = \"todo-service\" [10s]))",
+            "hide": false,
+            "legendFormat": "Todo Service",
+            "refId": "Todo Service"
+          },
+          {
+            "expr": "sum by (host) (rate({job=\"containers\"} | json | app = \"notification-service\" [10s]))",
+            "hide": false,
+            "legendFormat": "Notification Service",
+            "refId": "Notification Service"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Services",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 17,
+          "x": 0,
+          "y": 12
+        },
+        "id": 6,
+        "options": {
+          "dedupStrategy": "none",
+          "showLabels": false,
+          "showTime": false,
+          "sortOrder": "Descending",
+          "wrapLogMessage": false
+        },
+        "pluginVersion": "7.5.5",
+        "targets": [
+          {
+            "expr": "{job=\"containers\"} \n| json \n| app=\"api-gateway\" or app=\"todo-api\" or app=\"todo-service\" or app=\"notification-service\"\n| line_format \"[{{.app}}] __ [{{._t}}{{.time}}] __ {{.message}}{{._m}}{{.method}} {{.url}}\"",
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Logs",
+        "type": "logs"
+      },
+      {
+        "datasource": "PostgreSQL",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "blue",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 7,
+          "x": 17,
+          "y": 12
+        },
+        "id": 2,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": ["lastNotNull"],
+            "fields": "",
+            "values": false
+          },
+          "text": {},
+          "textMode": "auto"
+        },
+        "pluginVersion": "7.5.5",
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  created_at AS \"time\",\n  id\nFROM todos\nWHERE\n  $__timeFilter(created_at)\nORDER BY 1",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": ["id"],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "todos",
+            "timeColumn": "created_at",
+            "timeColumnType": "timestamptz",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "title": "Todo Count",
+        "type": "stat"
+      }
+    ],
+    "refresh": "5s",
+    "schemaVersion": 27,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Demo",
+    "uid": "demo",
+    "version": 1
+  }
+}

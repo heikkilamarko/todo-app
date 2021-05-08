@@ -2,7 +2,7 @@
 
 ![Todo App Architecture](doc/architecture.png)
 
-## Running the app
+## Running the App
 
 ```bash
 # Build and run the app
@@ -23,3 +23,16 @@ App URL: http://localhost:8000
   - URL: http://localhost:9000
   - username: `minio`
   - password: `minio123`
+
+### Demo Dashboard
+
+```bash
+# Navigate to the monitor/grafana directory
+cd monitor/grafana
+
+# Create Grafana resources
+./create_grafana_resources.sh <username>:<password>
+
+# <username>: grafana admin username (default: admin)
+# <password>: grafana admin password (default: admin)
+```
