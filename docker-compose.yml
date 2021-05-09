@@ -67,6 +67,8 @@ services:
       - ./env/nats.env
     ports:
       - 4222:4222
+    volumes:
+      - nats:/nats
     networks:
       - backend
 
@@ -166,6 +168,7 @@ networks:
 
 volumes:
   db:
+  nats:
   minio:
   grafana:
   promtail:
