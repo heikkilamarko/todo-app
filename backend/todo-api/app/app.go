@@ -86,6 +86,7 @@ func (a *App) initNATS() error {
 
 	nc, err := nats.Connect(
 		a.config.NATSUrl,
+		nats.Token(a.config.NATSToken),
 		nats.RetryOnFailedConnect(true),
 		nats.MaxReconnects(10),
 		nats.ReconnectWait(time.Second),

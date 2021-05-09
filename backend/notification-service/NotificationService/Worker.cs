@@ -33,8 +33,12 @@ namespace NotificationService
             {
                 _logger.LogInformation("application is starting up...");
 
-                var connectionFactory = new ConnectionFactory();
-                var connection = connectionFactory.CreateConnection(_natsOptions.Url);
+                var options = ConnectionFactory.GetDefaultOptions();
+                options.Url = _natsOptions.Url;
+                options.Token = _natsOptions.Token;
+
+                var connection = new ConnectionFactory()
+                    .CreateConnection(options);
 
                 connection.SubscribeAsync("todo.processed", async (_, args) =>
                 {

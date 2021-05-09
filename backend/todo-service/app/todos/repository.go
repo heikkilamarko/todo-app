@@ -38,7 +38,7 @@ func (r *repository) createTodo(ctx context.Context, command *createTodoCommand)
 		Scan(&t.ID)
 
 	if err != nil {
-		r.logger.Err(err).Send()
+		r.logger.Error().Err(err).Send()
 		return goutils.ErrInternalError
 	}
 

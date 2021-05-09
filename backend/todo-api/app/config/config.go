@@ -15,6 +15,7 @@ type Config struct {
 	Address            string        `json:"address"`
 	DBConnectionString string        `json:"db_connection_string"`
 	NATSUrl            string        `json:"nats_url"`
+	NATSToken          string        `json:"nats_token"`
 	LogLevel           zerolog.Level `json:"log_level"`
 	RequestTimeout     time.Duration `json:"request_timeout"`
 }
@@ -24,10 +25,13 @@ func New() *Config {
 	return &Config{}
 }
 
+const redactedString = "[redacted]"
+
 // String method
 func (c *Config) String() string {
 	cc := *c
-	cc.DBConnectionString = "***"
+	cc.DBConnectionString = redactedString
+	cc.NATSToken = redactedString
 	if b, err := json.Marshal(cc); err == nil {
 		return string(b)
 	}
@@ -40,6 +44,7 @@ func (c *Config) Load() {
 	c.Address = getEnv("APP_ADDRESS", ":8080")
 	c.DBConnectionString = getEnv("APP_DB_CONNECTION_STRING", "")
 	c.NATSUrl = getEnv("APP_NATS_URL", "")
+	c.NATSToken = getEnv("APP_NATS_TOKEN", "")
 
 	var err error
 

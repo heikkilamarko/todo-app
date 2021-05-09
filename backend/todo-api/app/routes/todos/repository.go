@@ -28,7 +28,7 @@ func (r *repository) getTodos(ctx context.Context, query *getTodosQuery) ([]*tod
 		query.Limit, query.Offset)
 
 	if err != nil {
-		r.logger.Err(err).Send()
+		r.logger.Error().Err(err).Send()
 		return nil, goutils.ErrInternalError
 	}
 
@@ -48,7 +48,7 @@ func (r *repository) getTodos(ctx context.Context, query *getTodosQuery) ([]*tod
 		)
 
 		if err != nil {
-			r.logger.Err(err).Send()
+			r.logger.Error().Err(err).Send()
 			return nil, goutils.ErrInternalError
 		}
 

@@ -60,8 +60,11 @@ services:
       - api-gateway
 
   nats:
-    image: nats:2.2.3-alpine3.13
+    build: ./backend/nats
+    image: nats
     restart: on-failure
+    env_file:
+      - ./env/nats.env
     ports:
       - 4222:4222
     networks:

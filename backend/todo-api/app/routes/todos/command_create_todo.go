@@ -19,7 +19,9 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 
 	err = c.natsConn.Publish("todo.created", command.Todo)
 	if err != nil {
+		c.logger.Error().Err(err).Send()
 		goutils.WriteInternalError(w, nil)
+		return
 	}
 
 	goutils.WriteResponse(w, http.StatusOK, nil)
