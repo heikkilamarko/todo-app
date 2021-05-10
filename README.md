@@ -18,24 +18,8 @@
 ## Running the App
 
 ```bash
-# Build
-> docker compose build
-
-# Run NATS container
-> docker compose up nats
-
-# Configure NATS JetStream
-> cd <repo>/backend/nats/jetstream
-> ./configure_jetstream.sh
-
-# Run all containers
-> docker compose up
-
-# Configure Grafana Dashboard
-#   <username>: grafana admin username (default: admin)
-#   <password>: grafana admin password (default: admin)
-> cd <repo>/monitor/grafana
-> ./create_grafana_resources.sh <username>:<password>
+# Build and run
+> docker compose up --build
 ```
 
 App: http://localhost:8000

@@ -33,7 +33,7 @@ services:
       - backend
     depends_on:
       - db
-      - nats
+      - nats-configure
 
   todo-service:
     build: ./backend/todo-service
@@ -45,7 +45,7 @@ services:
       - backend
     depends_on:
       - db
-      - nats
+      - nats-configure
 
   notification-service:
     build: ./backend/notification-service
@@ -71,6 +71,17 @@ services:
       - nats:/nats
     networks:
       - backend
+
+  nats-configure:
+    build: ./backend/nats/jetstream
+    image: nats-configure
+    restart: on-failure
+    env_file:
+      - ./env/nats.env
+    networks:
+      - backend
+    depends_on:
+      - nats
 
   db:
     build: ./backend/db/postgres
@@ -160,6 +171,17 @@ services:
       - backend
     depends_on:
       - db
+
+  grafana-configure:
+    build: ./monitor/grafana
+    image: grafana-configure
+    restart: on-failure
+    env_file:
+      - ./env/grafana-configure.env
+    networks:
+      - backend
+    depends_on:
+      - grafana
 
 networks:
   frontend:
