@@ -28,5 +28,6 @@ func NewController(config *config.Config, logger *zerolog.Logger, db *sql.DB, nc
 // Start method
 func (c *Controller) Start() error {
 	c.handleTodoCreated()
+	c.handleTodoCompleted()
 	return nil
 }

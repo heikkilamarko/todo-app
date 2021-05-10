@@ -2,7 +2,14 @@ asyncapi: 2.0.0
 info:
   title: Todo Service
   version: 1.0.0
-  description: This service is in charge of processing new todos
+  description: |
+    Subscribes to
+    - `todo.created`
+    - `todo.completed`
+
+    Publishes
+    - `todo.created.ok`
+    - `todo.completed.ok`
 servers:
   nats:
     url: nats://nats:4222
@@ -12,10 +19,18 @@ channels:
     subscribe:
       message:
         $ref: "#/components/messages/TodoCreated"
-  todo.processed:
+  todo.completed:
+    subscribe:
+      message:
+        $ref: "#/components/messages/TodoCompleted"
+  todo.created.ok:
     publish:
       message:
-        $ref: "#/components/messages/TodoProcessed"
+        $ref: "#/components/messages/TodoCreatedOk"
+  todo.completed.ok:
+    publish:
+      message:
+        $ref: "#/components/messages/TodoCompleted"
 components:
   messages:
     TodoCreated:
@@ -28,7 +43,15 @@ components:
           description:
             type: string
             description: Description
-    TodoProcessed:
+    TodoCompleted:
+      payload:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Todo ID
+            example: 1
+    TodoCreatedOk:
       payload:
         type: object
         properties:

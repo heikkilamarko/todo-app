@@ -3,28 +3,30 @@ package todos
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"todo-api/app/constants"
 
+	"github.com/gorilla/mux"
 	"github.com/heikkilamarko/goutils"
 )
 
-// CreateTodo method
-func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
-	command, err := parseCreateTodoRequest(r)
+// CompleteTodo method
+func (c *Controller) CompleteTodo(w http.ResponseWriter, r *http.Request) {
+	command, err := parseCompleteTodoRequest(r)
 
 	if err != nil {
 		goutils.WriteValidationError(w, err)
 		return
 	}
 
-	data, err := json.Marshal(command.Todo)
+	data, err := json.Marshal(command)
 
 	if err != nil {
 		c.logger.Error().Err(err).Send()
 		return
 	}
 
-	_, err = c.js.Publish(constants.MessageTodoCreated, data)
+	_, err = c.js.Publish(constants.MessageTodoCompleted, data)
 
 	if err != nil {
 		c.logger.Error().Err(err).Send()
@@ -35,17 +37,17 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	goutils.WriteResponse(w, http.StatusOK, nil)
 }
 
-func parseCreateTodoRequest(r *http.Request) (*createTodoCommand, error) {
+func parseCompleteTodoRequest(r *http.Request) (*completeTodoCommand, error) {
 	validationErrors := map[string]string{}
 
-	todo := &todo{}
-	if err := json.NewDecoder(r.Body).Decode(todo); err != nil {
-		validationErrors[constants.FieldRequestBody] = constants.ErrCodeInvalidPayload
+	id, err := strconv.Atoi(mux.Vars(r)[constants.FieldID])
+	if err != nil {
+		validationErrors[constants.FieldID] = constants.ErrCodeInvalidTodoID
 	}
 
 	if 0 < len(validationErrors) {
 		return nil, goutils.NewValidationError(validationErrors)
 	}
 
-	return &createTodoCommand{todo}, nil
+	return &completeTodoCommand{id}, nil
 }

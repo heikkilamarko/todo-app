@@ -2,19 +2,26 @@ asyncapi: 2.0.0
 info:
   title: Notification Service
   version: 1.0.0
-  description: This service is in charge of notifying clients about new todos
+  description: |
+    Subscribes to
+    - `todo.created.ok`
+    - `todo.completed.ok`
 servers:
   nats:
     url: nats://nats:4222
     protocol: nats
 channels:
-  todo.processed:
+  todo.created.ok:
     subscribe:
       message:
-        $ref: "#/components/messages/TodoProcessed"
+        $ref: "#/components/messages/TodoCreatedOk"
+  todo.completed.ok:
+    subscribe:
+      message:
+        $ref: "#/components/messages/TodoCompletedOk"
 components:
   messages:
-    TodoProcessed:
+    TodoCreatedOk:
       payload:
         type: object
         properties:
@@ -38,3 +45,11 @@ components:
             type: string
             description: Update timestamp
             example: "2021-05-01T18:00:00Z"
+    TodoCompletedOk:
+      payload:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Todo ID
+            example: 1

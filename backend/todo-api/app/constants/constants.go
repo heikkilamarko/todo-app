@@ -5,6 +5,9 @@ const (
 	// ErrCodeInvalidPayload constant
 	ErrCodeInvalidPayload = "invalid_payload"
 
+	// ErrCodeInvalidTodoID constant
+	ErrCodeInvalidTodoID = "invalid_todo_id"
+
 	// ErrCodeInvalidOffset constant
 	ErrCodeInvalidOffset = "invalid_offset"
 
@@ -13,6 +16,9 @@ const (
 )
 
 const (
+	// FieldID constant
+	FieldID = "id"
+
 	// FieldPaginationOffset constant
 	FieldPaginationOffset = "offset"
 
@@ -26,4 +32,12 @@ const (
 const (
 	// PaginationLimitMax constant
 	PaginationLimitMax = 100
+)
+
+const (
+	// MessageTodoCreated constant
+	MessageTodoCreated = "todo.created"
+
+	// MessageTodoCompleted constant
+	MessageTodoCompleted = "todo.completed"
 )

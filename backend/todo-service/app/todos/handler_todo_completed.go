@@ -8,16 +8,16 @@ import (
 	"todo-service/app/utils"
 )
 
-//go:embed schemas/todo.created.json
-var todoCreatedSchema string
+//go:embed schemas/todo.completed.json
+var todoCompletedSchema string
 
-func (c *Controller) handleTodoCreated() {
+func (c *Controller) handleTodoCompleted() {
 
 	go func() {
 
 		sub, err := c.js.PullSubscribe(
-			constants.MessageTodoCreated,
-			constants.DurableTodoCreated,
+			constants.MessageTodoCompleted,
+			constants.DurableTodoCompleted,
 		)
 
 		if err != nil {
@@ -25,7 +25,7 @@ func (c *Controller) handleTodoCreated() {
 			return
 		}
 
-		validator := utils.NewJSONSchemaValidator(todoCreatedSchema)
+		validator := utils.NewJSONSchemaValidator(todoCompletedSchema)
 
 		for {
 			ms, err := sub.Fetch(1)
@@ -52,28 +52,26 @@ func (c *Controller) handleTodoCreated() {
 				continue
 			}
 
-			todo := &todo{}
+			command := &completeTodoCommand{}
 
-			if err := json.Unmarshal(m.Data, todo); err != nil {
+			if err := json.Unmarshal(m.Data, command); err != nil {
 				c.logger.Error().Err(err).Send()
 				continue
 			}
 
-			command := &createTodoCommand{Todo: todo}
-
-			if err := c.repository.createTodo(context.Background(), command); err != nil {
+			if err := c.repository.completeTodo(context.Background(), command); err != nil {
 				c.logger.Error().Err(err).Send()
 				continue
 			}
 
-			data, err := json.Marshal(todo)
+			data, err := json.Marshal(command)
 
 			if err != nil {
 				c.logger.Error().Err(err).Send()
 				continue
 			}
 
-			if err := c.nc.Publish(constants.MessageTodoCreatedOk, data); err != nil {
+			if err := c.nc.Publish(constants.MessageTodoCompletedOk, data); err != nil {
 				c.logger.Error().Err(err).Send()
 				continue
 			}

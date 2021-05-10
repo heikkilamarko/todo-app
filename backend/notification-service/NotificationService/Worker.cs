@@ -40,14 +40,37 @@ namespace NotificationService
                 var connection = new ConnectionFactory()
                     .CreateConnection(options);
 
-                connection.SubscribeAsync("todo.processed", async (_, args) =>
+                connection.SubscribeAsync(Constants.MessageTodoCreatedOk, async (_, args) =>
                 {
                     _logger.LogInformation("message received ({Subject})", args.Message.Subject);
 
                     try
                     {
-                        var todo = JsonSerializer.Deserialize<Todo>(args.Message.Data);
-                        await _apiGatewayClient.SendNotification(todo);
+                        var data = JsonSerializer.Deserialize<TodoCreatedOk>(args.Message.Data);
+                        await _apiGatewayClient.SendNotification(new Notification
+                        {
+                            Type = Constants.MessageTodoCreatedOk,
+                            Data = data
+                        });
+                    }
+                    catch (Exception exception)
+                    {
+                        _logger.LogError(exception, "message handling failed");
+                    }
+                });
+
+                connection.SubscribeAsync(Constants.MessageTodoCompletedOk, async (_, args) =>
+                {
+                    _logger.LogInformation("message received ({Subject})", args.Message.Subject);
+
+                    try
+                    {
+                        var data = JsonSerializer.Deserialize<TodoCompletedOk>(args.Message.Data);
+                        await _apiGatewayClient.SendNotification(new Notification
+                        {
+                            Type = Constants.MessageTodoCompletedOk,
+                            Data = data
+                        });
                     }
                     catch (Exception exception)
                     {

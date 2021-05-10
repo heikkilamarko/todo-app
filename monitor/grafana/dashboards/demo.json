@@ -142,7 +142,7 @@
         },
         "gridPos": {
           "h": 12,
-          "w": 17,
+          "w": 24,
           "x": 0,
           "y": 12
         },
@@ -165,78 +165,6 @@
         "timeShift": null,
         "title": "Logs",
         "type": "logs"
-      },
-      {
-        "datasource": "PostgreSQL",
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "blue",
-                  "value": null
-                }
-              ]
-            }
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 12,
-          "w": 7,
-          "x": 17,
-          "y": 12
-        },
-        "id": 2,
-        "options": {
-          "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "auto",
-          "reduceOptions": {
-            "calcs": ["lastNotNull"],
-            "fields": "",
-            "values": false
-          },
-          "text": {},
-          "textMode": "auto"
-        },
-        "pluginVersion": "7.5.5",
-        "targets": [
-          {
-            "format": "time_series",
-            "group": [],
-            "metricColumn": "none",
-            "rawQuery": true,
-            "rawSql": "SELECT\n  created_at AS \"time\",\n  id\nFROM todos\nWHERE\n  $__timeFilter(created_at)\nORDER BY 1",
-            "refId": "A",
-            "select": [
-              [
-                {
-                  "params": ["id"],
-                  "type": "column"
-                }
-              ]
-            ],
-            "table": "todos",
-            "timeColumn": "created_at",
-            "timeColumnType": "timestamptz",
-            "where": [
-              {
-                "name": "$__timeFilter",
-                "params": [],
-                "type": "macro"
-              }
-            ]
-          }
-        ],
-        "title": "Todo Count",
-        "type": "stat"
       }
     ],
     "refresh": "5s",

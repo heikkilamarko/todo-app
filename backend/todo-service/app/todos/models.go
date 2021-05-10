@@ -15,3 +15,7 @@ type todo struct {
 type createTodoCommand struct {
 	Todo *todo `json:"todo"`
 }
+
+type completeTodoCommand struct {
+	ID int `json:"id"`
+}

@@ -44,3 +44,17 @@ func (r *repository) createTodo(ctx context.Context, command *createTodoCommand)
 
 	return nil
 }
+
+//go:embed sql/complete_todo.sql
+var completeTodoSQL string
+
+func (r *repository) completeTodo(ctx context.Context, command *completeTodoCommand) error {
+	_, err := r.db.ExecContext(ctx, completeTodoSQL, command.ID)
+
+	if err != nil {
+		r.logger.Err(err).Send()
+		return goutils.ErrInternalError
+	}
+
+	return nil
+}

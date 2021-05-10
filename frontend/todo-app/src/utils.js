@@ -18,9 +18,9 @@ api.defaults.baseURL = API_URL;
  * Get todos from server.
  * @returns {Promise<Array<import("./types").Todo>>}
  */
-export async function getTodos() {
+export async function getTodos(offset = 0, limit = 10) {
   try {
-    var response = await api.get("/todos?limit=10");
+    var response = await api.get(`/todos?offset=${offset}&limit=${limit}`);
     /** @type {Array<import("./types").ServerTodo>} */
     var todos = response?.data?.data ?? [];
     return todos.map(toTodo);
@@ -37,6 +37,19 @@ export async function getTodos() {
 export async function createTodo(todo) {
   try {
     await api.post("/todos", todo);
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+/**
+ * Tell server to complete the given todo.
+ * @param {number} id
+ */
+export async function completeTodo(id) {
+  try {
+    await api.post(`/todos/${id}/complete`);
   } catch (e) {
     console.error(e);
     throw e;

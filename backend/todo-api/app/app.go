@@ -141,8 +141,14 @@ func (a *App) registerRoutes() {
 
 	c := todos.NewController(a.config, a.logger, a.db, a.js)
 
-	a.router.HandleFunc("/todos", c.GetTodos).Methods(http.MethodGet)
-	a.router.HandleFunc("/todos", c.CreateTodo).Methods(http.MethodPost)
+	a.router.HandleFunc("/todos", c.GetTodos).
+		Methods(http.MethodGet)
+
+	a.router.HandleFunc("/todos", c.CreateTodo).
+		Methods(http.MethodPost)
+
+	a.router.HandleFunc("/todos/{id:[0-9]+}/complete", c.CompleteTodo).
+		Methods(http.MethodPost)
 }
 
 func (a *App) serve() error {

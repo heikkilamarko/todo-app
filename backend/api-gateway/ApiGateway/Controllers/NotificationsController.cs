@@ -19,9 +19,9 @@ namespace ApiGateway.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostNotification([FromBody] Todo todo, CancellationToken token)
+        public async Task<ActionResult> PostNotification([FromBody] Notification notification, CancellationToken token)
         {
-            await _hub.Clients.All.SendAsync("ReceiveNotification", todo, token);
+            await _hub.Clients.All.SendAsync("ReceiveNotification", notification, token);
 
             return Ok();
         }

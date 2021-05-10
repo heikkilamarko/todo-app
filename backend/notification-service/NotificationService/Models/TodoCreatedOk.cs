@@ -4,10 +4,10 @@ using System.Text.Json.Serialization;
 
 namespace NotificationService.Models
 {
-    public class Todo
+    public class TodoCreatedOk
     {
-        [JsonPropertyName("id")] 
-        [Required] 
+        [JsonPropertyName("id")]
+        [Required]
         public int? Id { get; set; }
 
         [JsonPropertyName("name")]

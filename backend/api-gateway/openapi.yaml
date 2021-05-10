@@ -2,21 +2,21 @@ openapi: 3.0.3
 info:
   title: API Gateway
   description: |
-    API Gateway
+    Gateway to:
+    - Todo API
   version: v1
 servers:
   - url: "http://localhost:8000"
     description: localhost
 tags:
-  - name: Todo
-    description: Todo API
+  - name: Todo API
 paths:
   /todos:
     get:
       summary: Browse todo items
       description: Browse todo items
       tags:
-        - Todo
+        - Todo API
       parameters:
         - $ref: "#/components/parameters/offset"
         - $ref: "#/components/parameters/limit"
@@ -33,7 +33,7 @@ paths:
       summary: Create a new todo item
       description: Create a new todo item
       tags:
-        - Todo
+        - Todo API
       requestBody:
         $ref: "#/components/requestBodies/NewTodo"
       responses:
@@ -45,8 +45,33 @@ paths:
           $ref: "#/components/responses/Error"
         "500":
           $ref: "#/components/responses/Error"
+  /todos/{id}/complete:
+    post:
+      summary: Complete todo by id
+      description: Complete todo by id
+      tags:
+        - Todo API
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: Ok
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+        "500":
+          $ref: "#/components/responses/Error"
 components:
   parameters:
+    id:
+      name: id
+      in: path
+      description: Todo ID
+      required: true
+      schema:
+        type: integer
+      example: 1
     offset:
       name: offset
       in: query

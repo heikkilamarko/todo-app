@@ -1,32 +1,26 @@
 <script>
   import { fly } from "svelte/transition";
+  import { completeTodo } from "./utils";
 
   export let todo;
 </script>
 
 <div
-  class="px-4 py-2 my-4 shadow-sm rounded border"
-  in:fly={{ x: 100, duration: 800 }}
+  class="px-4 py-4 my-4 shadow-sm rounded border"
+  in:fly={{ x: 100, duration: 600 }}
+  out:fly={{ x: 500, duration: 300 }}
 >
-  <dl>
-    <dt>Name</dt>
-    <dd>{todo.name}</dd>
-    <dt>Description</dt>
-    <dd class="pre">{todo.description || "-"}</dd>
-    <dt>Created</dt>
-    <dd>{todo.created_at.toLocaleString()}</dd>
-  </dl>
+  <h1 class="display-6">{todo.name}</h1>
+  <p class="text-muted">{todo.created_at.toLocaleString()}</p>
+  <p class="pre">{todo.description || "-"}</p>
+  <button
+    type="button"
+    class="btn btn-outline-success"
+    on:click={() => completeTodo(todo.id)}>Complete</button
+  >
 </div>
 
 <style>
-  dl {
-    margin: 0;
-  }
-
-  dd:last-child {
-    margin-bottom: 0;
-  }
-
   .pre {
     white-space: pre-wrap;
   }

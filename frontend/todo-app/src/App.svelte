@@ -25,9 +25,17 @@
     connection.onreconnecting(() => (isConnected = false));
     connection.onreconnected(() => (isConnected = true));
 
-    connection.on(NOTIFICATION_METHOD_NAME, (todo) => {
-      todos = [toTodo(todo), ...todos];
-      window?.confetti();
+    connection.on(NOTIFICATION_METHOD_NAME, (notification) => {
+      const { type, data } = notification ?? {};
+
+      if (type === "todo.created.ok") {
+        todos = [toTodo(data), ...todos];
+        window?.confetti();
+      } else if (type === "todo.completed.ok") {
+        todos = todos.filter((t) => t.id !== data.id);
+      } else {
+        console.log("unknown notification received", type, data);
+      }
     });
 
     try {

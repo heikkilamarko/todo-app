@@ -1,0 +1,41 @@
+asyncapi: 2.0.0
+info:
+  title: Todo API
+  version: 1.0.0
+  description: |
+    Publishes
+    - `todo.created`
+    - `todo.completed`
+servers:
+  nats:
+    url: nats://nats:4222
+    protocol: nats
+channels:
+  todo.created:
+    publish:
+      message:
+        $ref: "#/components/messages/TodoCreated"
+  todo.completed:
+    publish:
+      message:
+        $ref: "#/components/messages/TodoCompleted"
+components:
+  messages:
+    TodoCreated:
+      payload:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Name
+          description:
+            type: string
+            description: Description
+    TodoCompleted:
+      payload:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Todo ID
+            example: 1

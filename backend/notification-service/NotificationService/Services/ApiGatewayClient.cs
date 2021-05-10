@@ -23,9 +23,9 @@ namespace NotificationService.Services
             _logger = logger;
         }
 
-        public async Task SendNotification(Todo todo)
+        public async Task SendNotification(Notification notification)
         {
-            var response = await _httpClient.PostAsJsonAsync("notifications", todo);
+            var response = await _httpClient.PostAsJsonAsync("notifications", notification);
 
             if (!response.IsSuccessStatusCode)
             {
