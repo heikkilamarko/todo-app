@@ -17,7 +17,15 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = c.natsConn.Publish("todo.created", command.Todo)
+	todoBytes, err := json.Marshal(command.Todo)
+
+	if err != nil {
+		c.logger.Error().Err(err).Send()
+		return
+	}
+
+	_, err = c.js.Publish("todo.created", todoBytes)
+
 	if err != nil {
 		c.logger.Error().Err(err).Send()
 		goutils.WriteInternalError(w, nil)

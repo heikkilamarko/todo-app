@@ -60,7 +60,7 @@ services:
       - api-gateway
 
   nats:
-    build: ./backend/nats
+    build: ./backend/nats/docker
     image: nats
     restart: on-failure
     env_file:

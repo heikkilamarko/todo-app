@@ -14,22 +14,19 @@ type Controller struct {
 	config     *config.Config
 	logger     *zerolog.Logger
 	db         *sql.DB
-	natsConn   *nats.Conn
+	nc         *nats.Conn
+	js         nats.JetStreamContext
 	repository *repository
 }
 
 // NewController func
-func NewController(config *config.Config, logger *zerolog.Logger, db *sql.DB, natsConn *nats.Conn) *Controller {
+func NewController(config *config.Config, logger *zerolog.Logger, db *sql.DB, nc *nats.Conn, js nats.JetStreamContext) *Controller {
 	repository := newRepository(db, logger)
-	return &Controller{config, logger, db, natsConn, repository}
+	return &Controller{config, logger, db, nc, js, repository}
 }
 
 // Start method
 func (c *Controller) Start() error {
-
-	if err := c.handleTodoCreated(); err != nil {
-		return err
-	}
-
+	c.handleTodoCreated()
 	return nil
 }

@@ -2,15 +2,6 @@
 
 ![Todo App Architecture](doc/architecture.png)
 
-## Running the App
-
-```bash
-# Build and run the app
-> docker compose up --build
-```
-
-App URL: http://localhost:8000
-
 ## Monitoring Stack
 
 - [Grafana](https://grafana.com/oss/grafana/)
@@ -24,15 +15,31 @@ App URL: http://localhost:8000
   - username: `minio`
   - password: `minio123`
 
-### Demo Dashboard
+## Running the App
 
 ```bash
-# Navigate to the monitor/grafana directory
-cd monitor/grafana
+# Build
+> docker compose build
 
-# Create Grafana resources
-./create_grafana_resources.sh <username>:<password>
+# Run NATS container
+> docker compose up nats
 
-# <username>: grafana admin username (default: admin)
-# <password>: grafana admin password (default: admin)
+# Configure NATS JetStream
+> cd <repo>/backend/nats/jetstream
+> ./configure_jetstream.sh
+
+# Run all containers
+> docker compose up
+
+# Configure Grafana Dashboard
+#   <username>: grafana admin username (default: admin)
+#   <password>: grafana admin password (default: admin)
+> cd <repo>/monitor/grafana
+> ./create_grafana_resources.sh <username>:<password>
 ```
+
+App: http://localhost:8000
+
+Grafana: http://localhost:3000
+
+MinIO: http://localhost:9000

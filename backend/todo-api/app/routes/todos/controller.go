@@ -14,12 +14,12 @@ type Controller struct {
 	config     *config.Config
 	logger     *zerolog.Logger
 	db         *sql.DB
-	natsConn   *nats.EncodedConn
+	js         nats.JetStreamContext
 	repository *repository
 }
 
 // NewController func
-func NewController(config *config.Config, logger *zerolog.Logger, db *sql.DB, natsConn *nats.EncodedConn) *Controller {
+func NewController(config *config.Config, logger *zerolog.Logger, db *sql.DB, js nats.JetStreamContext) *Controller {
 	repository := newRepository(db, logger)
-	return &Controller{config, logger, db, natsConn, repository}
+	return &Controller{config, logger, db, js, repository}
 }

@@ -23,12 +23,13 @@ import (
 
 // App struct
 type App struct {
-	config   *config.Config
-	logger   *zerolog.Logger
-	db       *sql.DB
-	natsConn *nats.EncodedConn
-	router   *mux.Router
-	server   *http.Server
+	config *config.Config
+	logger *zerolog.Logger
+	db     *sql.DB
+	nc     *nats.Conn
+	js     nats.JetStreamContext
+	router *mux.Router
+	server *http.Server
 }
 
 // New func
@@ -96,13 +97,14 @@ func (a *App) initNATS() error {
 		return err
 	}
 
-	nec, err := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
+	js, err := nc.JetStream()
 
 	if err != nil {
 		return err
 	}
 
-	a.natsConn = nec
+	a.nc = nc
+	a.js = js
 
 	return nil
 }
@@ -137,7 +139,7 @@ func (a *App) initServer() {
 
 func (a *App) registerRoutes() {
 
-	c := todos.NewController(a.config, a.logger, a.db, a.natsConn)
+	c := todos.NewController(a.config, a.logger, a.db, a.js)
 
 	a.router.HandleFunc("/todos", c.GetTodos).Methods(http.MethodGet)
 	a.router.HandleFunc("/todos", c.CreateTodo).Methods(http.MethodPost)
@@ -161,7 +163,7 @@ func (a *App) serve() error {
 		defer cancel()
 
 		_ = a.server.Shutdown(ctx)
-		_ = a.natsConn.Drain()
+		_ = a.nc.Drain()
 		_ = a.db.Close()
 
 		e <- nil

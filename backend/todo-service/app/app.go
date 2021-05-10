@@ -19,10 +19,11 @@ import (
 
 // App struct
 type App struct {
-	config   *config.Config
-	logger   *zerolog.Logger
-	db       *sql.DB
-	natsConn *nats.Conn
+	config *config.Config
+	logger *zerolog.Logger
+	db     *sql.DB
+	nc     *nats.Conn
+	js     nats.JetStreamContext
 }
 
 // New func
@@ -89,14 +90,21 @@ func (a *App) initNATS() error {
 		return err
 	}
 
-	a.natsConn = nc
+	js, err := nc.JetStream()
+
+	if err != nil {
+		return err
+	}
+
+	a.nc = nc
+	a.js = js
 
 	return nil
 }
 
 func (a *App) registerRoutes() error {
 
-	c := todos.NewController(a.config, a.logger, a.db, a.natsConn)
+	c := todos.NewController(a.config, a.logger, a.db, a.nc, a.js)
 
 	if err := c.Start(); err != nil {
 		return err
@@ -119,7 +127,7 @@ func (a *App) serve() error {
 
 		a.logInfo("application is shutting down...")
 
-		_ = a.natsConn.Drain()
+		_ = a.nc.Drain()
 		_ = a.db.Close()
 
 		e <- nil
