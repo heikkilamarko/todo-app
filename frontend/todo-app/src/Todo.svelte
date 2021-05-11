@@ -1,6 +1,5 @@
 <script>
   import { fly } from "svelte/transition";
-  import { completeTodo } from "./utils";
 
   export let todo;
 </script>
@@ -13,10 +12,8 @@
   <h1 class="display-6">{todo.name}</h1>
   <p class="text-muted">{todo.created_at.toLocaleString()}</p>
   <p class="pre">{todo.description || "-"}</p>
-  <button
-    type="button"
-    class="btn btn-outline-success"
-    on:click={() => completeTodo(todo.id)}>Complete</button
+  <button type="button" class="btn btn-outline-success" on:click
+    >Complete</button
   >
 </div>
 

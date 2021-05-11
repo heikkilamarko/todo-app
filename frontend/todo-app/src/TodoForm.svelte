@@ -1,5 +1,5 @@
 <script>
-  import { createTodo } from "./utils";
+  import { createTodo, showError } from "./utils";
 
   let name = "";
   let description = "";
@@ -13,7 +13,7 @@
       name = "";
       description = "";
     } catch (e) {
-      alert(`Todo creation failed: ${e}`);
+      showError(`Todo creation failed\n${e}`);
     }
   }
 

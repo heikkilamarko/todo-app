@@ -82,3 +82,12 @@ export function toTodo(todo) {
     updated_at: new Date(todo.updated_at),
   };
 }
+
+/**
+ * Shows an error message.
+ * @param {string} message
+ */
+export function showError(message) {
+  // @ts-ignore
+  window.pushToast(message, "danger");
+}

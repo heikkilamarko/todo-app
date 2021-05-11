@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import Toaster from "./Toaster.svelte";
   import Header from "./Header.svelte";
   import TodoForm from "./TodoForm.svelte";
   import Todos from "./Todos.svelte";
@@ -8,6 +9,7 @@
     getTodos,
     getSignalRConnection,
     toTodo,
+    showError,
     NOTIFICATION_METHOD_NAME,
   } from "./utils";
 
@@ -27,19 +29,13 @@
       const { type, data } = notification ?? {};
       switch (type) {
         case Notification.TodoCreatedOk:
-          await load();
-          window?.confetti();
-          break;
         case Notification.TodoCompletedOk:
           await load();
           break;
         case Notification.TodoCreatedError:
         case Notification.TodoCompletedError:
-          // TODO: Implement proper error handling
-          alert(JSON.stringify(data, null, 2));
+          showError(`ERROR: ${data.code}\n${data.message || "-"}`);
           break;
-        default:
-          console.log("unknown notification received", type, data);
       }
     });
 
@@ -47,14 +43,14 @@
       await connection.start();
       isConnected = true;
     } catch (e) {
-      alert(`Real-time connection failed: ${e}`);
+      showError(`Real-time connection failed\n${e}`);
     }
 
     async function load() {
       try {
         todos = await getTodos();
       } catch (e) {
-        alert(`Todo loading failed: ${e}`);
+        showError(`Todo loading failed\n${e}`);
       }
     }
 
@@ -73,3 +69,5 @@
     <Todos {todos} />
   </section>
 </main>
+
+<Toaster />
