@@ -40,7 +40,7 @@ namespace NotificationService
                 var connection = new ConnectionFactory()
                     .CreateConnection(options);
 
-                connection.SubscribeAsync(Constants.MessageTodoCreated, async (_, args) =>
+                connection.SubscribeAsync(Constants.MessageTodo, async (_, args) =>
                 {
                     _logger.LogInformation("message received ({Subject})", args.Message.Subject);
 
@@ -49,64 +49,25 @@ namespace NotificationService
                         switch (args.Message.Subject)
                         {
                             case Constants.MessageTodoCreatedOk:
-                            {
-                                var data = JsonSerializer.Deserialize<TodoCreatedOk>(args.Message.Data);
-                                await _apiGatewayClient.SendNotification(new Notification
-                                {
-                                    Type = Constants.MessageTodoCreatedOk,
-                                    Data = data
-                                });
-                            }
+                                await SendNotificationAsync<TodoCreatedOk>(Constants.MessageTodoCreatedOk,
+                                    args.Message.Data);
                                 break;
+
                             case Constants.MessageTodoCreatedError:
-                            {
-                                var data = JsonSerializer.Deserialize<TodoError>(args.Message.Data);
-                                await _apiGatewayClient.SendNotification(new Notification
-                                {
-                                    Type = Constants.MessageTodoCreatedError,
-                                    Data = data
-                                });
-                            }
+                                await SendNotificationAsync<TodoError>(Constants.MessageTodoCreatedError,
+                                    args.Message.Data);
                                 break;
-                            default:
-                                _logger.LogWarning("unknown message received");
-                                break;
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        _logger.LogError(exception, "message handling failed");
-                    }
-                });
 
-                connection.SubscribeAsync(Constants.MessageTodoCompleted, async (_, args) =>
-                {
-                    _logger.LogInformation("message received ({Subject})", args.Message.Subject);
-
-                    try
-                    {
-                        switch (args.Message.Subject)
-                        {
                             case Constants.MessageTodoCompletedOk:
-                            {
-                                var data = JsonSerializer.Deserialize<TodoCompletedOk>(args.Message.Data);
-                                await _apiGatewayClient.SendNotification(new Notification
-                                {
-                                    Type = Constants.MessageTodoCompletedOk,
-                                    Data = data
-                                });
-                            }
+                                await SendNotificationAsync<TodoCompletedOk>(Constants.MessageTodoCompletedOk,
+                                    args.Message.Data);
                                 break;
+
                             case Constants.MessageTodoCompletedError:
-                            {
-                                var data = JsonSerializer.Deserialize<TodoError>(args.Message.Data);
-                                await _apiGatewayClient.SendNotification(new Notification
-                                {
-                                    Type = Constants.MessageTodoCompletedError,
-                                    Data = data
-                                });
-                            }
+                                await SendNotificationAsync<TodoError>(Constants.MessageTodoCompletedError,
+                                    args.Message.Data);
                                 break;
+
                             default:
                                 _logger.LogWarning("unknown message received");
                                 break;
@@ -143,6 +104,15 @@ namespace NotificationService
                 _logger.LogError(exception, "critical error");
                 throw;
             }
+        }
+
+        private async Task SendNotificationAsync<T>(string type, byte[] data)
+        {
+            await _apiGatewayClient.SendNotification(new Notification
+            {
+                Type = type,
+                Data = JsonSerializer.Deserialize<T>(data)
+            });
         }
     }
 }
