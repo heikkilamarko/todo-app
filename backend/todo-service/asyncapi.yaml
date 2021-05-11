@@ -9,7 +9,9 @@ info:
 
     Publishes
     - `todo.created.ok`
+    - `todo.created.error`
     - `todo.completed.ok`
+    - `todo.completed.error`
 servers:
   nats:
     url: nats://nats:4222
@@ -27,10 +29,18 @@ channels:
     publish:
       message:
         $ref: "#/components/messages/TodoCreatedOk"
+  todo.created.error:
+    publish:
+      message:
+        $ref: "#/components/messages/TodoError"
   todo.completed.ok:
     publish:
       message:
         $ref: "#/components/messages/TodoCompleted"
+  todo.completed.error:
+    publish:
+      message:
+        $ref: "#/components/messages/TodoError"
 components:
   messages:
     TodoCreated:
@@ -75,3 +85,13 @@ components:
             type: string
             description: Update timestamp
             example: "2021-05-01T18:00:00Z"
+    TodoError:
+      payload:
+        type: object
+        properties:
+          code:
+            type: string
+            description: Error code
+          message:
+            type: string
+            description: Error message

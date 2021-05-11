@@ -34,13 +34,14 @@ func (c *Controller) handleTodoCreated() {
 			}
 
 			m := ms[0]
+			m.Ack()
 
 			c.logger.Info().Msgf("message received (%s)", m.Subject)
 
 			ves, err := validator.Validate(string(m.Data))
 
 			if err != nil {
-				c.logger.Error().Err(err).Send()
+				c.publishTodoCreatedError(err, "")
 				continue
 			}
 
@@ -49,20 +50,21 @@ func (c *Controller) handleTodoCreated() {
 				for _, ve := range ves {
 					c.logger.Warn().Msgf("validation error: %s", ve)
 				}
+				c.publishTodoCreatedError(nil, "bad request")
 				continue
 			}
 
 			todo := &todo{}
 
 			if err := json.Unmarshal(m.Data, todo); err != nil {
-				c.logger.Error().Err(err).Send()
+				c.publishTodoCreatedError(err, "")
 				continue
 			}
 
 			command := &createTodoCommand{Todo: todo}
 
 			if err := c.repository.createTodo(context.Background(), command); err != nil {
-				c.logger.Error().Err(err).Send()
+				c.publishTodoCreatedError(err, "")
 				continue
 			}
 
@@ -77,8 +79,24 @@ func (c *Controller) handleTodoCreated() {
 				c.logger.Error().Err(err).Send()
 				continue
 			}
-
-			m.Ack()
 		}
 	}()
+}
+
+func (c *Controller) publishTodoCreatedError(err error, message string) {
+
+	if err != nil {
+		c.logger.Error().Err(err).Send()
+	}
+
+	data, err := json.Marshal(todoError{constants.MessageTodoCreatedError, message})
+
+	if err != nil {
+		c.logger.Error().Err(err).Send()
+		return
+	}
+
+	if err := c.nc.Publish(constants.MessageTodoCreatedError, data); err != nil {
+		c.logger.Error().Err(err).Send()
+	}
 }

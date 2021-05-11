@@ -40,18 +40,38 @@ namespace NotificationService
                 var connection = new ConnectionFactory()
                     .CreateConnection(options);
 
-                connection.SubscribeAsync(Constants.MessageTodoCreatedOk, async (_, args) =>
+                connection.SubscribeAsync(Constants.MessageTodoCreated, async (_, args) =>
                 {
                     _logger.LogInformation("message received ({Subject})", args.Message.Subject);
 
                     try
                     {
-                        var data = JsonSerializer.Deserialize<TodoCreatedOk>(args.Message.Data);
-                        await _apiGatewayClient.SendNotification(new Notification
+                        switch (args.Message.Subject)
                         {
-                            Type = Constants.MessageTodoCreatedOk,
-                            Data = data
-                        });
+                            case Constants.MessageTodoCreatedOk:
+                            {
+                                var data = JsonSerializer.Deserialize<TodoCreatedOk>(args.Message.Data);
+                                await _apiGatewayClient.SendNotification(new Notification
+                                {
+                                    Type = Constants.MessageTodoCreatedOk,
+                                    Data = data
+                                });
+                            }
+                                break;
+                            case Constants.MessageTodoCreatedError:
+                            {
+                                var data = JsonSerializer.Deserialize<TodoError>(args.Message.Data);
+                                await _apiGatewayClient.SendNotification(new Notification
+                                {
+                                    Type = Constants.MessageTodoCreatedError,
+                                    Data = data
+                                });
+                            }
+                                break;
+                            default:
+                                _logger.LogWarning("unknown message received");
+                                break;
+                        }
                     }
                     catch (Exception exception)
                     {
@@ -59,18 +79,38 @@ namespace NotificationService
                     }
                 });
 
-                connection.SubscribeAsync(Constants.MessageTodoCompletedOk, async (_, args) =>
+                connection.SubscribeAsync(Constants.MessageTodoCompleted, async (_, args) =>
                 {
                     _logger.LogInformation("message received ({Subject})", args.Message.Subject);
 
                     try
                     {
-                        var data = JsonSerializer.Deserialize<TodoCompletedOk>(args.Message.Data);
-                        await _apiGatewayClient.SendNotification(new Notification
+                        switch (args.Message.Subject)
                         {
-                            Type = Constants.MessageTodoCompletedOk,
-                            Data = data
-                        });
+                            case Constants.MessageTodoCompletedOk:
+                            {
+                                var data = JsonSerializer.Deserialize<TodoCompletedOk>(args.Message.Data);
+                                await _apiGatewayClient.SendNotification(new Notification
+                                {
+                                    Type = Constants.MessageTodoCompletedOk,
+                                    Data = data
+                                });
+                            }
+                                break;
+                            case Constants.MessageTodoCompletedError:
+                            {
+                                var data = JsonSerializer.Deserialize<TodoError>(args.Message.Data);
+                                await _apiGatewayClient.SendNotification(new Notification
+                                {
+                                    Type = Constants.MessageTodoCompletedError,
+                                    Data = data
+                                });
+                            }
+                                break;
+                            default:
+                                _logger.LogWarning("unknown message received");
+                                break;
+                        }
                     }
                     catch (Exception exception)
                     {

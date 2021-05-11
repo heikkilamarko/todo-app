@@ -5,7 +5,9 @@ info:
   description: |
     Subscribes to
     - `todo.created.ok`
+    - `todo.created.error`
     - `todo.completed.ok`
+    - `todo.completed.error`
 servers:
   nats:
     url: nats://nats:4222
@@ -15,10 +17,18 @@ channels:
     subscribe:
       message:
         $ref: "#/components/messages/TodoCreatedOk"
+  todo.created.error:
+    subscribe:
+      message:
+        $ref: "#/components/messages/TodoError"
   todo.completed.ok:
     subscribe:
       message:
         $ref: "#/components/messages/TodoCompletedOk"
+  todo.completed.error:
+    subscribe:
+      message:
+        $ref: "#/components/messages/TodoError"
 components:
   messages:
     TodoCreatedOk:
@@ -53,3 +63,13 @@ components:
             type: integer
             description: Todo ID
             example: 1
+    TodoError:
+      payload:
+        type: object
+        properties:
+          code:
+            type: string
+            description: Error code
+          message:
+            type: string
+            description: Error message

@@ -33,6 +33,11 @@
         case Notification.TodoCompletedOk:
           await load();
           break;
+        case Notification.TodoCreatedError:
+        case Notification.TodoCompletedError:
+          // TODO: Implement proper error handling
+          alert(JSON.stringify(data, null, 2));
+          break;
         default:
           console.log("unknown notification received", type, data);
       }

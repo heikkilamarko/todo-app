@@ -11,8 +11,14 @@ const (
 	// MessageTodoCreatedOk constant
 	MessageTodoCreatedOk = "todo.created.ok"
 
+	// MessageTodoCreatedError constant
+	MessageTodoCreatedError = "todo.created.error"
+
 	// MessageTodoCompletedOk constant
 	MessageTodoCompletedOk = "todo.completed.ok"
+
+	// MessageTodoCompletedError constant
+	MessageTodoCompletedError = "todo.completed.error"
 )
 
 const (

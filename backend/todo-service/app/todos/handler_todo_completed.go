@@ -34,13 +34,14 @@ func (c *Controller) handleTodoCompleted() {
 			}
 
 			m := ms[0]
+			m.Ack()
 
 			c.logger.Info().Msgf("message received (%s)", m.Subject)
 
 			ves, err := validator.Validate(string(m.Data))
 
 			if err != nil {
-				c.logger.Error().Err(err).Send()
+				c.publishTodoCompletedError(err, "")
 				continue
 			}
 
@@ -49,18 +50,19 @@ func (c *Controller) handleTodoCompleted() {
 				for _, ve := range ves {
 					c.logger.Warn().Msgf("validation error: %s", ve)
 				}
+				c.publishTodoCompletedError(nil, "bad request")
 				continue
 			}
 
 			command := &completeTodoCommand{}
 
 			if err := json.Unmarshal(m.Data, command); err != nil {
-				c.logger.Error().Err(err).Send()
+				c.publishTodoCompletedError(err, "")
 				continue
 			}
 
 			if err := c.repository.completeTodo(context.Background(), command); err != nil {
-				c.logger.Error().Err(err).Send()
+				c.publishTodoCompletedError(err, "")
 				continue
 			}
 
@@ -75,8 +77,24 @@ func (c *Controller) handleTodoCompleted() {
 				c.logger.Error().Err(err).Send()
 				continue
 			}
-
-			m.Ack()
 		}
 	}()
+}
+
+func (c *Controller) publishTodoCompletedError(err error, message string) {
+
+	if err != nil {
+		c.logger.Error().Err(err).Send()
+	}
+
+	data, err := json.Marshal(todoError{constants.MessageTodoCompletedError, message})
+
+	if err != nil {
+		c.logger.Error().Err(err).Send()
+		return
+	}
+
+	if err := c.nc.Publish(constants.MessageTodoCompletedError, data); err != nil {
+		c.logger.Error().Err(err).Send()
+	}
 }
