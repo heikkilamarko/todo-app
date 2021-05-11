@@ -3,11 +3,11 @@ info:
   title: Todo Service
   version: 1.0.0
   description: |
-    Subscribes to
+    Subscribes to the following messages:
     - `todo.created`
     - `todo.completed`
 
-    Publishes
+    Publishes the following notification messages:
     - `todo.created.ok`
     - `todo.created.error`
     - `todo.completed.ok`
@@ -18,27 +18,27 @@ servers:
     protocol: nats
 channels:
   todo.created:
-    subscribe:
+    publish:
       message:
         $ref: "#/components/messages/TodoCreated"
   todo.completed:
-    subscribe:
+    publish:
       message:
         $ref: "#/components/messages/TodoCompleted"
   todo.created.ok:
-    publish:
+    subscribe:
       message:
         $ref: "#/components/messages/TodoCreatedOk"
   todo.created.error:
-    publish:
+    subscribe:
       message:
         $ref: "#/components/messages/TodoError"
   todo.completed.ok:
-    publish:
+    subscribe:
       message:
         $ref: "#/components/messages/TodoCompleted"
   todo.completed.error:
-    publish:
+    subscribe:
       message:
         $ref: "#/components/messages/TodoError"
 components:

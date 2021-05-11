@@ -3,30 +3,32 @@ info:
   title: Notification Service
   version: 1.0.0
   description: |
-    Subscribes to
-    - `todo.created.ok`
-    - `todo.created.error`
-    - `todo.completed.ok`
-    - `todo.completed.error`
+    - Subscribes to the following notification messages:
+      - `todo.created.ok`
+      - `todo.created.error`
+      - `todo.completed.ok`
+      - `todo.completed.error`
+
+    - Delivers notifications to Todo App.
 servers:
   nats:
     url: nats://nats:4222
     protocol: nats
 channels:
   todo.created.ok:
-    subscribe:
+    publish:
       message:
         $ref: "#/components/messages/TodoCreatedOk"
   todo.created.error:
-    subscribe:
+    publish:
       message:
         $ref: "#/components/messages/TodoError"
   todo.completed.ok:
-    subscribe:
+    publish:
       message:
         $ref: "#/components/messages/TodoCompletedOk"
   todo.completed.error:
-    subscribe:
+    publish:
       message:
         $ref: "#/components/messages/TodoError"
 components:

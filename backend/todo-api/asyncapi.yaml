@@ -3,7 +3,7 @@ info:
   title: Todo API
   version: 1.0.0
   description: |
-    Publishes
+    Publishes the following messages:
     - `todo.created`
     - `todo.completed`
 servers:
@@ -12,11 +12,11 @@ servers:
     protocol: nats
 channels:
   todo.created:
-    publish:
+    subscribe:
       message:
         $ref: "#/components/messages/TodoCreated"
   todo.completed:
-    publish:
+    subscribe:
       message:
         $ref: "#/components/messages/TodoCompleted"
 components:
