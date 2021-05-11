@@ -1,7 +1,9 @@
 <script>
   import { onMount } from "svelte";
-  import Todo from "./Todo.svelte";
+  import Header from "./Header.svelte";
   import TodoForm from "./TodoForm.svelte";
+  import Todos from "./Todos.svelte";
+  import { Notification } from "./constants";
   import {
     getTodos,
     getSignalRConnection,
@@ -13,11 +15,7 @@
   let isConnected = false;
 
   onMount(async () => {
-    try {
-      todos = await getTodos();
-    } catch (e) {
-      alert(`Todo loading failed: ${e}`);
-    }
+    await load();
 
     let connection = getSignalRConnection();
 
@@ -25,16 +23,18 @@
     connection.onreconnecting(() => (isConnected = false));
     connection.onreconnected(() => (isConnected = true));
 
-    connection.on(NOTIFICATION_METHOD_NAME, (notification) => {
+    connection.on(NOTIFICATION_METHOD_NAME, async (notification) => {
       const { type, data } = notification ?? {};
-
-      if (type === "todo.created.ok") {
-        todos = [toTodo(data), ...todos];
-        window?.confetti();
-      } else if (type === "todo.completed.ok") {
-        todos = todos.filter((t) => t.id !== data.id);
-      } else {
-        console.log("unknown notification received", type, data);
+      switch (type) {
+        case Notification.TodoCreatedOk:
+          await load();
+          window?.confetti();
+          break;
+        case Notification.TodoCompletedOk:
+          await load();
+          break;
+        default:
+          console.log("unknown notification received", type, data);
       }
     });
 
@@ -45,29 +45,26 @@
       alert(`Real-time connection failed: ${e}`);
     }
 
+    async function load() {
+      try {
+        todos = await getTodos();
+      } catch (e) {
+        alert(`Todo loading failed: ${e}`);
+      }
+    }
+
     return () => connection.stop();
   });
 </script>
 
 <main class="container">
-  <h1 class="display-3 mt-2">
-    Todo App
-    {#if isConnected}
-      <span class="badge bg-success">CONNECTED</span>
-    {:else}
-      <span class="badge bg-danger">NO SIGNAL</span>
-    {/if}
-  </h1>
+  <Header {isConnected} />
 
   <section>
     <TodoForm />
   </section>
 
   <section>
-    {#each todos as todo (todo.id)}
-      <div>
-        <Todo {todo} />
-      </div>
-    {/each}
+    <Todos {todos} />
   </section>
 </main>
