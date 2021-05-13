@@ -4,9 +4,11 @@ import (
 	"context"
 	_ "embed"
 	"encoding/json"
+	"errors"
 	"todo-service/app/constants"
 	"todo-service/app/utils"
 
+	"github.com/heikkilamarko/goutils"
 	"github.com/nats-io/nats.go"
 )
 
@@ -16,30 +18,24 @@ var todoCompletedSchema string
 func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 	m.Ack()
 
-	validator := utils.NewJSONSchemaValidator(todoCompletedSchema)
+	command := &completeTodoCommand{}
 
-	ves, err := validator.Validate(string(m.Data))
+	err := utils.
+		NewMessageParser(todoCompletedSchema).
+		Parse(m.Data, command)
 
 	if err != nil {
 		c.logError(err)
-		c.publishError(constants.MessageTodoCompletedError, "")
-		return
-	}
 
-	if 0 < len(ves) {
-		c.logInfo("invalid message")
-		for _, ve := range ves {
-			c.logInfo("validation error: %s", ve)
+		var message string
+
+		var verr *goutils.ValidationError
+		if errors.As(err, &verr) {
+			message = verr.Error()
 		}
-		c.publishError(constants.MessageTodoCompletedError, "bad request")
-		return
-	}
 
-	command := &completeTodoCommand{}
+		c.publishError(constants.MessageTodoCompletedError, message)
 
-	if err := json.Unmarshal(m.Data, command); err != nil {
-		c.logError(err)
-		c.publishError(constants.MessageTodoCompletedError, "")
 		return
 	}
 

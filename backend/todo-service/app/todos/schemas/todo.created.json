@@ -2,23 +2,30 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
-    "name": {
-      "description": "Todo's name",
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 100
-    },
-    "description": {
-      "anyOf": [
-        {
-          "description": "Todo's description",
+    "todo": {
+      "description": "Todo",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Todo's name",
           "type": "string",
           "minLength": 1,
-          "maxLength": 1000
+          "maxLength": 100
         },
-        { "type": "null" }
-      ]
+        "description": {
+          "anyOf": [
+            {
+              "description": "Todo's description",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            },
+            { "type": "null" }
+          ]
+        }
+      },
+      "required": ["name"]
     }
   },
-  "required": ["name"]
+  "required": ["todo"]
 }

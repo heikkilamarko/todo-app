@@ -4,9 +4,11 @@ import (
 	"context"
 	_ "embed"
 	"encoding/json"
+	"errors"
 	"todo-service/app/constants"
 	"todo-service/app/utils"
 
+	"github.com/heikkilamarko/goutils"
 	"github.com/nats-io/nats.go"
 )
 
@@ -16,34 +18,26 @@ var todoCreatedSchema string
 func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
 	m.Ack()
 
-	validator := utils.NewJSONSchemaValidator(todoCreatedSchema)
+	command := &createTodoCommand{}
 
-	ves, err := validator.Validate(string(m.Data))
+	err := utils.
+		NewMessageParser(todoCreatedSchema).
+		Parse(m.Data, command)
 
 	if err != nil {
 		c.logError(err)
-		c.publishError(constants.MessageTodoCreatedError, "")
-		return
-	}
 
-	if 0 < len(ves) {
-		c.logInfo("invalid message")
-		for _, ve := range ves {
-			c.logInfo("validation error: %s", ve)
+		var message string
+
+		var verr *goutils.ValidationError
+		if errors.As(err, &verr) {
+			message = verr.Error()
 		}
-		c.publishError(constants.MessageTodoCreatedError, "bad request")
+
+		c.publishError(constants.MessageTodoCreatedError, message)
+
 		return
 	}
-
-	todo := &todo{}
-
-	if err := json.Unmarshal(m.Data, todo); err != nil {
-		c.logError(err)
-		c.publishError(constants.MessageTodoCreatedError, "")
-		return
-	}
-
-	command := &createTodoCommand{Todo: todo}
 
 	if err := c.repository.createTodo(ctx, command); err != nil {
 		c.logError(err)
@@ -51,7 +45,7 @@ func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
 		return
 	}
 
-	data, err := json.Marshal(todo)
+	data, err := json.Marshal(command)
 
 	if err != nil {
 		c.logError(err)

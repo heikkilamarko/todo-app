@@ -17,7 +17,7 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := json.Marshal(command.Todo)
+	data, err := json.Marshal(command)
 
 	if err != nil {
 		c.logger.Error().Err(err).Send()
