@@ -2,6 +2,7 @@
 package app
 
 import (
+	"context"
 	"database/sql"
 	"os"
 	"os/signal"
@@ -36,7 +37,10 @@ func (a *App) Run() {
 
 	a.logInfo("application is starting up...")
 
-	if err := a.initDB(); err != nil {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	if err := a.initDB(ctx); err != nil {
 		a.logFatal(err)
 	}
 
@@ -44,18 +48,18 @@ func (a *App) Run() {
 		a.logFatal(err)
 	}
 
-	if err := a.registerRoutes(); err != nil {
+	if err := a.registerRoutes(ctx); err != nil {
 		a.logFatal(err)
 	}
 
-	if err := a.serve(); err != nil {
+	if err := a.serve(ctx); err != nil {
 		a.logFatal(err)
 	}
 
 	a.logInfo("application is shut down")
 }
 
-func (a *App) initDB() error {
+func (a *App) initDB(ctx context.Context) error {
 
 	db, err := sql.Open("pgx", a.config.DBConnectionString)
 	if err != nil {
@@ -67,7 +71,7 @@ func (a *App) initDB() error {
 	db.SetConnMaxLifetime(10 * time.Minute)
 	db.SetConnMaxIdleTime(5 * time.Minute)
 
-	if err := db.Ping(); err != nil {
+	if err := db.PingContext(ctx); err != nil {
 		return err
 	}
 
@@ -102,40 +106,37 @@ func (a *App) initNATS() error {
 	return nil
 }
 
-func (a *App) registerRoutes() error {
+func (a *App) registerRoutes(ctx context.Context) error {
 
 	c := todos.NewController(a.config, a.logger, a.db, a.nc, a.js)
 
-	if err := c.Start(); err != nil {
+	if err := c.Start(ctx); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (a *App) serve() error {
+func (a *App) serve(ctx context.Context) error {
 
 	var (
-		s = make(chan os.Signal)
-		e = make(chan error)
+		err = make(chan error)
 	)
 
 	go func() {
-		signal.Notify(s, os.Interrupt, syscall.SIGTERM)
-
-		<-s
+		<-ctx.Done()
 
 		a.logInfo("application is shutting down...")
 
 		_ = a.nc.Drain()
 		_ = a.db.Close()
 
-		e <- nil
+		err <- nil
 	}()
 
 	a.logInfo("application is running")
 
-	return <-e
+	return <-err
 }
 
 func (a *App) logInfo(msg string, v ...interface{}) {

@@ -1,6 +1,6 @@
 {
   "name": "todo",
-  "subjects": ["todo.created", "todo.completed"],
+  "subjects": ["todo.*"],
   "retention": "workqueue",
   "max_consumers": -1,
   "max_msgs": -1,

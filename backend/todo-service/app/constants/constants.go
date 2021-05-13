@@ -2,6 +2,9 @@
 package constants
 
 const (
+	// MessageTodo constant
+	MessageTodo = "todo.*"
+
 	// MessageTodoCreated constant
 	MessageTodoCreated = "todo.created"
 
@@ -22,9 +25,6 @@ const (
 )
 
 const (
-	// DurableTodoCreated constant
-	DurableTodoCreated = "todo_created"
-
-	// DurableTodoCompleted constant
-	DurableTodoCompleted = "todo_completed"
+	// DurableTodo constant
+	DurableTodo = "todo"
 )
