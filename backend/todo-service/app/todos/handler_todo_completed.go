@@ -27,9 +27,9 @@ func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 	}
 
 	if 0 < len(ves) {
-		c.logger.Warn().Msg("invalid message")
+		c.logInfo("invalid message")
 		for _, ve := range ves {
-			c.logger.Warn().Msgf("validation error: %s", ve)
+			c.logInfo("validation error: %s", ve)
 		}
 		c.publishError(constants.MessageTodoCompletedError, "bad request")
 		return

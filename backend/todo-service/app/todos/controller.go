@@ -39,13 +39,13 @@ func (c *Controller) Start(ctx context.Context) error {
 
 	go func() {
 
-		c.logger.Info().Msg("todos controller started")
+		c.logInfo("todos controller started")
 
 		for {
 
 			select {
 			case <-ctx.Done():
-				c.logger.Info().Msg("todos controller stopped")
+				c.logInfo("todos controller stopped")
 				return
 			default:
 			}
@@ -57,7 +57,7 @@ func (c *Controller) Start(ctx context.Context) error {
 
 			m := ms[0]
 
-			c.logger.Info().Msgf("message received (%s)", m.Subject)
+			c.logInfo("message received (%s)", m.Subject)
 
 			switch m.Subject {
 			case constants.MessageTodoCreated:
@@ -65,10 +65,10 @@ func (c *Controller) Start(ctx context.Context) error {
 			case constants.MessageTodoCompleted:
 				c.handleTodoCompleted(ctx, m)
 			default:
-				c.logger.Info().Msgf("unsupported message (%s)", m.Subject)
+				c.logInfo("unsupported message (%s)", m.Subject)
 			}
 
-			c.logger.Info().Msgf("message handled (%s)", m.Subject)
+			c.logInfo("message handled (%s)", m.Subject)
 		}
 	}()
 
@@ -87,6 +87,10 @@ func (c *Controller) publishError(subject, message string) {
 	if err := c.nc.Publish(subject, data); err != nil {
 		c.logError(err)
 	}
+}
+
+func (c *Controller) logInfo(msg string, v ...interface{}) {
+	c.logger.Info().Msgf(msg, v...)
 }
 
 func (c *Controller) logError(err error) {
