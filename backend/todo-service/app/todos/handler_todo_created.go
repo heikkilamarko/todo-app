@@ -3,7 +3,6 @@ package todos
 import (
 	"context"
 	_ "embed"
-	"encoding/json"
 	"errors"
 	"todo-service/app/constants"
 	"todo-service/app/utils"
@@ -34,26 +33,24 @@ func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
 			message = verr.Error()
 		}
 
-		c.publishError(constants.MessageTodoCreatedError, message)
+		c.publishMessage(
+			constants.MessageTodoCreatedError,
+			errorMessage{constants.MessageTodoCreatedError, message},
+		)
 
 		return
 	}
 
 	if err := c.repository.createTodo(ctx, command); err != nil {
 		c.logError(err)
-		c.publishError(constants.MessageTodoCreatedError, "")
+		c.publishMessage(
+			constants.MessageTodoCreatedError,
+			errorMessage{Code: constants.MessageTodoCreatedError},
+		)
 		return
 	}
 
-	data, err := json.Marshal(command)
-
-	if err != nil {
+	if err := c.publishMessage(constants.MessageTodoCreatedOk, command); err != nil {
 		c.logError(err)
-		return
-	}
-
-	if err := c.nc.Publish(constants.MessageTodoCreatedOk, data); err != nil {
-		c.logError(err)
-		return
 	}
 }

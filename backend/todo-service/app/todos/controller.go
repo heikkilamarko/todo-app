@@ -42,7 +42,6 @@ func (c *Controller) Start(ctx context.Context) error {
 		c.logInfo("todos controller started")
 
 		for {
-
 			select {
 			case <-ctx.Done():
 				c.logInfo("todos controller stopped")
@@ -75,18 +74,19 @@ func (c *Controller) Start(ctx context.Context) error {
 	return nil
 }
 
-func (c *Controller) publishError(subject, message string) {
+func (c *Controller) publishMessage(subject string, message interface{}) error {
 
-	data, err := json.Marshal(todoError{subject, message})
+	data, err := json.Marshal(message)
 
 	if err != nil {
-		c.logError(err)
-		return
+		return err
 	}
 
 	if err := c.nc.Publish(subject, data); err != nil {
-		c.logError(err)
+		return err
 	}
+
+	return nil
 }
 
 func (c *Controller) logInfo(msg string, v ...interface{}) {

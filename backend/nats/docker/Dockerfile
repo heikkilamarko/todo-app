@@ -1,4 +1,4 @@
-FROM nats:2.2.3-alpine3.13
+FROM nats:2.2.4-alpine3.13
 
 COPY ./server.conf /server.conf
 

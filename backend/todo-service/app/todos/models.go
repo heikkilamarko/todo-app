@@ -12,15 +12,15 @@ type todo struct {
 	UpdatedAt   time.Time `json:"updated_at,omitempty"`
 }
 
-type todoError struct {
-	Code    string `json:"code"`
-	Message string `json:"message,omitempty"`
-}
-
 type createTodoCommand struct {
 	Todo *todo `json:"todo"`
 }
 
 type completeTodoCommand struct {
 	ID int `json:"id"`
+}
+
+type errorMessage struct {
+	Code    string `json:"code"`
+	Message string `json:"message,omitempty"`
 }
