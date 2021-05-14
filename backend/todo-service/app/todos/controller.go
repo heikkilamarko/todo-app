@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"todo-service/app/config"
-	"todo-service/app/constants"
 
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
@@ -24,14 +23,13 @@ type Controller struct {
 
 // NewController func
 func NewController(config *config.Config, logger *zerolog.Logger, db *sql.DB, nc *nats.Conn, js nats.JetStreamContext) *Controller {
-	repository := newRepository(db, logger)
-	return &Controller{config, logger, db, nc, js, repository}
+	return &Controller{config, logger, db, nc, js, &repository{db, logger}}
 }
 
 // Start method
 func (c *Controller) Start(ctx context.Context) error {
 
-	sub, err := c.js.PullSubscribe(constants.MessageTodo, constants.DurableTodo)
+	sub, err := c.js.PullSubscribe(subjectTodo, durableTodo)
 
 	if err != nil {
 		return err
@@ -58,20 +56,24 @@ func (c *Controller) Start(ctx context.Context) error {
 
 			c.logInfo("message received (%s)", m.Subject)
 
-			switch m.Subject {
-			case constants.MessageTodoCreated:
-				c.handleTodoCreated(ctx, m)
-			case constants.MessageTodoCompleted:
-				c.handleTodoCompleted(ctx, m)
-			default:
-				c.logInfo("unsupported message (%s)", m.Subject)
-			}
+			c.handleMessage(ctx, m)
 
 			c.logInfo("message handled (%s)", m.Subject)
 		}
 	}()
 
 	return nil
+}
+
+func (c *Controller) handleMessage(ctx context.Context, m *nats.Msg) {
+	switch m.Subject {
+	case subjectTodoCreated:
+		c.handleTodoCreated(ctx, m)
+	case subjectTodoCompleted:
+		c.handleTodoCompleted(ctx, m)
+	default:
+		c.logInfo("unsupported message (%s)", m.Subject)
+	}
 }
 
 func (c *Controller) publishMessage(subject string, message interface{}) error {

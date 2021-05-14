@@ -3,7 +3,6 @@ package todos
 import (
 	"context"
 	"database/sql"
-	_ "embed"
 	"time"
 
 	"github.com/heikkilamarko/goutils"
@@ -15,13 +14,6 @@ type repository struct {
 	logger *zerolog.Logger
 }
 
-func newRepository(db *sql.DB, logger *zerolog.Logger) *repository {
-	return &repository{db, logger}
-}
-
-//go:embed sql/create_todo.sql
-var createTodoSQL string
-
 func (r *repository) createTodo(ctx context.Context, command *createTodoCommand) error {
 	t := command.Todo
 
@@ -30,7 +22,7 @@ func (r *repository) createTodo(ctx context.Context, command *createTodoCommand)
 	t.CreatedAt = n
 	t.UpdatedAt = n
 
-	err := r.db.QueryRowContext(ctx, createTodoSQL,
+	err := r.db.QueryRowContext(ctx, sqlCreateTodo,
 		t.Name,
 		t.Description,
 		t.CreatedAt,
@@ -45,11 +37,8 @@ func (r *repository) createTodo(ctx context.Context, command *createTodoCommand)
 	return nil
 }
 
-//go:embed sql/complete_todo.sql
-var completeTodoSQL string
-
 func (r *repository) completeTodo(ctx context.Context, command *completeTodoCommand) error {
-	_, err := r.db.ExecContext(ctx, completeTodoSQL, command.ID)
+	_, err := r.db.ExecContext(ctx, sqlCompleteTodo, command.ID)
 
 	if err != nil {
 		r.logger.Err(err).Send()

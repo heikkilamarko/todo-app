@@ -2,17 +2,12 @@ package todos
 
 import (
 	"context"
-	_ "embed"
 	"errors"
-	"todo-service/app/constants"
 	"todo-service/app/utils"
 
 	"github.com/heikkilamarko/goutils"
 	"github.com/nats-io/nats.go"
 )
-
-//go:embed schemas/todo.completed.json
-var todoCompletedSchema string
 
 func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 	m.Ack()
@@ -20,7 +15,7 @@ func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 	command := &completeTodoCommand{}
 
 	err := utils.
-		NewMessageParser(todoCompletedSchema).
+		NewMessageParser(schemaTodoCompleted).
 		Parse(m.Data, command)
 
 	if err != nil {
@@ -34,8 +29,8 @@ func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 		}
 
 		c.publishMessage(
-			constants.MessageTodoCompletedError,
-			errorMessage{constants.MessageTodoCompletedError, message},
+			subjectTodoCompletedError,
+			errorMessage{subjectTodoCompletedError, message},
 		)
 
 		return
@@ -44,13 +39,13 @@ func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 	if err := c.repository.completeTodo(ctx, command); err != nil {
 		c.logError(err)
 		c.publishMessage(
-			constants.MessageTodoCompletedError,
-			errorMessage{Code: constants.MessageTodoCompletedError},
+			subjectTodoCompletedError,
+			errorMessage{Code: subjectTodoCompletedError},
 		)
 		return
 	}
 
-	if err := c.publishMessage(constants.MessageTodoCompletedOk, command); err != nil {
+	if err := c.publishMessage(subjectTodoCompletedOk, command); err != nil {
 		c.logError(err)
 	}
 }
