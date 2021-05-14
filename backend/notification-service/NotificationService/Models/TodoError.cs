@@ -10,7 +10,6 @@ namespace NotificationService.Models
         public string Code { get; set; }
 
         [JsonPropertyName("message")]
-        [Required]
         public string Message { get; set; }
     }
 }
