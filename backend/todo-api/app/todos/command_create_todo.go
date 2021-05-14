@@ -3,9 +3,7 @@ package todos
 import (
 	"encoding/json"
 	"net/http"
-	"todo-api/app/constants"
-
-	"github.com/heikkilamarko/goutils"
+	"todo-api/app/utils"
 )
 
 // CreateTodo method
@@ -13,7 +11,7 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	command, err := parseCreateTodoRequest(r)
 
 	if err != nil {
-		goutils.WriteValidationError(w, err)
+		utils.WriteValidationError(w, err)
 		return
 	}
 
@@ -24,15 +22,15 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = c.js.Publish(constants.MessageTodoCreated, data)
+	_, err = c.js.Publish(subjectTodoCreated, data)
 
 	if err != nil {
 		c.logger.Error().Err(err).Send()
-		goutils.WriteInternalError(w, nil)
+		utils.WriteInternalError(w, nil)
 		return
 	}
 
-	goutils.WriteResponse(w, http.StatusOK, nil)
+	utils.WriteResponse(w, http.StatusOK, nil)
 }
 
 func parseCreateTodoRequest(r *http.Request) (*createTodoCommand, error) {
@@ -40,11 +38,11 @@ func parseCreateTodoRequest(r *http.Request) (*createTodoCommand, error) {
 
 	todo := &todo{}
 	if err := json.NewDecoder(r.Body).Decode(todo); err != nil {
-		validationErrors[constants.FieldRequestBody] = constants.ErrCodeInvalidPayload
+		validationErrors[utils.FieldRequestBody] = utils.ErrCodeInvalidRequestBody
 	}
 
 	if 0 < len(validationErrors) {
-		return nil, goutils.NewValidationError(validationErrors)
+		return nil, utils.NewValidationError(validationErrors)
 	}
 
 	return &createTodoCommand{todo}, nil

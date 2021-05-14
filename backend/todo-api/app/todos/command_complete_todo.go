@@ -4,10 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"todo-api/app/constants"
+	"todo-api/app/utils"
 
 	"github.com/gorilla/mux"
-	"github.com/heikkilamarko/goutils"
 )
 
 // CompleteTodo method
@@ -15,7 +14,7 @@ func (c *Controller) CompleteTodo(w http.ResponseWriter, r *http.Request) {
 	command, err := parseCompleteTodoRequest(r)
 
 	if err != nil {
-		goutils.WriteValidationError(w, err)
+		utils.WriteValidationError(w, err)
 		return
 	}
 
@@ -26,27 +25,27 @@ func (c *Controller) CompleteTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = c.js.Publish(constants.MessageTodoCompleted, data)
+	_, err = c.js.Publish(subjectTodoCompleted, data)
 
 	if err != nil {
 		c.logger.Error().Err(err).Send()
-		goutils.WriteInternalError(w, nil)
+		utils.WriteInternalError(w, nil)
 		return
 	}
 
-	goutils.WriteResponse(w, http.StatusOK, nil)
+	utils.WriteResponse(w, http.StatusOK, nil)
 }
 
 func parseCompleteTodoRequest(r *http.Request) (*completeTodoCommand, error) {
 	validationErrors := map[string]string{}
 
-	id, err := strconv.Atoi(mux.Vars(r)[constants.FieldID])
+	id, err := strconv.Atoi(mux.Vars(r)[utils.FieldID])
 	if err != nil {
-		validationErrors[constants.FieldID] = constants.ErrCodeInvalidTodoID
+		validationErrors[utils.FieldID] = utils.ErrCodeInvalidID
 	}
 
 	if 0 < len(validationErrors) {
-		return nil, goutils.NewValidationError(validationErrors)
+		return nil, utils.NewValidationError(validationErrors)
 	}
 
 	return &completeTodoCommand{id}, nil

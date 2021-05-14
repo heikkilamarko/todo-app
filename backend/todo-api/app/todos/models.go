@@ -1,7 +1,18 @@
 package todos
 
 import (
+	_ "embed"
 	"time"
+)
+
+const (
+	subjectTodoCreated   = "todo.created"
+	subjectTodoCompleted = "todo.completed"
+)
+
+var (
+	//go:embed sql/get_todos.sql
+	sqlGetTodos string
 )
 
 type todo struct {

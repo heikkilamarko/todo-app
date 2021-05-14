@@ -20,6 +20,5 @@ type Controller struct {
 
 // NewController func
 func NewController(config *config.Config, logger *zerolog.Logger, db *sql.DB, js nats.JetStreamContext) *Controller {
-	repository := newRepository(db, logger)
-	return &Controller{config, logger, db, js, repository}
+	return &Controller{config, logger, db, js, &repository{db, logger}}
 }

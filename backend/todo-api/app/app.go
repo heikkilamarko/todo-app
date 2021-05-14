@@ -10,10 +10,10 @@ import (
 	"syscall"
 	"time"
 	"todo-api/app/config"
-	"todo-api/app/routes/todos"
+	"todo-api/app/middleware"
+	"todo-api/app/todos"
 
 	"github.com/gorilla/mux"
-	"github.com/heikkilamarko/goutils/middleware"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 

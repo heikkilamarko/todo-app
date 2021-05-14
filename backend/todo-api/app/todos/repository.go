@@ -3,9 +3,8 @@ package todos
 import (
 	"context"
 	"database/sql"
-	_ "embed"
+	"todo-api/app/utils"
 
-	"github.com/heikkilamarko/goutils"
 	"github.com/rs/zerolog"
 )
 
@@ -14,22 +13,15 @@ type repository struct {
 	logger *zerolog.Logger
 }
 
-func newRepository(db *sql.DB, logger *zerolog.Logger) *repository {
-	return &repository{db, logger}
-}
-
-//go:embed sql/get_todos.sql
-var qetTodosSQL string
-
 func (r *repository) getTodos(ctx context.Context, query *getTodosQuery) ([]*todo, error) {
 	rows, err := r.db.QueryContext(
 		ctx,
-		qetTodosSQL,
+		sqlGetTodos,
 		query.Limit, query.Offset)
 
 	if err != nil {
 		r.logger.Error().Err(err).Send()
-		return nil, goutils.ErrInternalError
+		return nil, utils.ErrInternalError
 	}
 
 	defer rows.Close()
@@ -49,7 +41,7 @@ func (r *repository) getTodos(ctx context.Context, query *getTodosQuery) ([]*tod
 
 		if err != nil {
 			r.logger.Error().Err(err).Send()
-			return nil, goutils.ErrInternalError
+			return nil, utils.ErrInternalError
 		}
 
 		todos = append(todos, t)
