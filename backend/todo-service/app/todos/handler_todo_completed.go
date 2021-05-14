@@ -29,7 +29,7 @@ func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 
 		c.publishMessage(
 			subjectTodoCompletedError,
-			utils.ErrorMessage{
+			errorMessage{
 				Code:    subjectTodoCompletedError,
 				Message: message,
 			},
@@ -42,7 +42,7 @@ func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 		c.logError(err)
 		c.publishMessage(
 			subjectTodoCompletedError,
-			utils.ErrorMessage{
+			errorMessage{
 				Code: subjectTodoCompletedError,
 			},
 		)

@@ -42,3 +42,8 @@ type createTodoCommand struct {
 type completeTodoCommand struct {
 	ID int `json:"id"`
 }
+
+type errorMessage struct {
+	Code    string `json:"code"`
+	Message string `json:"message,omitempty"`
+}

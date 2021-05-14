@@ -29,7 +29,7 @@ func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
 
 		c.publishMessage(
 			subjectTodoCreatedError,
-			utils.ErrorMessage{
+			errorMessage{
 				Code:    subjectTodoCreatedError,
 				Message: message,
 			},
@@ -42,7 +42,7 @@ func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
 		c.logError(err)
 		c.publishMessage(
 			subjectTodoCreatedError,
-			utils.ErrorMessage{
+			errorMessage{
 				Code: subjectTodoCreatedError,
 			},
 		)

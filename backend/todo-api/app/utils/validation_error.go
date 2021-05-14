@@ -2,15 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"errors"
-)
-
-var (
-	// ErrNotFound error
-	ErrNotFound = errors.New(ErrCodeNotFound)
-
-	// ErrInternalError error
-	ErrInternalError = errors.New(ErrCodeInternalError)
 )
 
 // ValidationError error

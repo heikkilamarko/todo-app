@@ -2,14 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"errors"
-)
-
-var (
-	// ErrNotFound error
-	ErrNotFound = errors.New("not found")
-	// ErrInternalError error
-	ErrInternalError = errors.New("internal error")
 )
 
 // ValidationError error
@@ -29,10 +21,4 @@ func (v *ValidationError) Error() string {
 		return ""
 	}
 	return string(message)
-}
-
-// ErrorMessage struct
-type ErrorMessage struct {
-	Code    string `json:"code"`
-	Message string `json:"message,omitempty"`
 }
