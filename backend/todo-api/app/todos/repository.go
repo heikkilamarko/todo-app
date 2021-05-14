@@ -3,14 +3,10 @@ package todos
 import (
 	"context"
 	"database/sql"
-	"todo-api/app/utils"
-
-	"github.com/rs/zerolog"
 )
 
 type repository struct {
-	db     *sql.DB
-	logger *zerolog.Logger
+	db *sql.DB
 }
 
 func (r *repository) getTodos(ctx context.Context, query *getTodosQuery) ([]*todo, error) {
@@ -20,8 +16,7 @@ func (r *repository) getTodos(ctx context.Context, query *getTodosQuery) ([]*tod
 		query.Limit, query.Offset)
 
 	if err != nil {
-		r.logger.Error().Err(err).Send()
-		return nil, utils.ErrInternalError
+		return nil, err
 	}
 
 	defer rows.Close()
@@ -40,8 +35,7 @@ func (r *repository) getTodos(ctx context.Context, query *getTodosQuery) ([]*tod
 		)
 
 		if err != nil {
-			r.logger.Error().Err(err).Send()
-			return nil, utils.ErrInternalError
+			return nil, err
 		}
 
 		todos = append(todos, t)

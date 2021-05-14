@@ -1,7 +1,6 @@
 package todos
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 	"todo-api/app/utils"
@@ -14,21 +13,13 @@ func (c *Controller) CompleteTodo(w http.ResponseWriter, r *http.Request) {
 	command, err := parseCompleteTodoRequest(r)
 
 	if err != nil {
+		c.logError(err)
 		utils.WriteValidationError(w, err)
 		return
 	}
 
-	data, err := json.Marshal(command)
-
-	if err != nil {
-		c.logger.Error().Err(err).Send()
-		return
-	}
-
-	_, err = c.js.Publish(subjectTodoCompleted, data)
-
-	if err != nil {
-		c.logger.Error().Err(err).Send()
+	if err := c.publishMessage(subjectTodoCompleted, command); err != nil {
+		c.logError(err)
 		utils.WriteInternalError(w, nil)
 		return
 	}
@@ -37,15 +28,15 @@ func (c *Controller) CompleteTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 func parseCompleteTodoRequest(r *http.Request) (*completeTodoCommand, error) {
-	validationErrors := map[string]string{}
+	errorMap := map[string]string{}
 
 	id, err := strconv.Atoi(mux.Vars(r)[utils.FieldID])
 	if err != nil {
-		validationErrors[utils.FieldID] = utils.ErrCodeInvalidID
+		errorMap[utils.FieldID] = utils.ErrCodeInvalidID
 	}
 
-	if 0 < len(validationErrors) {
-		return nil, utils.NewValidationError(validationErrors)
+	if 0 < len(errorMap) {
+		return nil, utils.NewValidationError(errorMap)
 	}
 
 	return &completeTodoCommand{id}, nil

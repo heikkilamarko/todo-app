@@ -4,14 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"time"
-	"todo-service/app/utils"
-
-	"github.com/rs/zerolog"
 )
 
 type repository struct {
-	db     *sql.DB
-	logger *zerolog.Logger
+	db *sql.DB
 }
 
 func (r *repository) createTodo(ctx context.Context, command *createTodoCommand) error {
@@ -30,19 +26,16 @@ func (r *repository) createTodo(ctx context.Context, command *createTodoCommand)
 		Scan(&t.ID)
 
 	if err != nil {
-		r.logger.Error().Err(err).Send()
-		return utils.ErrInternalError
+		return err
 	}
 
 	return nil
 }
 
 func (r *repository) completeTodo(ctx context.Context, command *completeTodoCommand) error {
-	_, err := r.db.ExecContext(ctx, sqlCompleteTodo, command.ID)
 
-	if err != nil {
-		r.logger.Err(err).Send()
-		return utils.ErrInternalError
+	if _, err := r.db.ExecContext(ctx, sqlCompleteTodo, command.ID); err != nil {
+		return err
 	}
 
 	return nil

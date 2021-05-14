@@ -11,21 +11,13 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	command, err := parseCreateTodoRequest(r)
 
 	if err != nil {
+		c.logError(err)
 		utils.WriteValidationError(w, err)
 		return
 	}
 
-	data, err := json.Marshal(command)
-
-	if err != nil {
-		c.logger.Error().Err(err).Send()
-		return
-	}
-
-	_, err = c.js.Publish(subjectTodoCreated, data)
-
-	if err != nil {
-		c.logger.Error().Err(err).Send()
+	if err := c.publishMessage(subjectTodoCreated, command); err != nil {
+		c.logError(err)
 		utils.WriteInternalError(w, nil)
 		return
 	}
@@ -34,15 +26,15 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 func parseCreateTodoRequest(r *http.Request) (*createTodoCommand, error) {
-	validationErrors := map[string]string{}
+	errorMap := map[string]string{}
 
 	todo := &todo{}
 	if err := json.NewDecoder(r.Body).Decode(todo); err != nil {
-		validationErrors[utils.FieldRequestBody] = utils.ErrCodeInvalidRequestBody
+		errorMap[utils.FieldRequestBody] = utils.ErrCodeInvalidRequestBody
 	}
 
-	if 0 < len(validationErrors) {
-		return nil, utils.NewValidationError(validationErrors)
+	if 0 < len(errorMap) {
+		return nil, utils.NewValidationError(errorMap)
 	}
 
 	return &createTodoCommand{todo}, nil

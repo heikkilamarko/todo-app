@@ -157,7 +157,7 @@
         "pluginVersion": "7.5.5",
         "targets": [
           {
-            "expr": "{job=\"containers\"} \n| json \n| app=\"api-gateway\" or app=\"todo-api\" or app=\"todo-service\" or app=\"notification-service\"\n| line_format \"[{{.app}}] __ [{{._t}}{{.time}}] __ {{.message}}{{._m}}{{.method}} {{.url}}\"",
+            "expr": "{job=\"containers\"} \n| json \n| app=\"api-gateway\" or app=\"todo-api\" or app=\"todo-service\" or app=\"notification-service\"\n| line_format \"[{{.app}}] __ [{{._t}}{{.time}}] __ {{.message}}{{._m}}{{.error}}{{.method}} {{.url}}\"",
             "refId": "A"
           }
         ],

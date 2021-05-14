@@ -11,6 +11,7 @@ func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 	query, err := parseGetTodosRequest(r)
 
 	if err != nil {
+		c.logError(err)
 		utils.WriteValidationError(w, err)
 		return
 	}
@@ -18,6 +19,7 @@ func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 	todos, err := c.repository.getTodos(r.Context(), query)
 
 	if err != nil {
+		c.logError(err)
 		utils.WriteInternalError(w, nil)
 		return
 	}
@@ -26,7 +28,7 @@ func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 }
 
 func parseGetTodosRequest(r *http.Request) (*getTodosQuery, error) {
-	validationErrors := map[string]string{}
+	errorMap := map[string]string{}
 
 	var offset int = 0
 	var limit int = utils.LimitMaxPageSize
@@ -36,19 +38,19 @@ func parseGetTodosRequest(r *http.Request) (*getTodosQuery, error) {
 	if value := r.FormValue(utils.FieldPaginationOffset); value != "" {
 		offset, err = strconv.Atoi(value)
 		if err != nil || offset < 0 {
-			validationErrors[utils.FieldPaginationOffset] = utils.ErrCodeInvalidOffset
+			errorMap[utils.FieldPaginationOffset] = utils.ErrCodeInvalidOffset
 		}
 	}
 
 	if value := r.FormValue(utils.FieldPaginationLimit); value != "" {
 		limit, err = strconv.Atoi(value)
 		if err != nil || limit < 1 || utils.LimitMaxPageSize < limit {
-			validationErrors[utils.FieldPaginationLimit] = utils.ErrCodeInvalidLimit
+			errorMap[utils.FieldPaginationLimit] = utils.ErrCodeInvalidLimit
 		}
 	}
 
-	if 0 < len(validationErrors) {
-		return nil, utils.NewValidationError(validationErrors)
+	if 0 < len(errorMap) {
+		return nil, utils.NewValidationError(errorMap)
 	}
 
 	return &getTodosQuery{offset, limit}, nil
