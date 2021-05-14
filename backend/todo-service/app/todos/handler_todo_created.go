@@ -5,7 +5,6 @@ import (
 	"errors"
 	"todo-service/app/utils"
 
-	"github.com/heikkilamarko/goutils"
 	"github.com/nats-io/nats.go"
 )
 
@@ -23,14 +22,17 @@ func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
 
 		var message string
 
-		var verr *goutils.ValidationError
+		var verr *utils.ValidationError
 		if errors.As(err, &verr) {
 			message = verr.Error()
 		}
 
 		c.publishMessage(
 			subjectTodoCreatedError,
-			errorMessage{subjectTodoCreatedError, message},
+			utils.ErrorMessage{
+				Code:    subjectTodoCreatedError,
+				Message: message,
+			},
 		)
 
 		return
@@ -40,7 +42,9 @@ func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
 		c.logError(err)
 		c.publishMessage(
 			subjectTodoCreatedError,
-			errorMessage{Code: subjectTodoCreatedError},
+			utils.ErrorMessage{
+				Code: subjectTodoCreatedError,
+			},
 		)
 		return
 	}

@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+	"todo-service/app/utils"
 
-	"github.com/heikkilamarko/goutils"
 	"github.com/rs/zerolog"
 )
 
@@ -31,7 +31,7 @@ func (r *repository) createTodo(ctx context.Context, command *createTodoCommand)
 
 	if err != nil {
 		r.logger.Error().Err(err).Send()
-		return goutils.ErrInternalError
+		return utils.ErrInternalError
 	}
 
 	return nil
@@ -42,7 +42,7 @@ func (r *repository) completeTodo(ctx context.Context, command *completeTodoComm
 
 	if err != nil {
 		r.logger.Err(err).Send()
-		return goutils.ErrInternalError
+		return utils.ErrInternalError
 	}
 
 	return nil

@@ -1,9 +1,6 @@
 package utils
 
-import (
-	"github.com/heikkilamarko/goutils"
-	"github.com/xeipuuv/gojsonschema"
-)
+import "github.com/xeipuuv/gojsonschema"
 
 // SchemaValidator struct
 type SchemaValidator struct {
@@ -32,7 +29,7 @@ func (v *SchemaValidator) Validate(data string) error {
 		for _, e := range res.Errors() {
 			m[e.Field()] = e.String()
 		}
-		return goutils.NewValidationError(m)
+		return NewValidationError(m)
 	}
 
 	return nil
