@@ -14,7 +14,7 @@ func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 	command := &completeTodoCommand{}
 
 	err := utils.
-		NewMessageParser(schemaTodoCompleted).
+		NewMessageParser(c.validators[m.Subject]).
 		Parse(m.Data, command)
 
 	if err != nil {

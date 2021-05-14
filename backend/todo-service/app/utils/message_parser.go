@@ -10,17 +10,17 @@ type MessageParser struct {
 }
 
 // NewMessageParser func
-func NewMessageParser(schema string) *MessageParser {
-	return &MessageParser{
-		validator: NewSchemaValidator(schema),
-	}
+func NewMessageParser(v *SchemaValidator) *MessageParser {
+	return &MessageParser{v}
 }
 
 // Parse method
 func (p *MessageParser) Parse(message []byte, model interface{}) error {
 
-	if err := p.validator.Validate(string(message)); err != nil {
-		return err
+	if p.validator != nil {
+		if err := p.validator.Validate(string(message)); err != nil {
+			return err
+		}
 	}
 
 	if err := json.Unmarshal(message, model); err != nil {

@@ -14,7 +14,7 @@ func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
 	command := &createTodoCommand{}
 
 	err := utils.
-		NewMessageParser(schemaTodoCreated).
+		NewMessageParser(c.validators[m.Subject]).
 		Parse(m.Data, command)
 
 	if err != nil {
