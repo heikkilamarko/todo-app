@@ -1,5 +1,5 @@
 <script>
-  import { createTodo, showError } from "./utils";
+  import { createTodo, showError, showInfo } from "./utils";
 
   let name = "";
   let description = "";
@@ -12,6 +12,7 @@
       });
       name = "";
       description = "";
+      showInfo("Todo successfully sent for processing");
     } catch (e) {
       showError(`Todo creation failed\n${e}`);
     }

@@ -84,6 +84,15 @@ export function toTodo(todo) {
 }
 
 /**
+ * Shows an info message.
+ * @param {string} message
+ */
+export function showInfo(message) {
+  // @ts-ignore
+  window.pushToast(message, "success");
+}
+
+/**
  * Shows an error message.
  * @param {string} message
  */
