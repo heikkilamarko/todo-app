@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using NotificationService.Models;
 using NotificationService.Services;
@@ -55,6 +56,11 @@ namespace NotificationService
                     services.Configure<NatsOptions>(o => c.Bind("Nats", o));
 
                     services.AddApiGatewayClient(o => c.Bind("ApiGateway", o));
+
+                    services.AddSingleton<SchemaValidator>();
+
+                    services.AddSingleton<IFileProvider>(
+                        new ManifestEmbeddedFileProvider(typeof(Program).Assembly));
 
                     services.AddHostedService<Worker>();
                 });

@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "todo": {
+      "description": "Todo",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Todo's ID",
+          "type": "integer",
+          "minimum": 1,
+          "multipleOf": 1
+        },
+        "name": {
+          "description": "Todo's name",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "description": {
+          "anyOf": [
+            {
+              "description": "Todo's description",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "description": "Todo's creation timestamp",
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "description": "Todo's latest update timestamp",
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "created_at",
+        "updated_at"
+      ]
+    }
+  },
+  "required": [
+    "todo"
+  ]
+}

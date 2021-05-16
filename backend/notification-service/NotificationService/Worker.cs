@@ -14,17 +14,20 @@ namespace NotificationService
     public class Worker : BackgroundService
     {
         private readonly NatsOptions _natsOptions;
+        private readonly SchemaValidator _schemaValidator;
         private readonly ApiGatewayClient _apiGatewayClient;
         private readonly ILogger<Worker> _logger;
 
         public Worker(
-            ILogger<Worker> logger,
             IOptions<NatsOptions> natsOptions,
-            ApiGatewayClient apiGatewayClient)
+            SchemaValidator schemaValidator,
+            ApiGatewayClient apiGatewayClient,
+            ILogger<Worker> logger)
         {
-            _logger = logger;
             _natsOptions = natsOptions.Value;
+            _schemaValidator = schemaValidator;
             _apiGatewayClient = apiGatewayClient;
+            _logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -40,44 +43,15 @@ namespace NotificationService
                 var connection = new ConnectionFactory()
                     .CreateConnection(options);
 
-                connection.SubscribeAsync(Constants.MessageTodo, async (_, args) =>
-                {
-                    _logger.LogInformation("message received ({Subject})", args.Message.Subject);
-
-                    try
+                connection.SubscribeAsync(
+                    Constants.MessageTodo,
+                    async (_, args) =>
                     {
-                        switch (args.Message.Subject)
-                        {
-                            case Constants.MessageTodoCreatedOk:
-                                await SendNotificationAsync<TodoCreatedOk>(Constants.MessageTodoCreatedOk,
-                                    args.Message.Data);
-                                break;
-
-                            case Constants.MessageTodoCreatedError:
-                                await SendNotificationAsync<TodoError>(Constants.MessageTodoCreatedError,
-                                    args.Message.Data);
-                                break;
-
-                            case Constants.MessageTodoCompletedOk:
-                                await SendNotificationAsync<TodoCompletedOk>(Constants.MessageTodoCompletedOk,
-                                    args.Message.Data);
-                                break;
-
-                            case Constants.MessageTodoCompletedError:
-                                await SendNotificationAsync<TodoError>(Constants.MessageTodoCompletedError,
-                                    args.Message.Data);
-                                break;
-
-                            default:
-                                _logger.LogWarning("unknown message received");
-                                break;
-                        }
+                        _logger.LogInformation("message received ({Subject})", args.Message.Subject);
+                        await HandleMessageAsync(args.Message);
+                        _logger.LogInformation("message handled ({Subject})", args.Message.Subject);
                     }
-                    catch (Exception exception)
-                    {
-                        _logger.LogError(exception, "message handling failed");
-                    }
-                });
+                );
 
                 _logger.LogInformation("application is running");
 
@@ -106,13 +80,30 @@ namespace NotificationService
             }
         }
 
-        private async Task SendNotificationAsync<T>(string type, byte[] data)
+        private async Task HandleMessageAsync(Msg message)
         {
-            await _apiGatewayClient.SendNotification(new Notification
+            try
             {
-                Type = type,
-                Data = JsonSerializer.Deserialize<T>(data)
-            });
+                var data = JsonSerializer.Deserialize<JsonElement>(message.Data);
+
+                var results = await _schemaValidator.ValidateAsync(message.Subject, data);
+
+                if (!results.IsValid)
+                {
+                    _logger.LogWarning("invalid message");
+                    return;
+                }
+
+                await _apiGatewayClient.SendNotification(new Notification
+                {
+                    Type = message.Subject,
+                    Data = data
+                });
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, "message handling failed");
+            }
         }
     }
 }

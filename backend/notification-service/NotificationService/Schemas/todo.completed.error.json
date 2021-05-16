@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "code": {
+      "description": "Error code",
+      "type": "string",
+      "minLength": 1
+    },
+    "message": {
+      "anyOf": [
+        {
+          "description": "Error message",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "code"
+  ]
+}
