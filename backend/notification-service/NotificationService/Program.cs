@@ -62,6 +62,8 @@ namespace NotificationService
                     services.AddSingleton<IFileProvider>(
                         new ManifestEmbeddedFileProvider(typeof(Program).Assembly));
 
+                    services.AddMemoryCache();
+
                     services.AddHostedService<Worker>();
                 });
     }

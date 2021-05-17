@@ -88,7 +88,7 @@ namespace NotificationService
 
                 var results = await _schemaValidator.ValidateAsync(message.Subject, data);
 
-                if (!results.IsValid)
+                if (results is {IsValid: false})
                 {
                     _logger.LogWarning("invalid message");
                     return;
