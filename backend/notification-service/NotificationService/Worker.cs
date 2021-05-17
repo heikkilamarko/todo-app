@@ -1,9 +1,9 @@
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NATS.Client;
 using NotificationService.Models;
@@ -44,7 +44,7 @@ namespace NotificationService
                     .CreateConnection(options);
 
                 connection.SubscribeAsync(
-                    Constants.MessageTodo,
+                    Constants.SubjectTodo,
                     async (_, args) =>
                     {
                         _logger.LogInformation("message received ({Subject})", args.Message.Subject);
@@ -88,9 +88,9 @@ namespace NotificationService
 
                 var results = await _schemaValidator.ValidateAsync(message.Subject, data);
 
-                if (results is {IsValid: false})
+                if (!results.IsValid)
                 {
-                    _logger.LogWarning("invalid message");
+                    _logger.LogWarning("invalid message: {Message}", results.Message);
                     return;
                 }
 
@@ -102,7 +102,7 @@ namespace NotificationService
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "message handling failed");
+                _logger.LogError(exception, "message handling failed ({Subject})", message.Subject);
             }
         }
     }

@@ -1,18 +1,15 @@
-using System.Collections.Generic;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Json.Schema;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace NotificationService.Services
 {
     public class SchemaValidator
     {
-        private readonly Dictionary<string, JsonSchema> _schemas = new();
-
         private readonly IFileProvider _fileProvider;
         private readonly IMemoryCache _memoryCache;
         private readonly ILogger<SchemaValidator> _logger;
@@ -30,8 +27,7 @@ namespace NotificationService.Services
 
             if (schema == null)
             {
-                _logger.LogWarning("schema not found ({SchemaName})", schemaName);
-                return null;
+                throw new ApplicationException($"schema not found ({schemaName})");
             }
 
             return schema.Validate(data,
@@ -44,9 +40,9 @@ namespace NotificationService.Services
 
         private async Task<JsonSchema> GetSchemaAsync(string schemaName)
         {
-            var cacheKey = $"schema:{schemaName}";
+            var key = $"schema:{schemaName}";
 
-            return await _memoryCache.GetOrCreateAsync(cacheKey, async _ =>
+            return await _memoryCache.GetOrCreateAsync(key, async _ =>
             {
                 var info = _fileProvider.GetFileInfo($"Schemas/{schemaName}.json");
                 return info.Exists

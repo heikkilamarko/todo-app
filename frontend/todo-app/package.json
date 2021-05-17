@@ -8,7 +8,7 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "1.0.0-next.10",
     "svelte": "3.38.2",
-    "vite": "2.3.2"
+    "vite": "2.3.3"
   },
   "dependencies": {
     "@microsoft/signalr": "5.0.6",
