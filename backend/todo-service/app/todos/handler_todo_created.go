@@ -13,11 +13,7 @@ func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
 
 	command := &createTodoCommand{}
 
-	err := utils.
-		NewMessageParser(c.validators[m.Subject]).
-		Parse(m.Data, command)
-
-	if err != nil {
+	if err := c.messageParser.Parse(m, command); err != nil {
 		c.logError(err)
 
 		var message string

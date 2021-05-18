@@ -2,11 +2,13 @@ package utils
 
 import (
 	"encoding/json"
+
+	"github.com/nats-io/nats.go"
 )
 
 // MessageParser struct
 type MessageParser struct {
-	validator *SchemaValidator
+	v *SchemaValidator
 }
 
 // NewMessageParser func
@@ -15,15 +17,13 @@ func NewMessageParser(v *SchemaValidator) *MessageParser {
 }
 
 // Parse method
-func (p *MessageParser) Parse(message []byte, model interface{}) error {
+func (p *MessageParser) Parse(message *nats.Msg, model interface{}) error {
 
-	if p.validator != nil {
-		if err := p.validator.Validate(string(message)); err != nil {
-			return err
-		}
+	if err := p.v.Validate(message.Subject, message.Data); err != nil {
+		return err
 	}
 
-	if err := json.Unmarshal(message, model); err != nil {
+	if err := json.Unmarshal(message.Data, model); err != nil {
 		return err
 	}
 

@@ -1,7 +1,7 @@
 package todos
 
 import (
-	_ "embed"
+	"embed"
 	"time"
 )
 
@@ -17,10 +17,8 @@ const (
 )
 
 var (
-	//go:embed schemas/todo.created.json
-	schemaTodoCreated string
-	//go:embed schemas/todo.completed.json
-	schemaTodoCompleted string
+	//go:embed schemas/*.json
+	schemaFS embed.FS
 	//go:embed sql/create_todo.sql
 	sqlCreateTodo string
 	//go:embed sql/complete_todo.sql

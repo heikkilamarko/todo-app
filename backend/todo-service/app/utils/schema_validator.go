@@ -1,16 +1,32 @@
 package utils
 
-import "github.com/xeipuuv/gojsonschema"
+import (
+	"embed"
+	"fmt"
+
+	"github.com/xeipuuv/gojsonschema"
+)
 
 // SchemaValidator struct
 type SchemaValidator struct {
-	schema *gojsonschema.Schema
+	fs      embed.FS
+	schemas map[string]*gojsonschema.Schema
+}
+
+// NewSchemaValidator func
+func NewSchemaValidator(fs embed.FS) *SchemaValidator {
+	return &SchemaValidator{fs, make(map[string]*gojsonschema.Schema)}
 }
 
 // Validate method
-func (v *SchemaValidator) Validate(doc string) error {
+func (v *SchemaValidator) Validate(schemaName string, doc []byte) error {
 
-	r, err := v.schema.Validate(gojsonschema.NewStringLoader(doc))
+	schema, err := v.getSchema(schemaName)
+	if err != nil {
+		return err
+	}
+
+	r, err := schema.Validate(gojsonschema.NewStringLoader(string(doc)))
 	if err != nil {
 		return err
 	}
@@ -26,18 +42,27 @@ func (v *SchemaValidator) Validate(doc string) error {
 	return nil
 }
 
-// NewSchemaValidator func
-func NewSchemaValidator(schema string) (*SchemaValidator, error) {
+func (v *SchemaValidator) getSchema(schemaName string) (*gojsonschema.Schema, error) {
 
-	sl := gojsonschema.NewSchemaLoader()
-	sl.Draft = gojsonschema.Draft7
-	sl.AutoDetect = false
+	schema, found := v.schemas[schemaName]
 
-	s, err := sl.Compile(gojsonschema.NewStringLoader(schema))
+	if !found {
+		schemaBytes, err := v.fs.ReadFile(fmt.Sprintf("schemas/%s.json", schemaName))
+		if err != nil {
+			return nil, ErrSchemaNotFound
+		}
 
-	if err != nil {
-		return nil, err
+		sl := gojsonschema.NewSchemaLoader()
+		sl.Draft = gojsonschema.Draft7
+		sl.AutoDetect = false
+
+		schema, err = sl.Compile(gojsonschema.NewStringLoader(string(schemaBytes)))
+		if err != nil {
+			return nil, ErrInvalidSchema
+		}
+
+		v.schemas[schemaName] = schema
 	}
 
-	return &SchemaValidator{s}, nil
+	return schema, nil
 }
