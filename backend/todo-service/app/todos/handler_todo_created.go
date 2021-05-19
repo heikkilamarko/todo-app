@@ -9,7 +9,7 @@ import (
 )
 
 func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
-	m.Ack()
+	_ = m.Ack()
 
 	command := &createTodoCommand{}
 
@@ -18,12 +18,12 @@ func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
 
 		var message string
 
-		var verr *utils.ValidationError
-		if errors.As(err, &verr) {
-			message = verr.Error()
+		var vErr *utils.ValidationError
+		if errors.As(err, &vErr) {
+			message = vErr.Error()
 		}
 
-		c.publishMessage(
+		_ = c.publishMessage(
 			subjectTodoCreatedError,
 			errorMessage{
 				Code:    subjectTodoCreatedError,
@@ -36,12 +36,14 @@ func (c *Controller) handleTodoCreated(ctx context.Context, m *nats.Msg) {
 
 	if err := c.repository.createTodo(ctx, command); err != nil {
 		c.logError(err)
-		c.publishMessage(
+
+		_ = c.publishMessage(
 			subjectTodoCreatedError,
 			errorMessage{
 				Code: subjectTodoCreatedError,
 			},
 		)
+
 		return
 	}
 

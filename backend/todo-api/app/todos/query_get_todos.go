@@ -30,8 +30,8 @@ func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 func parseGetTodosRequest(r *http.Request) (*getTodosQuery, error) {
 	errorMap := map[string]string{}
 
-	var offset int = 0
-	var limit int = utils.LimitMaxPageSize
+	offset := 0
+	limit := utils.LimitMaxPageSize
 
 	var err error = nil
 

@@ -92,9 +92,9 @@ func WriteInternalError(w http.ResponseWriter, details map[string]string) {
 
 // WriteValidationError writes 400 or 500 response
 func WriteValidationError(w http.ResponseWriter, err error) {
-	var verr *ValidationError
-	if errors.As(err, &verr) {
-		WriteBadRequest(w, verr.ErrorMap)
+	var vErr *ValidationError
+	if errors.As(err, &vErr) {
+		WriteBadRequest(w, vErr.ErrorMap)
 	} else {
 		WriteInternalError(w, nil)
 	}

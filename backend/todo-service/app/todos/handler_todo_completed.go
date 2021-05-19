@@ -9,7 +9,7 @@ import (
 )
 
 func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
-	m.Ack()
+	_ = m.Ack()
 
 	command := &completeTodoCommand{}
 
@@ -18,12 +18,12 @@ func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 
 		var message string
 
-		var verr *utils.ValidationError
-		if errors.As(err, &verr) {
-			message = verr.Error()
+		var vErr *utils.ValidationError
+		if errors.As(err, &vErr) {
+			message = vErr.Error()
 		}
 
-		c.publishMessage(
+		_ = c.publishMessage(
 			subjectTodoCompletedError,
 			errorMessage{
 				Code:    subjectTodoCompletedError,
@@ -36,12 +36,14 @@ func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 
 	if err := c.repository.completeTodo(ctx, command); err != nil {
 		c.logError(err)
-		c.publishMessage(
+
+		_ = c.publishMessage(
 			subjectTodoCompletedError,
 			errorMessage{
 				Code: subjectTodoCompletedError,
 			},
 		)
+
 		return
 	}
 
