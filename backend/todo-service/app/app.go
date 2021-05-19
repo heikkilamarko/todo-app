@@ -27,11 +27,6 @@ type App struct {
 	js     nats.JetStreamContext
 }
 
-// New func
-func New(c *config.Config, l *zerolog.Logger) *App {
-	return &App{config: c, logger: l}
-}
-
 // Run method
 func (a *App) Run() {
 
