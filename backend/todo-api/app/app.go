@@ -32,13 +32,11 @@ type App struct {
 	server *http.Server
 }
 
-// New func
-func New(c *config.Config, l *zerolog.Logger) *App {
-	return &App{config: c, logger: l}
-}
-
 // Run method
 func (a *App) Run() {
+
+	a.loadConfig()
+	a.initLogger()
 
 	a.logInfo("application is starting up...")
 
@@ -64,6 +62,28 @@ func (a *App) Run() {
 	}
 
 	a.logInfo("application is shut down")
+}
+
+func (a *App) loadConfig() {
+	a.config = config.Load()
+}
+
+func (a *App) initLogger() {
+
+	level, err := zerolog.ParseLevel(a.config.LogLevel)
+	if err != nil {
+		level = zerolog.WarnLevel
+	}
+
+	zerolog.SetGlobalLevel(level)
+
+	logger := zerolog.New(os.Stderr).
+		With().
+		Timestamp().
+		Str("app", a.config.App).
+		Logger()
+
+	a.logger = &logger
 }
 
 func (a *App) initDB(ctx context.Context) error {
@@ -121,7 +141,6 @@ func (a *App) initRouter() {
 		middleware.Logger(a.logger),
 		middleware.RequestLogger(),
 		middleware.ErrorRecovery(),
-		middleware.Timeout(a.config.RequestTimeout),
 	)
 
 	router.NotFoundHandler = http.HandlerFunc(middleware.NotFoundHandler)
@@ -144,22 +163,19 @@ func (a *App) registerRoutes() {
 }
 
 func (a *App) initServer() {
-	server := &http.Server{
+
+	a.server = &http.Server{
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
 		Addr:         a.config.Address,
 		Handler:      a.router,
 	}
-
-	a.server = server
 }
 
 func (a *App) serve(ctx context.Context) error {
 
-	var (
-		e = make(chan error)
-	)
+	errChan := make(chan error)
 
 	go func() {
 		<-ctx.Done()
@@ -173,7 +189,7 @@ func (a *App) serve(ctx context.Context) error {
 		_ = a.nc.Drain()
 		_ = a.db.Close()
 
-		e <- nil
+		errChan <- nil
 	}()
 
 	a.logInfo("application is running at %s", a.config.Address)
@@ -182,7 +198,7 @@ func (a *App) serve(ctx context.Context) error {
 		return err
 	}
 
-	return <-e
+	return <-errChan
 }
 
 func (a *App) logInfo(msg string, v ...interface{}) {

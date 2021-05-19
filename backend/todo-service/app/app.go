@@ -35,6 +35,9 @@ func New(c *config.Config, l *zerolog.Logger) *App {
 // Run method
 func (a *App) Run() {
 
+	a.loadConfig()
+	a.initLogger()
+
 	a.logInfo("application is starting up...")
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
@@ -57,6 +60,28 @@ func (a *App) Run() {
 	}
 
 	a.logInfo("application is shut down")
+}
+
+func (a *App) loadConfig() {
+	a.config = config.Load()
+}
+
+func (a *App) initLogger() {
+
+	level, err := zerolog.ParseLevel(a.config.LogLevel)
+	if err != nil {
+		level = zerolog.WarnLevel
+	}
+
+	zerolog.SetGlobalLevel(level)
+
+	logger := zerolog.New(os.Stderr).
+		With().
+		Timestamp().
+		Str("app", a.config.App).
+		Logger()
+
+	a.logger = &logger
 }
 
 func (a *App) initDB(ctx context.Context) error {
@@ -119,9 +144,7 @@ func (a *App) registerRoutes(ctx context.Context) error {
 
 func (a *App) serve(ctx context.Context) error {
 
-	var (
-		err = make(chan error)
-	)
+	errChan := make(chan error)
 
 	go func() {
 		<-ctx.Done()
@@ -131,12 +154,12 @@ func (a *App) serve(ctx context.Context) error {
 		_ = a.nc.Drain()
 		_ = a.db.Close()
 
-		err <- nil
+		errChan <- nil
 	}()
 
 	a.logInfo("application is running")
 
-	return <-err
+	return <-errChan
 }
 
 func (a *App) logInfo(msg string, v ...interface{}) {

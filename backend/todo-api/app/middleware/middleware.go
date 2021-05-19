@@ -2,7 +2,6 @@
 package middleware
 
 import (
-	"context"
 	"net/http"
 	"time"
 	"todo-api/app/utils"
@@ -44,31 +43,6 @@ func ErrorRecovery() func(next http.Handler) http.Handler {
 					utils.WriteInternalError(w, nil)
 				}
 			}()
-			next.ServeHTTP(w, r)
-		})
-	}
-}
-
-// APIKey middleware
-func APIKey(apiKey, headerKey string) func(next http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if ak := r.Header.Get(headerKey); ak != apiKey {
-				utils.WriteUnauthorized(w, nil)
-				return
-			}
-			next.ServeHTTP(w, r)
-		})
-	}
-}
-
-// Timeout middleware
-func Timeout(duration time.Duration) func(next http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			ctx, cancel := context.WithTimeout(r.Context(), duration)
-			defer cancel()
-			r = r.WithContext(ctx)
 			next.ServeHTTP(w, r)
 		})
 	}
