@@ -33,7 +33,7 @@ func parseGetTodosRequest(r *http.Request) (*getTodosQuery, error) {
 	offset := 0
 	limit := utils.LimitMaxPageSize
 
-	var err error = nil
+	var err error
 
 	if value := r.FormValue(utils.FieldPaginationOffset); value != "" {
 		offset, err = strconv.Atoi(value)
