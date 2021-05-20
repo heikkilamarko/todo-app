@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NATS.Client;
+using NotificationService.Extensions;
 using NotificationService.Models;
 using NotificationService.Services;
 
@@ -55,17 +56,7 @@ namespace NotificationService
 
                 _logger.LogInformation("application is running");
 
-                while (!stoppingToken.IsCancellationRequested)
-                {
-                    try
-                    {
-                        await Task.Delay(5000, stoppingToken);
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
+                await stoppingToken.WaitShutdownAsync();
 
                 _logger.LogInformation("application is shutting down...");
 
