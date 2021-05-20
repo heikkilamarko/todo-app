@@ -55,7 +55,17 @@ namespace NotificationService
 
                 _logger.LogInformation("application is running");
 
-                stoppingToken.WaitHandle.WaitOne();
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        await Task.Delay(5000, stoppingToken);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
 
                 _logger.LogInformation("application is shutting down...");
 
