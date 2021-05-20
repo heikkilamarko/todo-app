@@ -55,7 +55,7 @@ namespace NotificationService
 
                 _logger.LogInformation("application is running");
 
-                WaitHandle.WaitAll(new[] {stoppingToken.WaitHandle});
+                stoppingToken.WaitHandle.WaitOne();
 
                 _logger.LogInformation("application is shutting down...");
 
