@@ -9,6 +9,7 @@
       "description": "Error code",
       "example": "todo.completed.error",
       "minLength": 1,
+      "maxLength": 100,
       "x-parser-schema-id": "<anonymous-schema-11>"
     },
     "message": {

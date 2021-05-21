@@ -92,6 +92,7 @@ components:
             description: Error code
             example: todo.completed.error
             minLength: 1
+            maxLength: 100
           message:
             description: Error message
             anyOf:
