@@ -1,31 +1,43 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "required": [
+    "todo"
+  ],
   "properties": {
     "todo": {
-      "description": "Todo",
       "type": "object",
+      "required": [
+        "name"
+      ],
       "properties": {
         "name": {
-          "description": "Todo's name",
           "type": "string",
+          "description": "Name",
+          "example": "Demo",
           "minLength": 1,
-          "maxLength": 100
+          "maxLength": 100,
+          "x-parser-schema-id": "<anonymous-schema-3>"
         },
         "description": {
+          "description": "Description",
           "anyOf": [
             {
-              "description": "Todo's description",
               "type": "string",
+              "example": "Prepare the demo",
               "minLength": 1,
-              "maxLength": 1000
+              "maxLength": 1000,
+              "x-parser-schema-id": "<anonymous-schema-5>"
             },
-            { "type": "null" }
-          ]
+            {
+              "type": "null",
+              "x-parser-schema-id": "<anonymous-schema-6>"
+            }
+          ],
+          "x-parser-schema-id": "<anonymous-schema-4>"
         }
       },
-      "required": ["name"]
+      "x-parser-schema-id": "<anonymous-schema-2>"
     }
   },
-  "required": ["todo"]
+  "x-parser-schema-id": "<anonymous-schema-1>"
 }

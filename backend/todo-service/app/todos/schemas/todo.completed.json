@@ -1,13 +1,16 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "required": [
+    "id"
+  ],
   "properties": {
     "id": {
-      "description": "Todo's ID",
       "type": "integer",
+      "description": "ID",
+      "example": 1,
       "minimum": 1,
-      "multipleOf": 1
+      "x-parser-schema-id": "<anonymous-schema-8>"
     }
   },
-  "required": ["id"]
+  "x-parser-schema-id": "<anonymous-schema-7>"
 }
