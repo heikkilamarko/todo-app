@@ -24,18 +24,29 @@ components:
     TodoCreated:
       payload:
         type: object
+        required: [name]
         properties:
           name:
             type: string
             description: Name
+            example: Demo
+            minLength: 1
+            maxLength: 100
           description:
-            type: string
             description: Description
+            anyOf:
+              - type: string
+                example: Prepare the demo
+                minLength: 1
+                maxLength: 1000
+              - type: "null"
     TodoCompleted:
       payload:
         type: object
+        required: [id]
         properties:
           id:
             type: integer
-            description: Todo ID
+            description: ID
             example: 1
+            minimum: 1

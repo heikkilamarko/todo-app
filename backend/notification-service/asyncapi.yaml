@@ -36,42 +36,67 @@ components:
     TodoCreatedOk:
       payload:
         type: object
+        required: [todo]
         properties:
-          id:
-            type: integer
-            description: Todo ID
-            example: 1
-          name:
-            type: string
-            description: Todo name
-            example: Demo
-          description:
-            type: string
-            description: Todo description
-            example: Prepare the demo
-          created_at:
-            type: string
-            description: Creation timestamp
-            example: "2021-05-01T17:30:00Z"
-          updated_at:
-            type: string
-            description: Update timestamp
-            example: "2021-05-01T18:00:00Z"
+          todo:
+            type: object
+            description: Todo
+            required: [id, name, created_at, updated_at]
+            properties:
+              id:
+                type: integer
+                description: ID
+                example: 1
+                minimum: 1
+              name:
+                type: string
+                description: Name
+                example: Demo
+                minLength: 1
+                maxLength: 100
+              description:
+                description: Description
+                anyOf:
+                  - type: string
+                    example: Prepare the demo
+                    minLength: 1
+                    maxLength: 1000
+                  - type: "null"
+              created_at:
+                type: string
+                description: Created at
+                example: "2021-05-01T17:30:00Z"
+                format: date-time
+              updated_at:
+                type: string
+                description: Updated at
+                example: "2021-05-01T18:00:00Z"
+                format: date-time
     TodoCompletedOk:
       payload:
         type: object
+        required: [id]
         properties:
           id:
             type: integer
-            description: Todo ID
+            description: ID
             example: 1
+            minimum: 1
     TodoError:
       payload:
         type: object
+        required: [code]
         properties:
           code:
             type: string
             description: Error code
+            example: todo.completed.error
+            minLength: 1
           message:
-            type: string
             description: Error message
+            anyOf:
+              - type: string
+                example: Invalid message payload
+                minLength: 1
+                maxLength: 1000
+              - type: "null"
