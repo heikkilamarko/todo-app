@@ -27,3 +27,11 @@ App: http://localhost:8000
 Grafana: http://localhost:3000
 
 MinIO: http://localhost:9000
+
+## Generating and Updating JSON Schemas
+
+```bash
+> cd tools/json-schema-generator
+> npm i
+> ./generate.sh
+```
