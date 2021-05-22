@@ -6,8 +6,8 @@ import YAML from "yaml";
 const configFile = process.argv.slice(2)[0];
 
 if (!configFile) {
-  console.error(
-    "error: You must pass a config yaml file as the only argument."
+  console.log(
+    chalk.red("error: You must pass a config file (yaml) as the only argument.")
   );
   process.exit(1);
 }

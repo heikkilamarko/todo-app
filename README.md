@@ -18,7 +18,6 @@
 ## Running the App
 
 ```bash
-# Build and run
 > docker compose up --build
 ```
 
@@ -28,7 +27,9 @@ Grafana: http://localhost:3000
 
 MinIO: http://localhost:9000
 
-## Generating and Updating JSON Schemas
+## Generating JSON Schemas
+
+The app uses JSON Schemas for message validation. Schemas are generated from [AsyncAPI](https://www.asyncapi.com/) documents.
 
 ```bash
 > cd tools/json-schema-generator
