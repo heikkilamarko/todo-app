@@ -1,27 +1,8 @@
 <script>
-  import { createTodo, showError, showInfo } from "./utils";
-
-  let name = "";
-  let description = "";
-
-  async function submit() {
-    try {
-      await createTodo({
-        name,
-        description: description || null,
-      });
-      name = "";
-      description = "";
-      showInfo("Todo successfully sent for processing");
-    } catch (e) {
-      showError(`Todo creation failed\n${e}`);
-    }
-  }
-
-  $: canSubmit = !!name;
+  import { name, description, canCreate, create } from "./stores/todoStore";
 </script>
 
-<form spellcheck="false" autocomplete="off" on:submit|preventDefault={submit}>
+<form spellcheck="false" autocomplete="off" on:submit|preventDefault={create}>
   <div class="mb-3">
     <label for="name" class="form-label"
       >Name <span class="text-danger">*</span></label
@@ -31,7 +12,7 @@
       class="form-control"
       id="name"
       placeholder="Name..."
-      bind:value={name}
+      bind:value={$name}
     />
   </div>
   <div class="mb-3">
@@ -40,10 +21,10 @@
       class="form-control"
       id="description"
       rows="3"
-      bind:value={description}
+      bind:value={$description}
     />
   </div>
-  <button type="submit" class="btn btn-success" disabled={!canSubmit}
+  <button type="submit" class="btn btn-success" disabled={!$canCreate}
     >Create</button
   >
 </form>

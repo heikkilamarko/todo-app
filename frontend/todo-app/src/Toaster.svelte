@@ -4,7 +4,7 @@
   import { backOut } from "svelte/easing";
 
   let toasts = [];
-  let timeout = 4000;
+  let timeout = 2500;
   let nextId = 0;
 
   function pushToast(message, type = "success") {

@@ -1,74 +1,29 @@
 <script>
   import { onMount } from "svelte";
-  import Toaster from "./Toaster.svelte";
   import Header from "./Header.svelte";
   import TodoForm from "./TodoForm.svelte";
   import Todos from "./Todos.svelte";
-  import { Notification } from "./constants";
-  import {
-    config,
-    getTodos,
-    getSignalRConnection,
-    toTodo,
-    showError,
-    loadConfig,
-  } from "./utils";
-
-  let todos = [];
-  let isConnected = false;
+  import Toaster from "./Toaster.svelte";
+  import { load as loadConfig } from "./stores/configStore";
+  import { load as loadTodos } from "./stores/todoStore";
+  import { connect } from "./stores/notificationStore";
 
   onMount(async () => {
     await loadConfig();
-    await load();
-
-    let connection = getSignalRConnection();
-
-    connection.onclose(() => (isConnected = false));
-    connection.onreconnecting(() => (isConnected = false));
-    connection.onreconnected(() => (isConnected = true));
-
-    connection.on(config.notificationMethodName, async (notification) => {
-      const { type, data } = notification ?? {};
-      switch (type) {
-        case Notification.TodoCreatedOk:
-        case Notification.TodoCompletedOk:
-          await load();
-          break;
-        case Notification.TodoCreatedError:
-        case Notification.TodoCompletedError:
-          showError(`ERROR: ${data.code}\n${data.message || "-"}`);
-          break;
-      }
-    });
-
-    try {
-      await connection.start();
-      isConnected = true;
-    } catch (e) {
-      showError(`Real-time connection failed\n${e}`);
-    }
-
-    async function load() {
-      try {
-        todos = await getTodos();
-      } catch (e) {
-        showError(`Todo loading failed\n${e}`);
-      }
-    }
-
-    return () => connection.stop();
+    await loadTodos();
+    return await connect();
   });
 </script>
 
 <main class="container">
-  <Header {isConnected} />
+  <Header />
 
   <section>
     <TodoForm />
   </section>
 
   <section>
-    <Todos {todos} />
+    <Todos />
   </section>
 </main>
 
