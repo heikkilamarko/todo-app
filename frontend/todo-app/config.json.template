@@ -1,0 +1,4 @@
+{
+  "apiUrl": "${VITE_PUBLIC_API_URL}",
+  "notificationMethodName": "${VITE_PUBLIC_NOTIFICATION_METHOD_NAME}"
+}

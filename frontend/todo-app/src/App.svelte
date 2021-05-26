@@ -6,17 +6,19 @@
   import Todos from "./Todos.svelte";
   import { Notification } from "./constants";
   import {
+    config,
     getTodos,
     getSignalRConnection,
     toTodo,
     showError,
-    NOTIFICATION_METHOD_NAME,
+    loadConfig,
   } from "./utils";
 
   let todos = [];
   let isConnected = false;
 
   onMount(async () => {
+    await loadConfig();
     await load();
 
     let connection = getSignalRConnection();
@@ -25,7 +27,7 @@
     connection.onreconnecting(() => (isConnected = false));
     connection.onreconnected(() => (isConnected = true));
 
-    connection.on(NOTIFICATION_METHOD_NAME, async (notification) => {
+    connection.on(config.notificationMethodName, async (notification) => {
       const { type, data } = notification ?? {};
       switch (type) {
         case Notification.TodoCreatedOk:

@@ -5,14 +5,30 @@ import {
   LogLevel,
 } from "@microsoft/signalr";
 
-const API_URL = import.meta.env.VITE_PUBLIC_API_URL;
-
-export const NOTIFICATION_METHOD_NAME = import.meta.env
-  .VITE_PUBLIC_NOTIFICATION_METHOD_NAME;
+/** @type {import("./types").Config} */
+export const config = {
+  apiUrl: null,
+  notificationMethodName: null,
+};
 
 const api = axios.create();
-// @ts-ignore
-api.defaults.baseURL = API_URL;
+
+/**
+ * Load config from server.
+ */
+export async function loadConfig() {
+  try {
+    var response = await api.get("/config.json");
+    /** @type {import("./types").Config} */
+    var c = response?.data;
+    Object.assign(config, c);
+    // @ts-ignore
+    api.defaults.baseURL = config.apiUrl;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
 
 /**
  * Get todos from server.
@@ -62,7 +78,7 @@ export async function completeTodo(id) {
  */
 export function getSignalRConnection() {
   return new HubConnectionBuilder()
-    .withUrl(`${API_URL}/push/notifications`)
+    .withUrl(`${config.apiUrl}/push/notifications`)
     .configureLogging(LogLevel.Critical)
     .withAutomaticReconnect({
       nextRetryDelayInMilliseconds: () => 5000,

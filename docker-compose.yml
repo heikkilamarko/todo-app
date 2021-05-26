@@ -5,6 +5,8 @@ services:
     build: ./frontend/todo-app
     image: todo-app
     restart: on-failure
+    env_file:
+      - ./env/todo-app.env
     ports:
       - 8000:80
     networks:

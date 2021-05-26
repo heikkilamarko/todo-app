@@ -1,3 +1,8 @@
+export interface Config {
+  apiUrl: string;
+  notificationMethodName: string;
+}
+
 export interface NewTodo {
   name: string;
   description?: string;
