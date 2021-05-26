@@ -31,11 +31,9 @@ export async function load(offset = 0, limit = 10) {
   }
 }
 
-/**
- * @param {import("../types").NewTodo} todo
- */
-export async function create(todo) {
+export async function create() {
   try {
+    /** @type {import("../types").NewTodo} */
     const todo = {
       name: get(name),
       description: get(description) || null,
