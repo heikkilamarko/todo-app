@@ -2,15 +2,15 @@ openapi: 3.0.3
 info:
   title: Todo API
   description: |
-    🔥 Browse todos
-
-    🔥 Create todos
-
-    🔥 Complete todos
+    - Browse todos
+    - Create todos
+    - Complete todos
   version: v1
 servers:
+  - url: "http://localhost:8080"
+    description: api-gateway
   - url: "http://localhost:8081"
-    description: localhost
+    description: todo-api
 tags:
   - name: Todo
 paths:
@@ -40,8 +40,8 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/NewTodo"
       responses:
-        "200":
-          description: Ok
+        "202":
+          description: The request has been accepted for processing, but the processing has not been completed.
         "400":
           $ref: "#/components/responses/Error"
         "401":
@@ -57,8 +57,8 @@ paths:
       parameters:
         - $ref: "#/components/parameters/id"
       responses:
-        "200":
-          description: Ok
+        "202":
+          description: The request has been accepted for processing, but the processing has not been completed.
         "400":
           $ref: "#/components/responses/Error"
         "401":

@@ -24,7 +24,7 @@ func (c *Controller) CompleteTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.WriteResponse(w, http.StatusOK, nil)
+	utils.WriteResponse(w, http.StatusAccepted, nil)
 }
 
 func parseCompleteTodoRequest(r *http.Request) (*completeTodoCommand, error) {

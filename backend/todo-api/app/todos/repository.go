@@ -21,7 +21,7 @@ func (r *repository) getTodos(ctx context.Context, query *getTodosQuery) ([]*tod
 
 	defer rows.Close()
 
-	var todos []*todo
+	todos := []*todo{}
 
 	for rows.Next() {
 		t := &todo{}

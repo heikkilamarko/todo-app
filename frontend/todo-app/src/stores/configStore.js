@@ -6,6 +6,10 @@ export const config = writable(null);
 export const loading = writable(false);
 
 export async function load() {
+  import.meta.env.DEV ? loadDev() : await loadProd();
+}
+
+async function loadProd() {
   try {
     loading.set(true);
     var r = await axios.get("/config.json");
@@ -14,5 +18,18 @@ export async function load() {
     showError(`config loading failed\n${e}`);
   } finally {
     loading.set(false);
+  }
+}
+
+function loadDev() {
+  try {
+    const c = {
+      apiUrl: import.meta.env.VITE_PUBLIC_API_URL,
+      notificationMethodName: import.meta.env
+        .VITE_PUBLIC_NOTIFICATION_METHOD_NAME,
+    };
+    config.set(c);
+  } catch (e) {
+    showError(`config loading failed\n${e}`);
   }
 }

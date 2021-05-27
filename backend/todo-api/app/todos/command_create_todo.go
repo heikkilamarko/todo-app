@@ -22,7 +22,7 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.WriteResponse(w, http.StatusOK, nil)
+	utils.WriteResponse(w, http.StatusAccepted, nil)
 }
 
 func parseCreateTodoRequest(r *http.Request) (*createTodoCommand, error) {
