@@ -1,22 +1,9 @@
-import {
-  HubConnection,
-  HubConnectionBuilder,
-  LogLevel,
-} from "@microsoft/signalr";
-
-/**
- * @param {string} url
- * @returns {HubConnection}
- */
-export function getSignalRConnection(url) {
-  return new HubConnectionBuilder()
-    .withUrl(url)
-    .configureLogging(LogLevel.Critical)
-    .withAutomaticReconnect({
-      nextRetryDelayInMilliseconds: () => 5000,
-    })
-    .build();
-}
+export const Notification = {
+  TodoCreatedOk: "todo.created.ok",
+  TodoCreatedError: "todo.created.error",
+  TodoCompletedOk: "todo.completed.ok",
+  TodoCompletedError: "todo.completed.error",
+};
 
 /**
  * @param {import("./types").ServerTodo} todo

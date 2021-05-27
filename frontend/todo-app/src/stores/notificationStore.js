@@ -1,6 +1,10 @@
 import { writable, get } from "svelte/store";
-import { getSignalRConnection, showError } from "../utils";
-import { Notification } from "../constants";
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  LogLevel,
+} from "@microsoft/signalr";
+import { showError, Notification } from "../common";
 import { config } from "./configStore";
 import { load } from "./todoStore";
 
@@ -9,7 +13,9 @@ export const connected = writable(false);
 export async function connect() {
   const c = get(config);
 
-  let connection = getSignalRConnection(`${c.apiUrl}/push/notifications`);
+  const url = `${c.apiUrl}/push/notifications`;
+
+  const connection = buildConnection(url);
 
   connection.onclose(() => connected.set(false));
   connection.onreconnecting(() => connected.set(false));
@@ -36,4 +42,18 @@ export async function connect() {
   } catch (e) {
     showError(`real-time connection error\n${e}`);
   }
+}
+
+/**
+ * @param {string} url
+ * @returns {HubConnection}
+ */
+function buildConnection(url) {
+  return new HubConnectionBuilder()
+    .withUrl(url)
+    .configureLogging(LogLevel.Critical)
+    .withAutomaticReconnect({
+      nextRetryDelayInMilliseconds: () => 5000,
+    })
+    .build();
 }

@@ -5,9 +5,10 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM nginx:1.19.10-alpine
+FROM nginx:1.21.0-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY config.json.template /app/
+COPY config.json.template /etc/todo-app/
+RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # RUN cat /etc/nginx/nginx.conf

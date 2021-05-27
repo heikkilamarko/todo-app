@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import axios from "axios";
-import { showError } from "../utils";
+import { showError } from "../common";
 
 export const config = writable(null);
 export const loading = writable(false);
