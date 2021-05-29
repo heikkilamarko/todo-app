@@ -4,6 +4,16 @@ import { showError, showInfo, toTodo } from "../common";
 import { config } from "./configStore";
 
 const api = axios.create();
+api.interceptors.request.use(
+  (config) => {
+    //@ts-ignore
+    config.headers["Authorization"] = `Bearer ${window.accessToken}`;
+    return config;
+  },
+  (error) => {
+    console.log(error);
+  }
+);
 
 config.subscribe((c) => {
   if (c) api.defaults.baseURL = c.apiUrl;

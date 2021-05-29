@@ -50,7 +50,10 @@ export async function connect() {
  */
 function buildConnection(url) {
   return new HubConnectionBuilder()
-    .withUrl(url)
+    .withUrl(url, {
+      //@ts-ignore
+      accessTokenFactory: () => window.accessToken,
+    })
     .configureLogging(LogLevel.Critical)
     .withAutomaticReconnect({
       nextRetryDelayInMilliseconds: () => 5000,
