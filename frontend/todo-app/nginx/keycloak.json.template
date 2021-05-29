@@ -1,0 +1,8 @@
+{
+  "realm": "${VITE_PUBLIC_AUTH_REALM}",
+  "auth-server-url": "${VITE_PUBLIC_AUTH_SERVER_URL}",
+  "ssl-required": "external",
+  "resource": "${VITE_PUBLIC_AUTH_RESOURCE}",
+  "public-client": true,
+  "confidential-port": 0
+}

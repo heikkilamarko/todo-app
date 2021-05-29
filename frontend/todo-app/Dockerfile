@@ -7,7 +7,7 @@ RUN npm run build
 
 FROM nginx:1.21.0-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY config.json.template /etc/todo-app/
+COPY nginx/ /etc/todo-app/
 RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build /app/dist /usr/share/nginx/html
 

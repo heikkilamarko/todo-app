@@ -1,8 +1,0 @@
-{
-  "realm": "myrealm",
-  "auth-server-url": "http://localhost:8002/auth/",
-  "ssl-required": "external",
-  "resource": "todo-app",
-  "public-client": true,
-  "confidential-port": 0
-}
