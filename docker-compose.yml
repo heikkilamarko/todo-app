@@ -192,6 +192,18 @@ services:
     depends_on:
       - grafana
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:13.0.1
+    restart: on-failure
+    env_file:
+      - ./env/keycloak.env
+    ports:
+      - 8002:8080
+    networks:
+      - backend
+    depends_on:
+      - db
+
 networks:
   frontend:
   backend:

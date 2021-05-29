@@ -1,3 +1,5 @@
 CREATE DATABASE todo_app;
 
+CREATE DATABASE keycloak;
+
 CREATE DATABASE grafana;
