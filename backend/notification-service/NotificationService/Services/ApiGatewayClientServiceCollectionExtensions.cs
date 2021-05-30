@@ -15,7 +15,16 @@ namespace NotificationService.Services
 
             services.Configure(setupAction);
 
-            services.AddHttpClient<ApiGatewayClient>()
+            services
+                .AddHttpClient("auth")
+                .AddTransientHttpErrorPolicy(p =>
+                    p.WaitAndRetryAsync(3, i =>
+                        TimeSpan.FromSeconds(Math.Pow(2, i))));
+
+            services
+                .AddScoped<ApiGatewayClientDelegatingHandler>()
+                .AddHttpClient<ApiGatewayClient>()
+                .AddHttpMessageHandler<ApiGatewayClientDelegatingHandler>()
                 .AddTransientHttpErrorPolicy(p =>
                     p.WaitAndRetryAsync(3, i =>
                         TimeSpan.FromSeconds(Math.Pow(2, i))));

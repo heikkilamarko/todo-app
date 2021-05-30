@@ -2,11 +2,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using ApiGateway.Hubs;
 using ApiGateway.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ApiGateway.Controllers
 {
+    [Authorize("app")]
     [ApiController]
     [Route("notifications")]
     public class NotificationsController : ControllerBase

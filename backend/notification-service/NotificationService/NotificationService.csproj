@@ -3,10 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-    <UserSecretsId>dotnet-NotificationService-0BCB8DCB-A709-42C3-A202-5755CF5464D1</UserSecretsId>
+    <UserSecretsId>690bbb23-6138-40c2-90e0-49bae0f4d4c3</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="5.1.0" />
     <PackageReference Include="JsonSchema.Net" Version="1.10.2" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.6" />
