@@ -35,10 +35,6 @@ App: http://localhost:8000
 - username: `demouser`
 - password: `demouser`
 
-Grafana: http://localhost:3000
-
-MinIO: http://localhost:9000
-
 ## Generating JSON Schemas
 
 The app uses JSON Schemas for message validation. Schemas are generated from [AsyncAPI](https://www.asyncapi.com/) documents.
