@@ -1,12 +1,11 @@
 <script>
-  import { connected } from "./stores/notificationStore";
+  import { logout } from "./auth";
+  import ConnectionBadge from "./ConnectionBadge.svelte";
 </script>
 
 <h1 class="display-3 mt-2">
-  Todo App
-  {#if $connected}
-    <span class="badge bg-success">CONNECTED</span>
-  {:else}
-    <span class="badge bg-danger">NO SIGNAL</span>
-  {/if}
+  Todo App <ConnectionBadge />
+  <button type="button" class="btn btn-danger float-end" on:click={logout}
+    ><i class="bi bi-power" /> logout</button
+  >
 </h1>

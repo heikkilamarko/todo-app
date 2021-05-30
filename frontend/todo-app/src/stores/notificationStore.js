@@ -4,6 +4,7 @@ import {
   HubConnectionBuilder,
   LogLevel,
 } from "@microsoft/signalr";
+import { accessToken } from "../auth";
 import { showError, Notification } from "../common";
 import { config } from "./configStore";
 import { load } from "./todoStore";
@@ -51,8 +52,7 @@ export async function connect() {
 function buildConnection(url) {
   return new HubConnectionBuilder()
     .withUrl(url, {
-      //@ts-ignore
-      accessTokenFactory: () => window.accessToken,
+      accessTokenFactory: () => accessToken(),
     })
     .configureLogging(LogLevel.Critical)
     .withAutomaticReconnect({

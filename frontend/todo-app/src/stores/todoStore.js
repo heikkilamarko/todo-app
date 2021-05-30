@@ -1,13 +1,14 @@
 import { derived, writable, get } from "svelte/store";
 import axios from "axios";
+import { accessToken } from "../auth";
 import { showError, showInfo, toTodo } from "../common";
 import { config } from "./configStore";
 
 const api = axios.create();
+
 api.interceptors.request.use(
   (config) => {
-    //@ts-ignore
-    config.headers["Authorization"] = `Bearer ${window.accessToken}`;
+    config.headers["Authorization"] = `Bearer ${accessToken()}`;
     return config;
   },
   (error) => {
