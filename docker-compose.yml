@@ -193,7 +193,8 @@ services:
       - grafana
 
   keycloak:
-    image: quay.io/keycloak/keycloak:13.0.1
+    build: ./backend/keycloak/docker
+    image: keycloak
     restart: on-failure
     env_file:
       - ./env/keycloak.env

@@ -1,6 +1,15 @@
 # Todo App
 
+## Application Architecture
+
 ![Todo App Architecture](doc/architecture.png)
+
+## Identity and Access Management
+
+- [Keycloak](https://www.keycloak.org/)
+  - URL: http://localhost:8002
+  - username: `admin`
+  - password: `admin`
 
 ## Monitoring Stack
 
@@ -22,6 +31,9 @@
 ```
 
 App: http://localhost:8000
+
+- username: `demouser`
+- password: `demouser`
 
 Grafana: http://localhost:3000
 
