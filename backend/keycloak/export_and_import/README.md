@@ -18,12 +18,12 @@ To export the `todo-app` realm into a JSON file:
 -Dkeycloak.migration.file=/tmp/todo-app.json
 ```
 
-2. The exported realm file: `/tmp/todo-app.json`
+2. The exported realm file (inside the container): `/tmp/todo-app.json`
 
 ## Import
 
-To import the `todo-app` realm from the JSON file, run the following command:
+To import the `todo-app` realm from a JSON file, run the following command:
 
 ```bash
-> ./import_realm.sh ../docker/todo-app.json
+> ./import_realm.sh /path/to/todo-app.json
 ```
