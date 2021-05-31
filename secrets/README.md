@@ -9,5 +9,8 @@ This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://
 ## Decrypting Secrets
 
 ```bash
+# Create the output directory
+> mkdir ../env
+# Decrypt the secrets
 > ./decrypt_env.sh env.enc ../env
 ```
