@@ -364,6 +364,8 @@ FodyWeavers.xsd
 
 dist
 
+env
+
 .idea
 .vscode
 
