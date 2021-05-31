@@ -4,6 +4,12 @@
 
 ![Todo App Architecture](doc/architecture.png)
 
+## Secrets Management
+
+This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://github.com/mozilla/sops#encrypting-using-age) for managing secrets.
+
+See [secrets](secrets/) for details.
+
 ## Identity and Access Management
 
 - [Keycloak](https://www.keycloak.org/)
@@ -26,6 +32,8 @@
 
 ## Running the App
 
+Before running the below command, make sure you have the unencrypted secrets in the `/env` directory. See [secrets](secrets/) for details.
+
 ```bash
 > docker compose up --build
 ```
@@ -44,9 +52,3 @@ The app uses JSON Schemas for message validation. Schemas are generated from [As
 > npm i
 > ./generate.sh
 ```
-
-## Secrets Management
-
-This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://github.com/mozilla/sops#encrypting-using-age) for managing secrets.
-
-See [/secrets](secrets/) for details.
