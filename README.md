@@ -49,4 +49,4 @@ The app uses JSON Schemas for message validation. Schemas are generated from [As
 
 This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://github.com/mozilla/sops#encrypting-using-age) for managing secrets.
 
-See [/secrets](secrets/README.md) for details.
+See [/secrets](secrets/) for details.
