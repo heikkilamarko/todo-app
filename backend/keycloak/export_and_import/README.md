@@ -1,4 +1,4 @@
-# Export and Inport
+# Export and Import
 
 [Keycloak docs](https://www.keycloak.org/docs/latest/server_admin/index.html#_export_import)
 
