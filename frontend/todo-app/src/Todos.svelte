@@ -4,7 +4,5 @@
 </script>
 
 {#each $todos as todo (todo.id)}
-  <div>
-    <Todo {todo} on:click={() => complete(todo.id)} />
-  </div>
+  <Todo {todo} on:click={() => complete(todo.id)} />
 {/each}
