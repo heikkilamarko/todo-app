@@ -7,8 +7,9 @@ import { config } from "./configStore";
 const api = axios.create();
 
 api.interceptors.request.use(
-  (config) => {
-    config.headers["Authorization"] = `Bearer ${accessToken()}`;
+  async (config) => {
+    const token = await accessToken();
+    config.headers["Authorization"] = `Bearer ${token}`;
     return config;
   },
   (error) => {

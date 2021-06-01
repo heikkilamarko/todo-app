@@ -6,7 +6,10 @@ const keycloak = new Keycloak();
  */
 export async function initAuth(cb) {
   try {
-    const isAuthenticated = await keycloak.init({ pkceMethod: "S256" });
+    const isAuthenticated = await keycloak.init({
+      pkceMethod: "S256",
+      // enableLogging: true,
+    });
     if (!isAuthenticated) {
       keycloak.login();
     } else {
@@ -18,10 +21,15 @@ export async function initAuth(cb) {
 }
 
 /**
- * @returns {string} Access Token
+ * @returns {Promise<string>} Access Token
  */
-export function accessToken() {
-  return keycloak.token;
+export async function accessToken() {
+  try {
+    await keycloak.updateToken();
+    return keycloak.token;
+  } catch (error) {
+    keycloak.login();
+  }
 }
 
 export function logout() {
