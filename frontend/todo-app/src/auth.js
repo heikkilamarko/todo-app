@@ -11,7 +11,7 @@ export async function initAuth(cb) {
       // enableLogging: true,
     });
     if (!isAuthenticated) {
-      keycloak.login();
+      await keycloak.login();
     } else {
       cb();
     }
@@ -28,10 +28,13 @@ export async function accessToken() {
     await keycloak.updateToken();
     return keycloak.token;
   } catch (error) {
-    keycloak.login();
+    await keycloak.login();
   }
 }
 
-export function logout() {
-  keycloak.logout();
+/**
+ * @returns {Promise}
+ */
+export async function logout() {
+  await keycloak.logout();
 }
