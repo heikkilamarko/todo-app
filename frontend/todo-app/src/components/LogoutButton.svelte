@@ -1,5 +1,5 @@
 <script>
-  import { logout } from "./auth";
+  import { logout } from "../shared/auth";
 </script>
 
 <button

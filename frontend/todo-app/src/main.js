@@ -1,5 +1,5 @@
-import { initAuth } from "./auth";
-import App from "./App.svelte";
+import { initAuth } from "./shared/auth";
+import App from "./components/App.svelte";
 
 initAuth(
   () =>

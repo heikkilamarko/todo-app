@@ -1,25 +1,11 @@
 import { derived, writable, get } from "svelte/store";
-import axios from "axios";
-import { accessToken } from "../auth";
-import { showError, showInfo, toTodo } from "../common";
-import { config } from "./configStore";
+import axios, { AxiosInstance } from "axios";
+import { config } from "../shared/config";
+import { accessToken } from "../shared/auth";
+import { showInfo, showError, toTodo } from "../shared/utils";
 
-const api = axios.create();
-
-api.interceptors.request.use(
-  async (config) => {
-    const token = await accessToken();
-    config.headers["Authorization"] = `Bearer ${token}`;
-    return config;
-  },
-  (error) => {
-    console.log(error);
-  }
-);
-
-config.subscribe((c) => {
-  if (c) api.defaults.baseURL = c.apiUrl;
-});
+/** @type {AxiosInstance} */
+let _api;
 
 export const todos = writable([]);
 export const name = writable("");
@@ -34,7 +20,7 @@ export const canCreate = derived(name, ($name) => !!$name);
 export async function load(offset = 0, limit = 10) {
   try {
     loading.set(true);
-    var r = await api.get(`/todos?offset=${offset}&limit=${limit}`);
+    const r = await api().get(`/todos?offset=${offset}&limit=${limit}`);
     todos.set((r.data.data ?? []).map(toTodo));
   } catch (e) {
     showError(`todo loading failed\n${e}`);
@@ -51,7 +37,7 @@ export async function create() {
       description: get(description) || null,
     };
     loading.set(true);
-    await api.post("/todos", todo);
+    await api().post("/todos", todo);
     name.set("");
     description.set("");
     showInfo("todo create job started");
@@ -68,11 +54,35 @@ export async function create() {
 export async function complete(id) {
   try {
     loading.set(true);
-    await api.post(`/todos/${id}/complete`);
+    await api().post(`/todos/${id}/complete`);
     showInfo("todo complete job started");
   } catch (e) {
     showError(`todo complete job failed\n${e}`);
   } finally {
     loading.set(false);
   }
+}
+
+/**
+ * @returns {AxiosInstance}
+ */
+function api() {
+  if (_api) return _api;
+
+  _api = axios.create();
+
+  _api.defaults.baseURL = config.apiUrl;
+
+  _api.interceptors.request.use(
+    async (req) => {
+      const token = await accessToken();
+      req.headers["Authorization"] = `Bearer ${token}`;
+      return req;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+
+  return _api;
 }

@@ -1,20 +1,18 @@
-import { writable, get } from "svelte/store";
+import { writable } from "svelte/store";
 import {
   HubConnection,
   HubConnectionBuilder,
   LogLevel,
 } from "@microsoft/signalr";
-import { accessToken } from "../auth";
-import { showError, Notification } from "../common";
-import { config } from "./configStore";
+import { config } from "../shared/config";
+import { accessToken } from "../shared/auth";
+import { showError, Notification } from "../shared/utils";
 import { load } from "./todoStore";
 
 export const connected = writable(false);
 
 export async function connect() {
-  const c = get(config);
-
-  const url = `${c.apiUrl}/push/notifications`;
+  const url = `${config.apiUrl}/push/notifications`;
 
   const connection = buildConnection(url);
 
@@ -22,7 +20,7 @@ export async function connect() {
   connection.onreconnecting(() => connected.set(false));
   connection.onreconnected(() => connected.set(true));
 
-  connection.on(c.notificationMethodName, async (notification) => {
+  connection.on(config.notificationMethodName, async (notification) => {
     const { type, data } = notification ?? {};
     switch (type) {
       case Notification.TodoCreatedOk:

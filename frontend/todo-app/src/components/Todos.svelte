@@ -1,6 +1,6 @@
 <script>
   import Todo from "./Todo.svelte";
-  import { todos, complete } from "./stores/todoStore";
+  import { todos, complete } from "../stores/todoStore";
 </script>
 
 {#each $todos as todo (todo.id)}

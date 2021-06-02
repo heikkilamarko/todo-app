@@ -1,5 +1,5 @@
 <script>
-  import { name, description, canCreate, create } from "./stores/todoStore";
+  import { name, description, canCreate, create } from "../stores/todoStore";
 </script>
 
 <form spellcheck="false" autocomplete="off" on:submit|preventDefault={create}>

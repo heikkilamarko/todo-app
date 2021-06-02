@@ -5,9 +5,9 @@
   import Todos from "./Todos.svelte";
   import LogoutButton from "./LogoutButton.svelte";
   import Toaster from "./Toaster.svelte";
-  import { load as loadConfig } from "./stores/configStore";
-  import { load as loadTodos } from "./stores/todoStore";
-  import { connect } from "./stores/notificationStore";
+  import { load as loadConfig } from "../shared/config";
+  import { load as loadTodos } from "../stores/todoStore";
+  import { connect } from "../stores/notificationStore";
 
   let disconnect = null;
 

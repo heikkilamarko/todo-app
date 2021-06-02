@@ -1,5 +1,5 @@
 <script>
-  import { connected } from "./stores/notificationStore";
+  import { connected } from "../stores/notificationStore";
 </script>
 
 {#if $connected}

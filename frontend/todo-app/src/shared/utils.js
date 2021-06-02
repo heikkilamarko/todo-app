@@ -6,8 +6,8 @@ export const Notification = {
 };
 
 /**
- * @param {import("./types").ServerTodo} todo
- * @returns {import("./types").Todo}
+ * @param {import("../types").ServerTodo} todo
+ * @returns {import("../types").Todo}
  */
 export function toTodo(todo) {
   return {
