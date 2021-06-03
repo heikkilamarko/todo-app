@@ -43,12 +43,8 @@ App: http://localhost:8000
 - username: `demouser`
 - password: `demouser`
 
-## Generating JSON Schemas
+## Tools
 
-The app uses JSON Schemas for message validation. Schemas are generated from [AsyncAPI](https://www.asyncapi.com/) documents.
+### JSON Schema Generator
 
-```bash
-> cd tools/json-schema-generator
-> npm i
-> ./generate.sh
-```
+The app uses [JSON Schema](https://json-schema.org/) for message validation. See [json-schema-generator](tools/json-schema-generator) for details.

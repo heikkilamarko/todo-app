@@ -1,3 +1,3 @@
 #!/bin/bash
 
-node index.js config.yaml
+npm i && node index.js config.yaml
