@@ -6,20 +6,20 @@ USER=$GF_USER:$GF_PASSWORD
 
 curl \
   -u $USER \
-  -d "@datasources/loki.json" \
+  -d "$(envsubst < datasources/loki.json)" \
   -H "Content-Type: application/json" \
-  -X POST http://grafana:3000/api/datasources
+  -X POST $GF_URL/api/datasources
 
 curl \
   -u $USER \
-  -d "@datasources/postgres.json" \
+  -d "$(envsubst < datasources/postgres.json)" \
   -H "Content-Type: application/json" \
-  -X POST http://grafana:3000/api/datasources
+  -X POST $GF_URL/api/datasources
 
 # dashboards
 
 curl \
   -u $USER \
-  -d "@dashboards/demo.json" \
+  -d "$(envsubst < dashboards/demo.json)" \
   -H "Content-Type: application/json" \
-  -X POST http://grafana:3000/api/dashboards/db
+  -X POST $GF_URL/api/dashboards/db
