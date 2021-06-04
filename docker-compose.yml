@@ -145,7 +145,7 @@ services:
     image: loki
     restart: on-failure
     env_file:
-      - ./env/minio.env
+      - ./env/loki.env
     ports:
       - "3100:3100"
     networks:
