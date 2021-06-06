@@ -1,20 +1,23 @@
-//@ts-ignore
-const keycloak = new Keycloak();
+import Keycloak from "keycloak-js";
+import { config } from "./config";
+
+/** @type {Keycloak.KeycloakInstance} */
+let keycloak;
 
 /**
- * @param {Function} cb
+ * @returns {Promise<boolean>}
  */
-export async function initAuth(cb) {
+export async function init() {
   try {
+    keycloak = Keycloak(config.auth);
     const isAuthenticated = await keycloak.init({
       pkceMethod: "S256",
       // enableLogging: true,
     });
     if (!isAuthenticated) {
       await keycloak.login();
-    } else {
-      cb();
     }
+    return isAuthenticated;
   } catch (error) {
     console.log(error);
   }
@@ -25,7 +28,7 @@ export async function initAuth(cb) {
  */
 export async function accessToken() {
   try {
-    await keycloak.updateToken();
+    await keycloak.updateToken(null);
     return keycloak.token;
   } catch (error) {
     await keycloak.login();

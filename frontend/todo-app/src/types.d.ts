@@ -1,6 +1,7 @@
 export interface Config {
   apiUrl: string;
-  notificationMethodName: string;
+  notificationMethod: string;
+  auth: Keycloak.KeycloakConfig;
 }
 
 export interface NewTodo {

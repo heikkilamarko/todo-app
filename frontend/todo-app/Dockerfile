@@ -6,6 +6,8 @@ COPY . .
 RUN npm run build
 
 FROM nginx:1.21.0-alpine
+ENV NGINX_ENVSUBST_TEMPLATE_DIR=/etc/todo-app
+ENV NGINX_ENVSUBST_OUTPUT_DIR=/usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY nginx/ /etc/todo-app/
 RUN rm -rf /usr/share/nginx/html/*

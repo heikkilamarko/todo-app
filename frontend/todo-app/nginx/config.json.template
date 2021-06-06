@@ -1,4 +1,9 @@
 {
   "apiUrl": "${VITE_PUBLIC_API_URL}",
-  "notificationMethodName": "${VITE_PUBLIC_NOTIFICATION_METHOD_NAME}"
+  "notificationMethod": "${VITE_PUBLIC_NOTIFICATION_METHOD}",
+  "auth": {
+    "url": "${VITE_PUBLIC_AUTH_URL}",
+    "realm": "${VITE_PUBLIC_AUTH_REALM}",
+    "clientId": "${VITE_PUBLIC_AUTH_CLIENT_ID}"
+  }
 }

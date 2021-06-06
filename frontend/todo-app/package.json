@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@microsoft/signalr": "5.0.6",
-    "axios": "0.21.1"
+    "axios": "0.21.1",
+    "keycloak-js": "13.0.1"
   }
 }

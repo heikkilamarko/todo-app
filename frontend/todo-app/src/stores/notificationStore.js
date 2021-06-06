@@ -20,7 +20,7 @@ export async function connect() {
   connection.onreconnecting(() => connected.set(false));
   connection.onreconnected(() => connected.set(true));
 
-  connection.on(config.notificationMethodName, async (notification) => {
+  connection.on(config.notificationMethod, async (notification) => {
     const { type, data } = notification ?? {};
     switch (type) {
       case Notification.TodoCreatedOk:

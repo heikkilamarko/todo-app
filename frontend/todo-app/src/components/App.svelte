@@ -5,15 +5,13 @@
   import Todos from "./Todos.svelte";
   import LogoutButton from "./LogoutButton.svelte";
   import Toaster from "./Toaster.svelte";
-  import { load as loadConfig } from "../shared/config";
-  import { load as loadTodos } from "../stores/todoStore";
+  import { load } from "../stores/todoStore";
   import { connect } from "../stores/notificationStore";
 
   let disconnect = null;
 
   onMount(async () => {
-    await loadConfig();
-    await loadTodos();
+    await load();
     disconnect = await connect();
   });
 

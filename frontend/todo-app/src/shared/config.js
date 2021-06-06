@@ -4,7 +4,8 @@ import { showError } from "./utils";
 /** @type {import("../types").Config} */
 export const config = {
   apiUrl: null,
-  notificationMethodName: null,
+  notificationMethod: null,
+  auth: null,
 };
 
 export async function load() {
@@ -23,7 +24,11 @@ async function loadProd() {
 function loadDev() {
   Object.assign(config, {
     apiUrl: import.meta.env.VITE_PUBLIC_API_URL,
-    notificationMethodName: import.meta.env
-      .VITE_PUBLIC_NOTIFICATION_METHOD_NAME,
+    notificationMethod: import.meta.env.VITE_PUBLIC_NOTIFICATION_METHOD,
+    auth: {
+      url: import.meta.env.VITE_PUBLIC_AUTH_URL,
+      realm: import.meta.env.VITE_PUBLIC_AUTH_REALM,
+      clientId: import.meta.env.VITE_PUBLIC_AUTH_CLIENT_ID,
+    },
   });
 }
