@@ -24,7 +24,9 @@
       bind:value={$description}
     />
   </div>
-  <button type="submit" class="btn btn-success" disabled={!$canCreate}
-    >Create</button
+  <button
+    type="submit"
+    class="btn btn-success rounded-pill px-3"
+    disabled={!$canCreate}><i class="bi bi-plus-lg" /> Create</button
   >
 </form>

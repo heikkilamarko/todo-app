@@ -1,5 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
+  import ConnectionBadge from "./ConnectionBadge.svelte";
   import Header from "./Header.svelte";
   import TodoForm from "./TodoForm.svelte";
   import Todos from "./Todos.svelte";
@@ -19,6 +20,7 @@
 </script>
 
 <main class="container position-relative">
+  <ConnectionBadge />
   <Header />
   <TodoForm />
   <Todos />

@@ -12,8 +12,10 @@
   <h1 class="display-6">{todo.name}</h1>
   <p class="text-muted">{todo.created_at.toLocaleString()}</p>
   <p class="pre">{todo.description || "-"}</p>
-  <button type="button" class="btn btn-outline-success" on:click
-    >Complete</button
+  <button
+    type="button"
+    class="btn btn-outline-success rounded-pill px-3"
+    on:click><i class="bi bi-check-lg" /> Complete</button
   >
 </div>
 

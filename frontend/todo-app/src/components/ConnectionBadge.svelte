@@ -3,7 +3,7 @@
 </script>
 
 {#if $connected}
-  <span class="badge rounded-pill bg-success">CONNECTED</span>
+  <span class="text-success fw-bold">CONNECTED</span>
 {:else}
-  <span class="badge rounded-pill bg-danger">NO SIGNAL</span>
+  <span class="text-danger fw-bold">NO SIGNAL</span>
 {/if}
