@@ -13,8 +13,8 @@ echo "Please type your Keycloak info below"
 read -p  "  url: "      KEYCLOAK_URL
 read -p  "  username: " KEYCLOAK_USER
 read -sp "  password: " KEYCLOAK_PASSWORD
-echo -e "\n\nImporting realm...\n\n"
 
+echo -e "\n\nImporting realm...\n\n"
 
 # get access token
 
