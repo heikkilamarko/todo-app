@@ -135,6 +135,7 @@ services:
     restart: on-failure
     env_file:
       - ./env/minio.env
+      - ./env/minio-migrate.env
     networks:
       - monitor
     depends_on:
@@ -157,6 +158,8 @@ services:
     build: ./monitor/promtail
     image: promtail
     restart: on-failure
+    env_file:
+      - ./env/promtail.env
     volumes:
       - promtail:/tmp/promtail
       - /var/lib/docker/containers:/var/lib/docker/containers
