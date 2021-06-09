@@ -8,9 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="5.1.0" />
-    <PackageReference Include="JsonSchema.Net" Version="1.10.2" />
+    <PackageReference Include="JsonSchema.Net" Version="1.10.3" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.6" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.7" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="5.0.1" />
     <PackageReference Include="NATS.Client" Version="0.12.0" />
