@@ -5,12 +5,16 @@ import { init as initAuth } from "./shared/auth";
 import App from "./components/App.svelte";
 
 async function bootstrap() {
-  await loadConfig();
-  const isAuthenticated = await initAuth();
-  isAuthenticated &&
-    new App({
-      target: document.getElementById("app"),
-    });
+  try {
+    await loadConfig();
+    const isAuthenticated = await initAuth();
+    isAuthenticated &&
+      new App({
+        target: document.getElementById("app"),
+      });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 bootstrap();

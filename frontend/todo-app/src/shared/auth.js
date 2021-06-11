@@ -20,6 +20,7 @@ export async function init() {
     return isAuthenticated;
   } catch (error) {
     console.log(error);
+    throw new Error("auth init failed");
   }
 }
 

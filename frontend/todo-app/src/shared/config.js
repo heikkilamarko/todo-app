@@ -1,5 +1,4 @@
 import axios from "axios";
-import { showError } from "./utils";
 
 /** @type {import("../types").Config} */
 export const config = {
@@ -12,7 +11,8 @@ export async function load() {
   try {
     import.meta.env.DEV ? loadDev() : await loadProd();
   } catch (error) {
-    showError(`config loading failed\n${error}`);
+    console.log(error);
+    throw new Error("config loading failed");
   }
 }
 
