@@ -14,7 +14,9 @@ export async function init() {
       pkceMethod: "S256",
       // enableLogging: true,
     });
-    if (!isAuthenticated) {
+    if (isAuthenticated) {
+      await keycloak.loadUserInfo();
+    } else {
       await keycloak.login();
     }
     return isAuthenticated;
@@ -41,4 +43,12 @@ export async function accessToken() {
  */
 export async function logout() {
   await keycloak.logout();
+}
+
+/**
+ * @returns {string}
+ */
+export function userName() {
+  // @ts-ignore
+  return keycloak.userInfo?.name ?? "<unknown user>";
 }
