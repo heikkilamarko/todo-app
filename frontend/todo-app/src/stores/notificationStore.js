@@ -6,7 +6,8 @@ import {
 } from "@microsoft/signalr";
 import { config } from "../shared/config";
 import { accessToken } from "../shared/auth";
-import { showError, Notification } from "../shared/utils";
+import { Notification } from "../shared/utils";
+import { showError } from "./toasterStore";
 import { load } from "./todoStore";
 
 export const connected = writable(false);

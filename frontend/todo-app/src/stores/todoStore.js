@@ -2,7 +2,8 @@ import { derived, writable, get } from "svelte/store";
 import axios, { AxiosInstance } from "axios";
 import { config } from "../shared/config";
 import { accessToken } from "../shared/auth";
-import { showInfo, showError, toTodo } from "../shared/utils";
+import { toTodo } from "../shared/utils";
+import { showInfo, showError } from "./toasterStore";
 
 /** @type {AxiosInstance} */
 let _api;

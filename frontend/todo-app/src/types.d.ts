@@ -4,6 +4,12 @@ export interface Config {
   auth: Keycloak.KeycloakConfig;
 }
 
+export interface Toast {
+  id: number;
+  type: string;
+  message: string;
+}
+
 export interface NewTodo {
   name: string;
   description?: string;

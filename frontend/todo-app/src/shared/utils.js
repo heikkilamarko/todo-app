@@ -16,19 +16,3 @@ export function toTodo(todo) {
     updated_at: new Date(todo.updated_at),
   };
 }
-
-/**
- * @param {string} message
- */
-export function showInfo(message) {
-  // @ts-ignore
-  window.pushToast(message, "success");
-}
-
-/**
- * @param {string} message
- */
-export function showError(message) {
-  // @ts-ignore
-  window.pushToast(message, "danger");
-}
