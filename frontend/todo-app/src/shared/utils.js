@@ -1,13 +1,6 @@
-export const Notification = {
-  TodoCreatedOk: "todo.created.ok",
-  TodoCreatedError: "todo.created.error",
-  TodoCompletedOk: "todo.completed.ok",
-  TodoCompletedError: "todo.completed.error",
-};
-
 /**
- * @param {import("../types").ServerTodo} todo
- * @returns {import("../types").Todo}
+ * @param {import("../types").ServerTodo} todo server todo
+ * @returns {import("../types").Todo} todo
  */
 export function toTodo(todo) {
   return {

@@ -8,6 +8,7 @@ import { showInfo, showError } from "./toasterStore";
 /** @type {AxiosInstance} */
 let _api;
 
+/** @type {import("svelte/store").Writable<import("../types").Todo[]>} */
 export const todos = writable([]);
 export const name = writable("");
 export const description = writable("");
@@ -15,8 +16,9 @@ export const loading = writable(false);
 export const canCreate = derived(name, ($name) => !!$name);
 
 /**
- * @param {number} offset
- * @param {number} limit
+ * Loads a page of todos from server
+ * @param {number} offset pagination offset
+ * @param {number} limit pagination limit
  */
 export async function load(offset = 0, limit = 10) {
   try {
@@ -30,6 +32,9 @@ export async function load(offset = 0, limit = 10) {
   }
 }
 
+/**
+ * Creates a new todo
+ */
 export async function create() {
   try {
     /** @type {import("../types").NewTodo} */
@@ -50,7 +55,8 @@ export async function create() {
 }
 
 /**
- * @param {number} id
+ * Completes a todo
+ * @param {number} id todo id
  */
 export async function complete(id) {
   try {
@@ -65,7 +71,7 @@ export async function complete(id) {
 }
 
 /**
- * @returns {AxiosInstance}
+ * @returns {AxiosInstance} axios instance
  */
 function api() {
   if (_api) return _api;

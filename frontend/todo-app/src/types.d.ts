@@ -6,9 +6,15 @@ export interface Config {
 
 export interface Toast {
   id: number;
-  type: string;
+  type: "success" | "danger";
   message: string;
 }
+
+export type NotificationType =
+  | "todo.created.ok"
+  | "todo.created.error"
+  | "todo.completed.ok"
+  | "todo.completed.error";
 
 export interface NewTodo {
   name: string;

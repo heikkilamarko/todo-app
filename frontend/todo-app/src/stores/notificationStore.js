@@ -6,12 +6,18 @@ import {
 } from "@microsoft/signalr";
 import { config } from "../shared/config";
 import { accessToken } from "../shared/auth";
-import { Notification } from "../shared/utils";
 import { showError } from "./toasterStore";
 import { load } from "./todoStore";
 
+/**
+ * Connection status
+ */
 export const connected = writable(false);
 
+/**
+ * Creates a real-time connection with the server
+ * @returns {Promise<() => void>} cleanup function
+ */
 export async function connect() {
   const url = `${config.apiUrl}/push/notifications`;
 
@@ -22,14 +28,15 @@ export async function connect() {
   connection.onreconnected(() => connected.set(true));
 
   connection.on(config.notificationMethod, async (notification) => {
+    /** @type {{type: import("../types").NotificationType, data: any}} */
     const { type, data } = notification ?? {};
     switch (type) {
-      case Notification.TodoCreatedOk:
-      case Notification.TodoCompletedOk:
+      case "todo.created.ok":
+      case "todo.completed.ok":
         await load();
         break;
-      case Notification.TodoCreatedError:
-      case Notification.TodoCompletedError:
+      case "todo.created.error":
+      case "todo.completed.error":
         showError(`error: ${data.code}\n${data.message || "-"}`);
         break;
     }
@@ -45,8 +52,8 @@ export async function connect() {
 }
 
 /**
- * @param {string} url
- * @returns {HubConnection}
+ * @param {string} url url
+ * @returns {HubConnection} hub connection
  */
 function buildConnection(url) {
   return new HubConnectionBuilder()

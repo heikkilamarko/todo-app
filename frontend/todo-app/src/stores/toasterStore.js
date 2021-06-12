@@ -4,25 +4,29 @@ let nextId = 0;
 
 const TIMEOUT = 2500;
 
+/** @type {import("svelte/store").Writable<import("../types").Toast[]>} */
 export const toasts = writable([]);
 
 /**
- * @param {string} message
+ * Shows an info message
+ * @param {string} message message
  */
 export function showInfo(message) {
   showToast(message, "success");
 }
 
 /**
- * @param {string} message
+ * Shows an error message
+ * @param {string} message message
  */
 export function showError(message) {
   showToast(message, "danger");
 }
 
 /**
- * @param {string} message
- * @param {"success"|"danger"} type
+ * Shows a message
+ * @param {string} message message
+ * @param {"success" | "danger"} type message type
  */
 export function showToast(message, type = "success") {
   toasts.update((t) => [
