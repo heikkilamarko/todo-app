@@ -5,5 +5,6 @@
     "url": "${VITE_PUBLIC_AUTH_URL}",
     "realm": "${VITE_PUBLIC_AUTH_REALM}",
     "clientId": "${VITE_PUBLIC_AUTH_CLIENT_ID}"
-  }
+  },
+  "profileUrl": "${VITE_PUBLIC_PROFILE_URL}"
 }

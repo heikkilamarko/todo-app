@@ -30,5 +30,6 @@ function loadDev() {
       realm: import.meta.env.VITE_PUBLIC_AUTH_REALM,
       clientId: import.meta.env.VITE_PUBLIC_AUTH_CLIENT_ID,
     },
+    profileUrl: import.meta.env.VITE_PUBLIC_PROFILE_URL,
   });
 }
