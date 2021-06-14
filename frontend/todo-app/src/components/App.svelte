@@ -4,7 +4,7 @@
   import Header from "./Header.svelte";
   import TodoForm from "./TodoForm.svelte";
   import Todos from "./Todos.svelte";
-  import UserButton from "./UserButton.svelte";
+  import AppMenu from "./AppMenu.svelte";
   import Toaster from "./Toaster.svelte";
   import { load } from "../stores/todoStore";
   import { connect } from "../stores/notificationStore";
@@ -26,6 +26,6 @@
   <Todos />
 </main>
 
-<UserButton />
+<AppMenu />
 
 <Toaster />

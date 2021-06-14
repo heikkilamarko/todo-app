@@ -7,7 +7,7 @@ export interface Config {
 
 export interface Toast {
   id: number;
-  type: "success" | "danger";
+  type: "primary" | "danger";
   message: string;
 }
 

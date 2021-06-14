@@ -12,7 +12,7 @@ export const toasts = writable([]);
  * @param {string} message message
  */
 export function showInfo(message) {
-  showToast(message, "success");
+  showToast(message, "primary");
 }
 
 /**
@@ -26,9 +26,9 @@ export function showError(message) {
 /**
  * Shows a message
  * @param {string} message message
- * @param {"success" | "danger"} type message type
+ * @param {"primary" | "danger"} type message type
  */
-export function showToast(message, type = "success") {
+export function showToast(message, type = "primary") {
   toasts.update((t) => [
     ...t,
     {

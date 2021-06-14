@@ -6,7 +6,7 @@
 <div class="btn-group position-fixed m-2 top-0 end-0">
   <button
     type="button"
-    class="btn btn-outline-success dropdown-toggle rounded-pill px-3"
+    class="btn btn-outline-primary dropdown-toggle rounded-pill px-3"
     data-bs-toggle="dropdown"
     aria-expanded="false"
   >
@@ -16,13 +16,19 @@
   <ul class="dropdown-menu">
     <li>
       <a class="dropdown-item" href={config.profileUrl} target="_blank"
-        ><i class="bi bi-person text-success" /> Profile</a
+        ><i class="bi bi-person text-primary" /> Profile</a
       >
     </li>
-    <li><hr class="dropdown-divider" /></li>
     <li>
       <a class="dropdown-item" href="/" on:click|preventDefault={logout}
-        ><i class="bi bi-power text-success" /> Logout</a
+        ><i class="bi bi-power text-primary" /> Logout</a
+      >
+    </li>
+    <li>
+      <a
+        class="dropdown-item"
+        href="https://github.com/heikkilamarko/todo-app"
+        target="_blank"><i class="bi bi-github text-primary" /> GitHub</a
       >
     </li>
   </ul>
