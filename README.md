@@ -1,5 +1,7 @@
 # Todo App
 
+![Todo App Architecture](doc/todo-app.png)
+
 ## Application Architecture
 
 ![Todo App Architecture](doc/architecture.png)
