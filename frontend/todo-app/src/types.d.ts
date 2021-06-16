@@ -37,3 +37,18 @@ export interface Todo {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface GetTodosRequest {
+  offset: number;
+  limit: number;
+}
+
+export interface GetTodosResponse {
+  meta: GetTodosResponseMeta;
+  data: ServerTodo[];
+}
+
+export interface GetTodosResponseMeta {
+  offset: number;
+  limit: number;
+}

@@ -8,25 +8,22 @@ const TIMEOUT = 2500;
 export const toasts = writable([]);
 
 /**
- * Shows an info message
- * @param {string} message message
+ * @param {string} message
  */
 export function showInfo(message) {
   showToast(message, "primary");
 }
 
 /**
- * Shows an error message
- * @param {string} message message
+ * @param {string} message
  */
 export function showError(message) {
   showToast(message, "danger");
 }
 
 /**
- * Shows a message
- * @param {string} message message
- * @param {"primary" | "danger"} type message type
+ * @param {string} message
+ * @param {"primary" | "danger"} type
  */
 export function showToast(message, type = "primary") {
   toasts.update((t) => [

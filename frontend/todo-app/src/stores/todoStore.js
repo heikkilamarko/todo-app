@@ -1,30 +1,24 @@
 import { derived, writable, get } from "svelte/store";
-import axios, { AxiosInstance } from "axios";
-import { config } from "../shared/config";
-import { accessToken } from "../shared/auth";
 import { toTodo } from "../shared/utils";
+import * as api from "../shared/api";
 import { showInfo, showError } from "./toasterStore";
-
-/** @type {AxiosInstance} */
-let _api;
 
 /** @type {import("svelte/store").Writable<import("../types").Todo[]>} */
 export const todos = writable([]);
 export const name = writable("");
 export const description = writable("");
 export const loading = writable(false);
-export const canCreate = derived(name, ($name) => !!$name);
+export const canCreateTodo = derived(name, ($name) => !!$name);
 
 /**
- * Loads a page of todos from server
- * @param {number} offset pagination offset
- * @param {number} limit pagination limit
+ * @param {number} offset
+ * @param {number} limit
  */
-export async function load(offset = 0, limit = 10) {
+export async function getTodos(offset = 0, limit = 10) {
   try {
     loading.set(true);
-    const r = await api().get(`/todos?offset=${offset}&limit=${limit}`);
-    todos.set((r.data.data ?? []).map(toTodo));
+    const { data } = await api.getTodos({ offset, limit });
+    todos.set(data.map(toTodo));
   } catch (e) {
     showError(`todo loading failed\n${e}`);
   } finally {
@@ -32,10 +26,7 @@ export async function load(offset = 0, limit = 10) {
   }
 }
 
-/**
- * Creates a new todo
- */
-export async function create() {
+export async function createTodo() {
   try {
     /** @type {import("../types").NewTodo} */
     const todo = {
@@ -43,7 +34,7 @@ export async function create() {
       description: get(description) || null,
     };
     loading.set(true);
-    await api().post("/todos", todo);
+    await api.createTodo(todo);
     name.set("");
     description.set("");
     showInfo("todo create job started");
@@ -55,41 +46,16 @@ export async function create() {
 }
 
 /**
- * Completes a todo
- * @param {number} id todo id
+ * @param {number} id
  */
-export async function complete(id) {
+export async function completeTodo(id) {
   try {
     loading.set(true);
-    await api().post(`/todos/${id}/complete`);
+    await api.completeTodo(id);
     showInfo("todo complete job started");
   } catch (e) {
     showError(`todo complete job failed\n${e}`);
   } finally {
     loading.set(false);
   }
-}
-
-/**
- * @returns {AxiosInstance} axios instance
- */
-function api() {
-  if (_api) return _api;
-
-  _api = axios.create();
-
-  _api.defaults.baseURL = config.apiUrl;
-
-  _api.interceptors.request.use(
-    async (req) => {
-      const token = await accessToken();
-      req.headers["Authorization"] = `Bearer ${token}`;
-      return req;
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
-
-  return _api;
 }

@@ -6,13 +6,13 @@
   import Todos from "./Todos.svelte";
   import AppMenu from "./AppMenu.svelte";
   import Toaster from "./Toaster.svelte";
-  import { load } from "../stores/todoStore";
+  import { getTodos } from "../stores/todoStore";
   import { connect } from "../stores/notificationStore";
 
   let disconnect = null;
 
   onMount(async () => {
-    await load();
+    await getTodos();
     disconnect = await connect();
   });
 

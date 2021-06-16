@@ -1,5 +1,10 @@
 <script>
-  import { name, description, canCreate, create } from "../stores/todoStore";
+  import {
+    name,
+    description,
+    canCreateTodo,
+    createTodo,
+  } from "../stores/todoStore";
 </script>
 
 <button
@@ -34,7 +39,7 @@
     <form
       spellcheck="false"
       autocomplete="off"
-      on:submit|preventDefault={create}
+      on:submit|preventDefault={createTodo}
     >
       <div class="mb-3">
         <label for="name" class="form-label"
@@ -60,7 +65,7 @@
       <button
         type="submit"
         class="btn btn-primary rounded-pill px-3"
-        disabled={!$canCreate}
+        disabled={!$canCreateTodo}
       >
         <i class="bi bi-plus-lg" />
         Create

@@ -7,15 +7,11 @@ import {
 import { config } from "../shared/config";
 import { accessToken } from "../shared/auth";
 import { showError } from "./toasterStore";
-import { load } from "./todoStore";
+import { getTodos } from "./todoStore";
 
-/**
- * Connection status
- */
 export const connected = writable(false);
 
 /**
- * Creates a real-time connection with the server
  * @returns {Promise<() => void>} cleanup function
  */
 export async function connect() {
@@ -33,7 +29,7 @@ export async function connect() {
     switch (type) {
       case "todo.created.ok":
       case "todo.completed.ok":
-        await load();
+        await getTodos();
         break;
       case "todo.created.error":
       case "todo.completed.error":
@@ -52,8 +48,8 @@ export async function connect() {
 }
 
 /**
- * @param {string} url url
- * @returns {HubConnection} hub connection
+ * @param {string} url
+ * @returns {HubConnection}
  */
 function buildConnection(url) {
   return new HubConnectionBuilder()
