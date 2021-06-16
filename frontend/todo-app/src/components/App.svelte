@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import ConnectionBadge from "./ConnectionBadge.svelte";
+  import ConnectionStatus from "./ConnectionStatus.svelte";
   import Header from "./Header.svelte";
   import TodoForm from "./TodoForm.svelte";
   import Todos from "./Todos.svelte";
@@ -19,8 +19,8 @@
   onDestroy(() => disconnect?.());
 </script>
 
-<main class="container position-relative">
-  <ConnectionBadge />
+<main class="container">
+  <ConnectionStatus />
   <Header />
   <TodoForm />
   <Todos />

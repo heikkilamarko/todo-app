@@ -5,6 +5,7 @@ export const config = {
   apiUrl: null,
   notificationMethod: null,
   auth: null,
+  profileUrl: null,
 };
 
 export async function load() {

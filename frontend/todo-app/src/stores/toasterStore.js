@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-let nextId = 0;
+let nextId = 1;
 
 const TIMEOUT = 2500;
 
@@ -32,7 +32,7 @@ export function showToast(message, type = "primary") {
   toasts.update((t) => [
     ...t,
     {
-      id: ++nextId,
+      id: nextId++,
       message,
       type,
     },
