@@ -1,10 +1,23 @@
 <script>
+  import { showInfo, showError } from "../stores/toasterStore";
+  import { createTodo } from "../stores/todoStore";
   import {
     name,
     description,
-    canCreateTodo,
-    createTodo,
-  } from "../stores/todoStore";
+    todo,
+    isValid,
+    reset,
+  } from "../stores/todoFormStore";
+
+  async function submit() {
+    try {
+      await createTodo($todo);
+      reset();
+      showInfo("todo create job started");
+    } catch (error) {
+      showError(`todo create job failed\n${error}`);
+    }
+  }
 </script>
 
 <button
@@ -39,7 +52,7 @@
     <form
       spellcheck="false"
       autocomplete="off"
-      on:submit|preventDefault={createTodo}
+      on:submit|preventDefault={submit}
     >
       <div class="mb-3">
         <label for="name" class="form-label"
@@ -65,7 +78,7 @@
       <button
         type="submit"
         class="btn btn-primary rounded-pill px-3"
-        disabled={!$canCreateTodo}
+        disabled={!$isValid}
       >
         <i class="bi bi-plus-lg" />
         Create

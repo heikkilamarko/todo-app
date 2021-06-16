@@ -29,7 +29,11 @@ export async function connect() {
     switch (type) {
       case "todo.created.ok":
       case "todo.completed.ok":
-        await getTodos();
+        try {
+          await getTodos();
+        } catch (error) {
+          showError(`todo loading failed\n${error}`);
+        }
         break;
       case "todo.created.error":
       case "todo.completed.error":
