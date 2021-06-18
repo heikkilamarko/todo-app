@@ -6,49 +6,48 @@
     description,
     todo,
     isValid,
+    closeOnCreate,
     reset,
   } from "../stores/todoFormStore";
+  import Offcanvas from "./Offcanvas.svelte";
+  import { off } from "bootstrap/js/dist/dom/event-handler";
+  import offcanvas from "bootstrap/js/dist/offcanvas";
+
+  let showOffcanvas = false;
 
   async function submit() {
     try {
       await createTodo($todo);
-      reset();
       showInfo("todo create job started");
+      reset();
+      if ($closeOnCreate) {
+        closeOffcanvas();
+      }
     } catch (error) {
       showError(`todo create job failed\n${error}`);
     }
+  }
+
+  function closeOffcanvas() {
+    showOffcanvas = false;
+  }
+
+  function toggleOffcanvas() {
+    showOffcanvas = !showOffcanvas;
   }
 </script>
 
 <button
   class="btn btn-primary rounded-pill px-3"
   type="button"
-  data-bs-toggle="offcanvas"
-  data-bs-target="#offcanvas-right"
-  aria-controls="offcanvas-right"
+  on:click={toggleOffcanvas}
 >
   <i class="bi bi-plus-lg" />
   New Todo
 </button>
 
-<div
-  id="offcanvas-right"
-  class="offcanvas offcanvas-end"
-  tabindex="-1"
-  data-bs-scroll="true"
-  data-bs-backdrop="false"
-  aria-labelledby="offcanvas-right-label"
->
-  <div class="offcanvas-header">
-    <h5 id="offcanvas-right-label">New Todo</h5>
-    <button
-      type="button"
-      class="btn-close text-reset"
-      data-bs-dismiss="offcanvas"
-      aria-label="Close"
-    />
-  </div>
-  <div class="offcanvas-body">
+{#if showOffcanvas}
+  <Offcanvas title="New Todo" on:close={closeOffcanvas}>
     <form
       spellcheck="false"
       autocomplete="off"
@@ -71,9 +70,22 @@
         <textarea
           class="form-control"
           id="description"
-          rows="3"
+          rows="5"
           bind:value={$description}
         />
+      </div>
+      <div class="mb-3">
+        <div class="form-check">
+          <input
+            id="close-on-save-check"
+            class="form-check-input"
+            type="checkbox"
+            bind:checked={$closeOnCreate}
+          />
+          <label class="form-check-label" for="close-on-save-check">
+            Close on Create
+          </label>
+        </div>
       </div>
       <button
         type="submit"
@@ -84,5 +96,5 @@
         Create
       </button>
     </form>
-  </div>
-</div>
+  </Offcanvas>
+{/if}
