@@ -1,6 +1,6 @@
 <script>
   import { showInfo, showError } from "../stores/toasterStore";
-  import { todos, completeTodo } from "../stores/todoStore";
+  import { todos, loading, completeTodo } from "../stores/todoStore";
   import Todo from "./Todo.svelte";
   import Empty from "./Empty.svelte";
 
@@ -17,5 +17,7 @@
 {#each $todos as todo (todo.id)}
   <Todo {todo} on:click={() => complete(todo.id)} />
 {:else}
-  <Empty />
+  {#if !$loading}
+    <Empty />
+  {/if}
 {/each}

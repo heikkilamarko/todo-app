@@ -3,6 +3,6 @@
     It seems you have nothing to do!
   </h1>
   <h2 class="display-6 text-muted">
-    ☝️ Add some todos by tapping the button above
+    ☝️ Add some todos by tapping the button above.
   </h2>
 </section>

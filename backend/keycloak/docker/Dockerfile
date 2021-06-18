@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:13.0.1
+FROM quay.io/keycloak/keycloak:14.0.0
 
 ENV KEYCLOAK_IMPORT=/todo-app.json
 

@@ -3,7 +3,7 @@ import { derived, writable } from "svelte/store";
 export const name = writable("");
 export const description = writable("");
 
-export const closeOnCreate = writable(false);
+export const closeOnCreate = writable(true);
 
 export const todo = derived([name, description], ([$name, $description]) => ({
   name: $name,
