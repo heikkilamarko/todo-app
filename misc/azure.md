@@ -4,18 +4,14 @@
 
 [Quickstart: Create a Linux virtual machine in the Azure portal](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-portal)
 
-- Linux (ubuntu 20.04)
-- Standard E2s v3 (2 vcpus, 16 GiB memory)
-
 Download the SSH key file (`ssh-key.pem`) when asked.
 
 ## Setup Networking
 
-Add inbound port rule:
+Allow:
 
-```text
-todo-app | 8000,8002,8080,3000,9000 | TCP | Any | Any | Allow
-```
+- HTTP (80)
+- SSH (22)
 
 ## Setup DNS Name
 
