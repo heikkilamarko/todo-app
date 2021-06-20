@@ -15,7 +15,7 @@ See [secrets](secrets/) for details.
 ## Identity and Access Management
 
 - [Keycloak](https://www.keycloak.org/)
-  - URL: http://localhost:8002
+  - URL: http://localhost:8081
   - username: `admin`
   - password: `admin`
 

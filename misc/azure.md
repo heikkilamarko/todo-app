@@ -10,7 +10,7 @@ Download the SSH key file (`ssh-key.pem`) when asked.
 
 Allow:
 
-- HTTP (80)
+- HTTP (80, 8080, 8081)
 - SSH (22)
 
 ## Setup DNS Name
@@ -76,7 +76,6 @@ In the above command, `VERSION` is `v3.7.1` or higher.
 ```bash
 > vim ~/todo-app/backend/keycloak/docker/todo-app.json
 # [EDIT] Replace localhost with VM_DNS_NAME
-# [EDIT] Set "sslRequired": "none"
 
 > vim ~/todo-app/env/todo-app.env
 # [EDIT] Replace localhost with VM_DNS_NAME

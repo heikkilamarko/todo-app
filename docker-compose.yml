@@ -12,13 +12,6 @@ services:
     networks:
       - frontend
 
-  swaggereditor:
-    image: swaggerapi/swagger-editor
-    ports:
-      - 8001:8080
-    networks:
-      - frontend
-
   api-gateway:
     build: ./backend/api-gateway
     image: api-gateway
@@ -36,8 +29,6 @@ services:
     restart: on-failure
     env_file:
       - ./env/todo-api.env
-    ports:
-      - 8081:8081
     networks:
       - backend
     depends_on:
@@ -147,8 +138,6 @@ services:
     restart: on-failure
     env_file:
       - ./env/loki.env
-    ports:
-      - "3100:3100"
     networks:
       - monitor
     depends_on:
@@ -202,7 +191,7 @@ services:
     env_file:
       - ./env/keycloak.env
     ports:
-      - 8002:8080
+      - 8081:8080
     networks:
       - backend
     depends_on:
