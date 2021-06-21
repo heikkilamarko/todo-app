@@ -17,20 +17,20 @@ See [secrets](secrets/) for details.
 - [Keycloak](https://www.keycloak.org/)
   - URL: http://localhost:8081
   - username: `admin`
-  - password: `admin`
+  - password: `S3c_r3t!`
 
 ## Monitoring Stack
 
 - [Grafana](https://grafana.com/oss/grafana/)
   - URL: http://localhost:3000
   - username: `admin`
-  - password: `admin`
+  - password: `S3c_r3t!`
 - [Loki](https://grafana.com/oss/loki/)
 - [Promtail](https://grafana.com/docs/loki/latest/clients/promtail/)
 - [MinIO](https://min.io/)
   - URL: http://localhost:9000
   - username: `minio`
-  - password: `minio123`
+  - password: `S3c_r3t!`
 
 ## Running the App
 
@@ -43,7 +43,7 @@ Before running the below command, make sure you have the unencrypted secrets in 
 App: http://localhost:8000
 
 - username: `demouser`
-- password: `demouser`
+- password: `S3c_r3t!`
 
 ## Tools
 
