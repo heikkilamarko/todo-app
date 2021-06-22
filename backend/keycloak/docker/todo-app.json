@@ -906,7 +906,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": ["http://localhost/*", "http://localhost:300/*"],
+      "redirectUris": ["http://localhost/*", "http://localhost:3000/*"],
       "webOrigins": ["http://localhost", "http://localhost:3000"],
       "notBefore": 0,
       "bearerOnly": false,

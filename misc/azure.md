@@ -74,9 +74,6 @@ In the above command, `VERSION` is `v3.7.1` or higher.
 3. Update configuration files.
 
 ```bash
-> vim ~/todo-app/docker-compose.yml
-# [EDIT] services/todo-app/ports: 80:80
-
 > vim ~/todo-app/backend/keycloak/docker/todo-app.json
 # [EDIT] Replace localhost with VM_DNS_NAME
 
