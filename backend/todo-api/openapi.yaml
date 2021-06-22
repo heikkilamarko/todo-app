@@ -7,10 +7,8 @@ info:
     - Complete todos
   version: v1
 servers:
-  - url: "http://localhost:8080"
-    description: api-gateway
-  - url: "http://localhost:8081"
-    description: todo-api
+  - url: "http://localhost"
+    description: dev
 tags:
   - name: Todo
 paths:
