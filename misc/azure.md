@@ -85,6 +85,9 @@ In the above command, `VERSION` is `v3.7.1` or higher.
 
 > vim ~/todo-app/env/api-gateway.env
 # [EDIT] Replace localhost with VM_DNS_NAME
+
+> vim ~/todo-app/env/grafana.env
+# [EDIT] Replace localhost with VM_DNS_NAME
 ```
 
 ## Run
