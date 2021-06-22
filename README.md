@@ -22,7 +22,7 @@ See [secrets](secrets/) for details.
 ## Monitoring Stack
 
 - [Grafana](https://grafana.com/oss/grafana/)
-  - URL: http://localhost:3000
+  - URL: http://localhost:8080/grafana
   - username: `admin`
   - password: `S3c_r3t!`
 - [Loki](https://grafana.com/oss/loki/)
