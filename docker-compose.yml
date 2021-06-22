@@ -1,17 +1,6 @@
 version: "3.9"
 
 services:
-  todo-app:
-    build: ./frontend/todo-app
-    image: todo-app
-    restart: on-failure
-    env_file:
-      - ./env/todo-app.env
-    ports:
-      - 8000:80
-    networks:
-      - frontend
-
   api-gateway:
     build: ./backend/api-gateway
     image: api-gateway
@@ -19,7 +8,16 @@ services:
     env_file:
       - ./env/api-gateway.env
     ports:
-      - 8080:80
+      - 80:80
+    networks:
+      - backend
+
+  todo-app:
+    build: ./frontend/todo-app
+    image: todo-app
+    restart: on-failure
+    env_file:
+      - ./env/todo-app.env
     networks:
       - backend
 
@@ -189,14 +187,13 @@ services:
     env_file:
       - ./env/keycloak.env
     ports:
-      - 8081:8080
+      - 8080:8080
     networks:
       - backend
     depends_on:
       - db
 
 networks:
-  frontend:
   backend:
   monitor:
 

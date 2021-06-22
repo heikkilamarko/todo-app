@@ -15,14 +15,14 @@ See [secrets](secrets/) for details.
 ## Identity and Access Management
 
 - [Keycloak](https://www.keycloak.org/)
-  - URL: http://localhost:8081
+  - URL: http://localhost:8080
   - username: `admin`
   - password: `S3c_r3t!`
 
 ## Monitoring Stack
 
 - [Grafana](https://grafana.com/oss/grafana/)
-  - URL: http://localhost:8080/grafana
+  - URL: http://localhost/grafana
   - username: `admin`
   - password: `S3c_r3t!`
 - [Loki](https://grafana.com/oss/loki/)
@@ -40,7 +40,7 @@ Before running the below command, make sure you have the unencrypted secrets in 
 > docker compose up --build
 ```
 
-App: http://localhost:8000
+App: http://localhost
 
 - username: `demouser`
 - password: `S3c_r3t!`

@@ -10,7 +10,7 @@ Download the SSH key file (`ssh-key.pem`) when asked.
 
 Allow:
 
-- HTTP (80, 8080, 8081)
+- HTTP (80, 8080)
 - SSH (22)
 
 ## Setup DNS Name
