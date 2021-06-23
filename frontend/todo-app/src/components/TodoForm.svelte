@@ -1,6 +1,6 @@
 <script>
   import { showInfo, showError } from "../stores/toasterStore";
-  import { createTodo } from "../stores/todoStore";
+  import { createTodo, loading } from "../stores/todoStore";
   import {
     name,
     description,
@@ -10,8 +10,6 @@
     reset,
   } from "../stores/todoFormStore";
   import Offcanvas from "./Offcanvas.svelte";
-  import { off } from "bootstrap/js/dist/dom/event-handler";
-  import offcanvas from "bootstrap/js/dist/offcanvas";
 
   let showOffcanvas = false;
 
@@ -35,6 +33,8 @@
   function toggleOffcanvas() {
     showOffcanvas = !showOffcanvas;
   }
+
+  $: canCreate = $isValid && !$loading;
 </script>
 
 <button
@@ -90,7 +90,7 @@
       <button
         type="submit"
         class="btn btn-primary rounded-pill px-3"
-        disabled={!$isValid}
+        disabled={!canCreate}
       >
         <i class="bi bi-plus-lg" />
         Create

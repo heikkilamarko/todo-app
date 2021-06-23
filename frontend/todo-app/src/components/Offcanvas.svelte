@@ -32,11 +32,11 @@
     }
   };
 
-  const previouslyFocused =
-    typeof document !== "undefined" && document.activeElement;
+  const previouslyFocused = document.activeElement;
 
   if (previouslyFocused) {
     onDestroy(() => {
+      //@ts-ignore
       previouslyFocused.focus();
     });
   }

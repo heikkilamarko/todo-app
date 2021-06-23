@@ -17,7 +17,6 @@
   }}
   out:fade={{
     duration: 500,
-    opacity: 0,
   }}
 >
   {toast.message}

@@ -46,8 +46,8 @@ export async function connect() {
     await connection.start();
     connected.set(true);
     return () => connection.stop();
-  } catch (e) {
-    showError(`real-time connection error\n${e}`);
+  } catch (error) {
+    showError(`real-time connection error\n${error}`);
   }
 }
 
