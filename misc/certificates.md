@@ -41,6 +41,10 @@ sudo docker run -it --rm --name certbot \
 
 Section: **Setting up TLS(SSL)**
 
+## MinIO
+
+[Docs](https://docs.min.io/docs/how-to-secure-access-to-minio-server-with-tls.html)
+
 ## Bypassing Certificate Check
 
 ⚠️ You shouldn't do this in production environments.
