@@ -6,6 +6,7 @@ export const config = {
   notificationMethod: null,
   auth: null,
   profileUrl: null,
+  dashboardUrl: null,
 };
 
 export async function load() {
@@ -32,5 +33,6 @@ function loadDev() {
       clientId: import.meta.env.VITE_PUBLIC_AUTH_CLIENT_ID,
     },
     profileUrl: import.meta.env.VITE_PUBLIC_PROFILE_URL,
+    dashboardUrl: import.meta.env.VITE_PUBLIC_DASHBOARD_URL,
   });
 }

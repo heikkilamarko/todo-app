@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 
@@ -17,6 +18,13 @@ namespace NotificationService.Services
 
             services
                 .AddHttpClient("auth")
+                .ConfigurePrimaryHttpMessageHandler(
+                    () => new HttpClientHandler
+                    {
+                        // TODO: Make this configurable.
+                        ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+                    }
+                )
                 .AddTransientHttpErrorPolicy(p =>
                     p.WaitAndRetryAsync(3, i =>
                         TimeSpan.FromSeconds(Math.Pow(2, i))));
@@ -24,6 +32,13 @@ namespace NotificationService.Services
             services
                 .AddScoped<ApiGatewayClientDelegatingHandler>()
                 .AddHttpClient<ApiGatewayClient>()
+                .ConfigurePrimaryHttpMessageHandler(
+                    () => new HttpClientHandler
+                    {
+                        // TODO: Make this configurable.
+                        ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+                    }
+                )
                 .AddHttpMessageHandler<ApiGatewayClientDelegatingHandler>()
                 .AddTransientHttpErrorPolicy(p =>
                     p.WaitAndRetryAsync(3, i =>

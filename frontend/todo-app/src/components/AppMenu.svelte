@@ -20,6 +20,11 @@
       >
     </li>
     <li>
+      <a class="dropdown-item" href={config.dashboardUrl} target="_blank"
+        ><i class="bi bi-grid text-primary" /> Dashboard</a
+      >
+    </li>
+    <li>
       <a class="dropdown-item" href="/" on:click|preventDefault={logout}
         ><i class="bi bi-power text-primary" /> Logout</a
       >

@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System.Threading.Tasks;
 using ApiGateway.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -44,6 +45,11 @@ namespace ApiGateway
                 o.Authority = Configuration["Auth:Authority"];
                 o.MetadataAddress = Configuration["Auth:MetadataAddress"];
                 o.RequireHttpsMetadata = false;
+                o.BackchannelHttpHandler = new HttpClientHandler
+                {
+                    // TODO: Make this configurable.
+                    ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+                };
                 o.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidIssuers = Configuration["Auth:ValidIssuers"].Split(",")

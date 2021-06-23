@@ -3,6 +3,7 @@ export interface Config {
   notificationMethod: string;
   auth: Keycloak.KeycloakConfig;
   profileUrl: string;
+  dashboardUrl: string;
 }
 
 export interface Toast {

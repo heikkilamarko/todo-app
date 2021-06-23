@@ -35,11 +35,21 @@ sudo docker run -it --rm --name certbot \
 }
 ```
 
+## Keycloak
+
+[Docs](https://hub.docker.com/r/jboss/keycloak/)
+
+Section: **Setting up TLS(SSL)**
+
 ## Bypassing Certificate Check
 
 ⚠️ You shouldn't do this in production environments.
 
+### .NET
+
 ```csharp
+// using System.Net.Http;
+
 services
   .AddHttpClient<MyHttpClient>()
   .ConfigurePrimaryHttpMessageHandler(
@@ -48,4 +58,18 @@ services
           ServerCertificateCustomValidationCallback = (_, _, _, _) => true
       }
   )
+```
+
+```csharp
+// using System.Net.Http;
+
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+{
+    // ...
+    o.BackchannelHttpHandler = new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+    };
+    // ...
+}
 ```
