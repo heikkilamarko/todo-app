@@ -8,16 +8,18 @@ Download the SSH key file (`ssh-key.pem`) when asked.
 
 ## Setup Networking
 
-Allow:
+`Allow`:
 
-- HTTP (80, 8080)
-- SSH (22)
+- HTTP(S): `443`, `8443`, `9000`
+- SSH: `22`
 
 ## Setup DNS Name
 
 ```text
 Public IP address > Configuration > DNS name label (VM_DNS_NAME) > Save
 ```
+
+Example: `todo-app.westeurope.cloudapp.azure.com`
 
 ## Connect to VM
 
@@ -39,6 +41,20 @@ Public IP address > Configuration > DNS name label (VM_DNS_NAME) > Save
 2. [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)
 3. [Install Docker Compose](https://docs.docker.com/compose/install/)
 
+## Prepare Certificates
+
+1. [Generate certificates](certificates.md)
+   - Domain name: `VM_DNS_NAME`
+2. Copy and rename the certificates into `/etc/todo-app/certs/`
+
+```text
+/etc/todo-app/certs/
+├── private.key
+├── public.crt
+├── tls.crt      # renamed public.crt
+└── tls.key      # renamed private.key
+```
+
 ## Install Mozilla SOPS
 
 ```bash
@@ -55,36 +71,88 @@ In the above command, `VERSION` is `v3.7.1` or higher.
 > git clone https://github.com/heikkilamarko/todo-app.git
 ```
 
-## Configure App
+## Configure Mozilla SOPS
 
-1. Copy the `age` key file.
+Copy the `age` key file.
 
 ```bash
 > mkdir -p ~/.config/sops/age
 > cp ~/todo-app/secrets/keys.txt ~/.config/sops/age/
 ```
 
-2. Prepare the `env` folder.
+## Create and Populate `env` Directory
 
 ```bash
 > mkdir ~/todo-app/env
 > ~/todo-app/secrets/decrypt_env.sh ~/todo-app/secrets/env.enc ~/todo-app/env
 ```
 
-3. Update configuration files.
+## Configure App
+
+Do the following edits:
+
+- Replace `http` -> `https`
+- Replace `localhost` -> `VM_DNS_NAME`
+- Replace port `80` -> `443`
+- Replace port `8080` -> `8443`
+
+```bash
+> vim ~/todo-app/docker-compose.yml
+```
+
+```yaml
+api-gateway:
+  # ...
+  ports:
+    - 443:443
+  volumes:
+    - /etc/todo-app/certs/:/etc/api-gateway/certs/
+  # ...
+
+minio:
+  # ...
+  volumes:
+    # ...
+    - /etc/todo-app/certs/:/root/.minio/certs/
+  # ...
+
+keycloak:
+  # ...
+  ports:
+    - 8443:8443
+  volumes:
+    - /etc/todo-app/certs/:/etc/x509/https/
+  # ...
+```
+
+```bash
+> vim ~/todo-app/backend/api-gateway/ApiGateway/appsettings.json
+```
+
+```json
+{
+  "Kestrel": {
+    "Endpoints": {
+      "Https": {
+        "Url": "https://+:443",
+        "Certificate": {
+          "Path": "/etc/api-gateway/certs/tls.crt",
+          "KeyPath": "/etc/api-gateway/certs/tls.key"
+        }
+      }
+    }
+  }
+}
+```
 
 ```bash
 > vim ~/todo-app/backend/keycloak/docker/todo-app.json
-# [EDIT] Replace localhost with VM_DNS_NAME
-
 > vim ~/todo-app/env/todo-app.env
-# [EDIT] Replace localhost with VM_DNS_NAME
-
 > vim ~/todo-app/env/api-gateway.env
-# [EDIT] Replace localhost with VM_DNS_NAME
-
+> vim ~/todo-app/env/notification-service.env
 > vim ~/todo-app/env/grafana.env
-# [EDIT] Replace localhost with VM_DNS_NAME
+> vim ~/todo-app/env/loki.env
+> vim ~/todo-app/env/minio-migrate.env
 ```
 
 ## Run
