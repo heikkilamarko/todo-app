@@ -22,8 +22,15 @@ schema_config:
 
 storage_config:
   aws:
-    s3: ${S3_URL}
+    endpoint: ${MINIO_URL}
+    bucketnames: ${MINIO_BUCKET_NAME}
+    access_key_id: ${MINIO_ACCESS_KEY}
+    secret_access_key: ${MINIO_SECRET_KEY}
+    insecure: false
+    sse_encryption: false
     s3forcepathstyle: true
+    http_config:
+      insecure_skip_verify: true
 
   boltdb_shipper:
     shared_store: aws

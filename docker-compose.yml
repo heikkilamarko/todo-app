@@ -135,6 +135,7 @@ services:
     image: loki
     restart: on-failure
     env_file:
+      - ./env/minio.env
       - ./env/loki.env
     networks:
       - monitor
