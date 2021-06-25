@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  api-gateway:
+    ports:
+      - 443:443
+    volumes:
+      - /etc/todo-app/certs/:/etc/api-gateway/certs/
+
+  minio:
+    volumes:
+      - minio:/data
+      - /etc/todo-app/certs/:/root/.minio/certs/
+
+  keycloak:
+    ports:
+      - 8443:8443
+    volumes:
+      - /etc/todo-app/certs/:/etc/x509/https/

@@ -906,8 +906,16 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": ["http://localhost/*", "http://localhost:3000/*"],
-      "webOrigins": ["http://localhost", "http://localhost:3000"],
+      "redirectUris": [
+        "http://localhost/*",
+        "http://localhost:3000/*",
+        "https://todo-app.westeurope.cloudapp.azure.com/*"
+      ],
+      "webOrigins": [
+        "http://localhost",
+        "http://localhost:3000",
+        "https://todo-app.westeurope.cloudapp.azure.com"
+      ],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,
