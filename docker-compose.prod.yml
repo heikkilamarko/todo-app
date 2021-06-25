@@ -2,17 +2,47 @@ version: "3.9"
 
 services:
   api-gateway:
+    restart: always
     ports:
       - 443:443
     volumes:
       - /etc/todo-app/certs/:/etc/api-gateway/certs/
 
+  todo-app:
+    restart: always
+
+  todo-api:
+    restart: always
+
+  todo-service:
+    restart: always
+
+  notification-service:
+    restart: always
+
+  nats:
+    restart: always
+
+  db:
+    restart: always
+
   minio:
+    restart: always
     volumes:
       - minio:/data
       - /etc/todo-app/certs/:/root/.minio/certs/
 
+  loki:
+    restart: always
+
+  promtail:
+    restart: always
+
+  grafana:
+    restart: always
+
   keycloak:
+    restart: always
     ports:
       - 8443:8443
     volumes:

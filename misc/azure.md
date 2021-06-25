@@ -84,80 +84,12 @@ Copy the `age` key file.
 
 ```bash
 > mkdir ~/todo-app/env
-> ~/todo-app/secrets/decrypt_env.sh ~/todo-app/secrets/env.enc ~/todo-app/env
-```
-
-## Configure App
-
-Do the following edits:
-
-- Replace `http` -> `https`
-- Replace `localhost` -> `VM_DNS_NAME`
-- Replace port `80` -> `443`
-- Replace port `8080` -> `8443`
-
-```bash
-> vim ~/todo-app/docker-compose.yml
-```
-
-```yaml
-api-gateway:
-  # ...
-  ports:
-    - 443:443
-  volumes:
-    - /etc/todo-app/certs/:/etc/api-gateway/certs/
-  # ...
-
-minio:
-  # ...
-  volumes:
-    # ...
-    - /etc/todo-app/certs/:/root/.minio/certs/
-  # ...
-
-keycloak:
-  # ...
-  ports:
-    - 8443:8443
-  volumes:
-    - /etc/todo-app/certs/:/etc/x509/https/
-  # ...
-```
-
-```bash
-> vim ~/todo-app/backend/api-gateway/ApiGateway/appsettings.json
-```
-
-```json
-{
-  "Kestrel": {
-    "Endpoints": {
-      "Https": {
-        "Url": "https://+:443",
-        "Certificate": {
-          "Path": "/etc/api-gateway/certs/tls.crt",
-          "KeyPath": "/etc/api-gateway/certs/tls.key"
-        }
-      }
-    }
-  }
-}
-```
-
-```bash
-> vim ~/todo-app/backend/keycloak/docker/todo-app.json
-> vim ~/todo-app/env/todo-app.env
-> vim ~/todo-app/env/api-gateway.env
-> vim ~/todo-app/env/notification-service.env
-> vim ~/todo-app/env/grafana.env
-> vim ~/todo-app/env/loki.env
-> vim ~/todo-app/env/minio-migrate.env
+> ~/todo-app/secrets/decrypt_env.sh ~/todo-app/secrets/env.prod.enc ~/todo-app/env
 ```
 
 ## Run
 
 ```bash
 > cd ~/todo-app
-> docker-compose up --build -d
+> docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
 ```
