@@ -1,10 +1,24 @@
 <script>
   import { fly } from "svelte/transition";
+  import { showInfo, showError } from "../stores/toasterStore";
+  import { loading, completeTodo } from "../stores/todoStore";
 
+  /** @type {import("../types").Todo} */
   export let todo;
+
+  async function complete() {
+    try {
+      await completeTodo(todo.id);
+      showInfo("todo complete job started");
+    } catch (error) {
+      showError(`todo complete job failed\n${error}`);
+    }
+  }
 
   $: createdAtLoc = todo.created_at.toLocaleString();
   $: createdAtIso = todo.created_at.toISOString();
+
+  $: canComplete = !$loading;
 </script>
 
 <div
@@ -18,7 +32,8 @@
   <button
     type="button"
     class="btn btn-outline-primary rounded-pill px-3"
-    on:click
+    disabled={!canComplete}
+    on:click={complete}
   >
     <i class="bi bi-check-lg" />
     Complete
