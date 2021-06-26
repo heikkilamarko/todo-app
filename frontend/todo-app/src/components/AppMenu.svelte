@@ -25,15 +25,16 @@
       >
     </li>
     <li>
-      <a class="dropdown-item" href="/" on:click|preventDefault={logout}
-        ><i class="bi bi-power text-primary" /> Logout</a
-      >
-    </li>
-    <li>
       <a
         class="dropdown-item"
         href="https://github.com/heikkilamarko/todo-app"
         target="_blank"><i class="bi bi-github text-primary" /> GitHub</a
+      >
+    </li>
+    <li><hr class="dropdown-divider" /></li>
+    <li>
+      <a class="dropdown-item" href="/" on:click|preventDefault={logout}
+        ><i class="bi bi-power text-primary" /> Logout</a
       >
     </li>
   </ul>
