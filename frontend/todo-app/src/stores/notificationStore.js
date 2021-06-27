@@ -15,7 +15,7 @@ export const connected = writable(false);
  * @returns {Promise<() => void>} cleanup function
  */
 export async function connect() {
-  const url = `${config.apiUrl}/push/notifications`;
+  const url = `${config.apiUrl}/notifications`;
 
   const connection = buildConnection(url);
 

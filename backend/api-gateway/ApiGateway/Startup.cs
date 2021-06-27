@@ -1,6 +1,5 @@
 using System.Net.Http;
 using System.Threading.Tasks;
-using ApiGateway.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,7 +33,6 @@ namespace ApiGateway
                     });
             });
 
-            services.AddControllers();
             services.AddReverseProxy().LoadFromConfig(Configuration.GetSection("ReverseProxy"));
 
             services.AddSignalR();
@@ -85,12 +83,7 @@ namespace ApiGateway
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapReverseProxy();
-                endpoints.MapControllers();
-                endpoints.MapHub<NotificationsHub>("/push/notifications");
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapReverseProxy(); });
         }
     }
 }

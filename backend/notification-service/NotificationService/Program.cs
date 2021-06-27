@@ -1,10 +1,6 @@
 using System;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using NotificationService.Models;
-using NotificationService.Services;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
@@ -49,22 +45,6 @@ namespace NotificationService
                         .Enrich.FromLogContext()
                         .WriteTo.Console(new RenderedCompactJsonFormatter());
                 })
-                .ConfigureServices((hostContext, services) =>
-                {
-                    var c = hostContext.Configuration;
-
-                    services.Configure<NatsOptions>(o => c.Bind("Nats", o));
-
-                    services.AddApiGatewayClient(o => c.Bind("ApiGateway", o));
-
-                    services.AddSingleton<SchemaValidator>();
-
-                    services.AddSingleton<IFileProvider>(
-                        new ManifestEmbeddedFileProvider(typeof(Program).Assembly));
-
-                    services.AddMemoryCache();
-
-                    services.AddHostedService<Worker>();
-                });
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
     }
 }

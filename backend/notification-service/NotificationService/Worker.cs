@@ -2,11 +2,13 @@ using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NATS.Client;
 using NotificationService.Extensions;
+using NotificationService.Hubs;
 using NotificationService.Models;
 using NotificationService.Services;
 
@@ -16,18 +18,18 @@ namespace NotificationService
     {
         private readonly NatsOptions _natsOptions;
         private readonly SchemaValidator _schemaValidator;
-        private readonly ApiGatewayClient _apiGatewayClient;
+        private readonly IHubContext<NotificationsHub> _hub;
         private readonly ILogger<Worker> _logger;
 
         public Worker(
             IOptions<NatsOptions> natsOptions,
             SchemaValidator schemaValidator,
-            ApiGatewayClient apiGatewayClient,
+            IHubContext<NotificationsHub> hub,
             ILogger<Worker> logger)
         {
             _natsOptions = natsOptions.Value;
             _schemaValidator = schemaValidator;
-            _apiGatewayClient = apiGatewayClient;
+            _hub = hub;
             _logger = logger;
         }
 
@@ -85,7 +87,7 @@ namespace NotificationService
                     return;
                 }
 
-                await _apiGatewayClient.SendNotification(new Notification
+                await _hub.Clients.All.SendAsync("ReceiveNotification", new Notification
                 {
                     Type = message.Subject,
                     Data = data
