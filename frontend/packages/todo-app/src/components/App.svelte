@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import { showError } from "../stores/toasterStore";
+  import { Toaster, toasterStore } from "todo-app-common";
   import { getTodos } from "../stores/todoStore";
   import { connect } from "../stores/notificationStore";
   import ConnectionStatus from "./ConnectionStatus.svelte";
@@ -8,7 +8,6 @@
   import TodoForm from "./TodoForm.svelte";
   import Todos from "./Todos.svelte";
   import AppMenu from "./AppMenu.svelte";
-  import Toaster from "./Toaster.svelte";
 
   let disconnect = null;
 
@@ -16,7 +15,7 @@
     try {
       await getTodos();
     } catch (error) {
-      showError(`todo loading failed\n${error}`);
+      toasterStore.showError(`todo loading failed\n${error}`);
     }
 
     disconnect = await connect();

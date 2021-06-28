@@ -1,5 +1,5 @@
 <script>
-  import { showInfo, showError } from "../stores/toasterStore";
+  import { Offcanvas, toasterStore } from "todo-app-common";
   import { createTodo, loading } from "../stores/todoStore";
   import {
     name,
@@ -9,20 +9,19 @@
     closeOnCreate,
     reset,
   } from "../stores/todoFormStore";
-  import Offcanvas from "./Offcanvas.svelte";
 
   let showOffcanvas = false;
 
   async function submit() {
     try {
       await createTodo($todo);
-      showInfo("todo create job started");
+      toasterStore.showInfo("todo create job started");
       reset();
       if ($closeOnCreate) {
         closeOffcanvas();
       }
     } catch (error) {
-      showError(`todo create job failed\n${error}`);
+      toasterStore.showError(`todo create job failed\n${error}`);
     }
   }
 

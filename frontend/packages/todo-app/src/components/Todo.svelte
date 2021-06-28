@@ -1,6 +1,6 @@
 <script>
   import { fly } from "svelte/transition";
-  import { showInfo, showError } from "../stores/toasterStore";
+  import { toasterStore } from "todo-app-common";
   import { loading, completeTodo } from "../stores/todoStore";
 
   /** @type {import("../types").Todo} */
@@ -9,9 +9,9 @@
   async function complete() {
     try {
       await completeTodo(todo.id);
-      showInfo("todo complete job started");
+      toasterStore.showInfo("todo complete job started");
     } catch (error) {
-      showError(`todo complete job failed\n${error}`);
+      toasterStore.showError(`todo complete job failed\n${error}`);
     }
   }
 

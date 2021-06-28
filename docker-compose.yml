@@ -13,7 +13,7 @@ services:
       - backend
 
   todo-app:
-    build: ./frontend/todo-app
+    build: ./frontend
     image: todo-app
     restart: on-failure
     env_file:

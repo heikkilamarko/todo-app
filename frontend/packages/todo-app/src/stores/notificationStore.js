@@ -6,7 +6,7 @@ import {
 } from "@microsoft/signalr";
 import { config } from "../shared/config";
 import { accessToken } from "../shared/auth";
-import { showError } from "./toasterStore";
+import { toasterStore } from "todo-app-common";
 import { getTodos } from "./todoStore";
 
 export const connected = writable(false);
@@ -32,12 +32,12 @@ export async function connect() {
         try {
           await getTodos();
         } catch (error) {
-          showError(`todo loading failed\n${error}`);
+          toasterStore.showError(`todo loading failed\n${error}`);
         }
         break;
       case "todo.created.error":
       case "todo.completed.error":
-        showError(`error: ${data.code}\n${data.message || "-"}`);
+        toasterStore.showError(`error: ${data.code}\n${data.message || "-"}`);
         break;
     }
   });
@@ -47,7 +47,7 @@ export async function connect() {
     connected.set(true);
     return () => connection.stop();
   } catch (error) {
-    showError(`real-time connection error\n${error}`);
+    toasterStore.showError(`real-time connection error\n${error}`);
   }
 }
 
