@@ -1,11 +1,10 @@
 import { writable } from "svelte/store";
 
-let nextId = 1;
+let toastId = 1;
 
 const TIMEOUT = 2500;
 
-/** @type {import("svelte/store").Writable<import("../types").Toast[]>} */
-export const toasts = writable([]);
+export const toasts = writable(/** @type {import("../types").Toast[]} */ ([]));
 
 /**
  * @param {string} message
@@ -29,7 +28,7 @@ export function showToast(message, type = "primary") {
   toasts.update((t) => [
     ...t,
     {
-      id: nextId++,
+      id: toastId++,
       message,
       type,
     },

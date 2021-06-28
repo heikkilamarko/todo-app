@@ -2,8 +2,7 @@ import { writable } from "svelte/store";
 import { toTodo } from "../shared/utils";
 import * as api from "../shared/api";
 
-/** @type {import("svelte/store").Writable<import("../types").Todo[]>} */
-export const todos = writable([]);
+export const todos = writable(/** @type {import("../types").Todo[]} */ ([]));
 export const loading = writable(false);
 
 /**
