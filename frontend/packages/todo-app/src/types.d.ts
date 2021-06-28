@@ -6,12 +6,6 @@ export interface Config {
   dashboardUrl: string;
 }
 
-export interface Toast {
-  id: number;
-  type: "primary" | "danger";
-  message: string;
-}
-
 export type NotificationType =
   | "todo.created.ok"
   | "todo.created.error"
