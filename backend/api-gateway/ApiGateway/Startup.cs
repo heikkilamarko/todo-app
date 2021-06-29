@@ -1,11 +1,9 @@
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 
 namespace ApiGateway
 {
@@ -39,16 +37,8 @@ namespace ApiGateway
                 o.Audience = Configuration["Auth:Audience"];
                 o.Authority = Configuration["Auth:Authority"];
                 o.MetadataAddress = Configuration["Auth:MetadataAddress"];
+                o.TokenValidationParameters.ValidIssuers = Configuration["Auth:ValidIssuers"].Split(",");
                 o.RequireHttpsMetadata = false;
-                o.BackchannelHttpHandler = new HttpClientHandler
-                {
-                    // TODO: Make this configurable.
-                    ServerCertificateCustomValidationCallback = (_, _, _, _) => true
-                };
-                o.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidIssuers = Configuration["Auth:ValidIssuers"].Split(",")
-                };
                 o.Events = new JwtBearerEvents
                 {
                     // SignalR
