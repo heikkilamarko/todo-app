@@ -1,3 +1,6 @@
+/// <reference types="svelte" />
+/// <reference types="vite/client" />
+
 import { Readable, Writable } from "svelte/store";
 import { ToasterStore } from "todo-app-common";
 
