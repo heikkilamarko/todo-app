@@ -1,28 +1,25 @@
 <script>
   import { Offcanvas } from "todo-app-common";
-  import { toasterStore } from "../stores/toasterStore";
-  import { createTodo, loading } from "../stores/todoStore";
-  import {
-    name,
-    description,
-    todo,
-    isValid,
-    closeOnCreate,
-    reset,
-  } from "../stores/todoFormStore";
+  import { stores } from "../stores";
+
+  const {
+    toasterStore: { showInfo, showError },
+    todoFormStore: { name, description, closeOnCreate, todo, isValid, reset },
+    todoStore: { loading, createTodo },
+  } = stores;
 
   let showOffcanvas = false;
 
-  async function submit() {
+  async function handleSubmit() {
     try {
       await createTodo($todo);
-      toasterStore.showInfo("todo create job started");
+      showInfo("todo create job started");
       reset();
       if ($closeOnCreate) {
         closeOffcanvas();
       }
     } catch (error) {
-      toasterStore.showError(`todo create job failed\n${error}`);
+      showError(`todo create job failed\n${error}`);
     }
   }
 
@@ -51,7 +48,7 @@
     <form
       spellcheck="false"
       autocomplete="off"
-      on:submit|preventDefault={submit}
+      on:submit|preventDefault={handleSubmit}
     >
       <div class="mb-3">
         <label for="name" class="form-label"

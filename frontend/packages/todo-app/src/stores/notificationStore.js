@@ -6,49 +6,63 @@ import {
 } from "@microsoft/signalr";
 import { config } from "../shared/config";
 import { accessToken } from "../shared/auth";
-import { toasterStore } from "./toasterStore";
-import { getTodos } from "./todoStore";
-
-export const connected = writable(false);
 
 /**
- * @returns {Promise<() => void>} cleanup function
+ * @param {import("../types").Stores} stores
+ * @returns {import("../types").NotificationStore}
  */
-export async function connect() {
-  const url = `${config.apiUrl}/notifications`;
+export function createNotificationStore(stores) {
+  const {
+    toasterStore: { showError },
+    todoStore: { getTodos },
+  } = stores;
 
-  const connection = buildConnection(url);
+  const connected = writable(false);
 
-  connection.onclose(() => connected.set(false));
-  connection.onreconnecting(() => connected.set(false));
-  connection.onreconnected(() => connected.set(true));
+  /**
+   * @returns {Promise<() => void>} cleanup function
+   */
+  async function connect() {
+    const url = `${config.apiUrl}/notifications`;
 
-  connection.on(config.notificationMethod, async (notification) => {
-    /** @type {{type: import("../types").NotificationType, data: any}} */
-    const { type, data } = notification ?? {};
-    switch (type) {
-      case "todo.created.ok":
-      case "todo.completed.ok":
-        try {
-          await getTodos();
-        } catch (error) {
-          toasterStore.showError(`todo loading failed\n${error}`);
-        }
-        break;
-      case "todo.created.error":
-      case "todo.completed.error":
-        toasterStore.showError(`error: ${data.code}\n${data.message || "-"}`);
-        break;
+    const connection = buildConnection(url);
+
+    connection.onclose(() => connected.set(false));
+    connection.onreconnecting(() => connected.set(false));
+    connection.onreconnected(() => connected.set(true));
+
+    connection.on(config.notificationMethod, async (notification) => {
+      /** @type {{type: import("../types").NotificationType, data: any}} */
+      const { type, data } = notification ?? {};
+      switch (type) {
+        case "todo.created.ok":
+        case "todo.completed.ok":
+          try {
+            await getTodos();
+          } catch (error) {
+            showError(`todo loading failed\n${error}`);
+          }
+          break;
+        case "todo.created.error":
+        case "todo.completed.error":
+          showError(`error: ${data.code}\n${data.message || "-"}`);
+          break;
+      }
+    });
+
+    try {
+      await connection.start();
+      connected.set(true);
+      return () => connection.stop();
+    } catch (error) {
+      showError(`real-time connection error\n${error}`);
     }
-  });
-
-  try {
-    await connection.start();
-    connected.set(true);
-    return () => connection.stop();
-  } catch (error) {
-    toasterStore.showError(`real-time connection error\n${error}`);
   }
+
+  return {
+    connected,
+    connect,
+  };
 }
 
 /**

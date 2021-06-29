@@ -1,17 +1,21 @@
 <script>
   import { fly } from "svelte/transition";
-  import { toasterStore } from "../stores/toasterStore";
-  import { loading, completeTodo } from "../stores/todoStore";
+  import { stores } from "../stores";
 
   /** @type {import("../types").Todo} */
   export let todo;
 
-  async function complete() {
+  const {
+    toasterStore: { showInfo, showError },
+    todoStore: { loading, completeTodo },
+  } = stores;
+
+  async function handleComplete() {
     try {
       await completeTodo(todo.id);
-      toasterStore.showInfo("todo complete job started");
+      showInfo("todo complete job started");
     } catch (error) {
-      toasterStore.showError(`todo complete job failed\n${error}`);
+      showError(`todo complete job failed\n${error}`);
     }
   }
 
@@ -33,7 +37,7 @@
     type="button"
     class="btn btn-outline-primary rounded-pill px-3"
     disabled={!canComplete}
-    on:click={complete}
+    on:click={handleComplete}
   >
     <i class="bi bi-check-lg" />
     Complete

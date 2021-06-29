@@ -1,7 +1,11 @@
 <script>
-  import { todos, loading } from "../stores/todoStore";
+  import { stores } from "../stores";
   import Todo from "./Todo.svelte";
   import Empty from "./Empty.svelte";
+
+  const {
+    todoStore: { todos, loading },
+  } = stores;
 </script>
 
 {#each $todos as todo (todo.id)}

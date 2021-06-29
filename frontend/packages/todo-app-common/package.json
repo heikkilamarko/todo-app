@@ -4,5 +4,6 @@
   "type": "module",
   "main": "src/index.js",
   "module": "src/index.js",
-  "svelte": "src/index.js"
+  "svelte": "src/index.js",
+  "types": "src/index.d.ts"
 }

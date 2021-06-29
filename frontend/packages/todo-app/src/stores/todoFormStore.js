@@ -1,18 +1,33 @@
 import { derived, writable } from "svelte/store";
 
-export const name = writable("");
-export const description = writable("");
+/**
+ * @returns {import("../types").TodoFormStore}
+ */
+export function createTodoFormStore() {
+  const name = writable("");
+  const description = writable("");
 
-export const closeOnCreate = writable(true);
+  const closeOnCreate = writable(true);
 
-export const todo = derived([name, description], ([$name, $description]) => ({
-  name: $name,
-  description: $description || null,
-}));
+  /** @type {import("../types").NewTodoStore} */
+  const todo = derived([name, description], ([$name, $description]) => ({
+    name: $name,
+    description: $description || null,
+  }));
 
-export const isValid = derived(name, ($name) => !!$name);
+  const isValid = derived(name, ($name) => !!$name);
 
-export function reset() {
-  name.set("");
-  description.set("");
+  function reset() {
+    name.set("");
+    description.set("");
+  }
+
+  return {
+    name,
+    description,
+    closeOnCreate,
+    todo,
+    isValid,
+    reset,
+  };
 }

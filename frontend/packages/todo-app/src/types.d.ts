@@ -1,4 +1,7 @@
-export interface Config {
+import { Readable, Writable } from "svelte/store";
+import { ToasterStore } from "todo-app-common";
+
+interface Config {
   apiUrl: string;
   notificationMethod: string;
   auth: Keycloak.KeycloakConfig;
@@ -6,18 +9,20 @@ export interface Config {
   dashboardUrl: string;
 }
 
-export type NotificationType =
+type NotificationType =
   | "todo.created.ok"
   | "todo.created.error"
   | "todo.completed.ok"
   | "todo.completed.error";
 
-export interface NewTodo {
+interface NewTodo {
   name: string;
   description?: string;
 }
 
-export interface ServerTodo {
+type NewTodoStore = Readable<NewTodo>;
+
+interface ServerTodo {
   id: number;
   name: string;
   description?: string;
@@ -25,7 +30,7 @@ export interface ServerTodo {
   updated_at: string;
 }
 
-export interface Todo {
+interface Todo {
   id: number;
   name: string;
   description?: string;
@@ -33,17 +38,48 @@ export interface Todo {
   updated_at: Date;
 }
 
-export interface GetTodosRequest {
+type TodosStore = Writable<Todo[]>;
+
+interface GetTodosRequest {
   offset: number;
   limit: number;
 }
 
-export interface GetTodosResponse {
+interface GetTodosResponse {
   meta: GetTodosResponseMeta;
   data: ServerTodo[];
 }
 
-export interface GetTodosResponseMeta {
+interface GetTodosResponseMeta {
   offset: number;
   limit: number;
+}
+
+interface NotificationStore {
+  connected: Writable<boolean>;
+  connect: () => Promise<() => void>;
+}
+
+interface TodoFormStore {
+  name: Writable<string>;
+  description: Writable<string>;
+  closeOnCreate: Writable<boolean>;
+  todo: Readable<NewTodo>;
+  isValid: Readable<boolean>;
+  reset: () => void;
+}
+
+interface TodoStore {
+  todos: TodosStore;
+  loading: Writable<boolean>;
+  getTodos: (offset?: number, limit?: number) => Promise<void>;
+  createTodo: (todo: NewTodo) => Promise<void>;
+  completeTodo: (id: number) => Promise<void>;
+}
+
+interface Stores {
+  toasterStore: ToasterStore;
+  notificationStore: NotificationStore;
+  todoFormStore: TodoFormStore;
+  todoStore: TodoStore;
 }

@@ -1,5 +1,9 @@
 <script>
-  import { connected } from "../stores/notificationStore";
+  import { stores } from "../stores";
+
+  const {
+    notificationStore: { connected },
+  } = stores;
 
   $: status = $connected ? "CONNECTED" : "NO SIGNAL";
 </script>

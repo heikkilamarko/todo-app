@@ -1,7 +1,7 @@
 <script>
   import Toast from "./Toast.svelte";
 
-  /** @type {import("../types").ToastsStore} */
+  /** @type {import("../index").ToastsStore} */
   export let toasts;
 </script>
 

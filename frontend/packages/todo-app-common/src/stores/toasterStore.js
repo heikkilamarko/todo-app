@@ -1,14 +1,14 @@
 import { writable } from "svelte/store";
 
 /**
- * @returns {import("../types").ToasterStore}
+ * @returns {import("../index").ToasterStore}
  */
 export function createToasterStore() {
   let toastId = 1;
 
   const TIMEOUT = 2500;
 
-  /** @type {import("../types").ToastsStore} */
+  /** @type {import("../index").ToastsStore} */
   const toasts = writable([]);
 
   /**
@@ -27,7 +27,7 @@ export function createToasterStore() {
 
   /**
    * @param {string} message
-   * @param {import("../types").ToastType} type
+   * @param {import("../index").ToastType} type
    */
   function showToast(message, type = "info") {
     toasts.update((t) => [
