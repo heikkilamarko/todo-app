@@ -1,5 +1,10 @@
 {
   "name": "frontend",
+  "scripts": {
+    "dev": "npm run dev -w todo-app",
+    "build": "npm run build -w todo-app",
+    "serve": "npm run serve -w todo-app"
+  },
   "workspaces": [
     "./packages/*"
   ]

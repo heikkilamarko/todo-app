@@ -1,6 +1,6 @@
 <script>
   import { fly } from "svelte/transition";
-  import { toasterStore } from "todo-app-common";
+  import { toasterStore } from "../stores/toasterStore";
   import { loading, completeTodo } from "../stores/todoStore";
 
   /** @type {import("../types").Todo} */

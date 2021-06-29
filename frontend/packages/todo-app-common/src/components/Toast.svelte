@@ -2,11 +2,29 @@
   import { fade, fly } from "svelte/transition";
   import { backOut } from "svelte/easing";
 
+  /** @type {import("../types").Toast} */
   export let toast;
+
+  /**
+   * @param {import("../types").ToastType} type
+   * @returns {"primary" | "danger"}
+   */
+  function getToastType(type) {
+    switch (type) {
+      case "info":
+        return "primary";
+      case "error":
+        return "danger";
+      default:
+        return "primary";
+    }
+  }
+
+  $: toastType = getToastType(toast.type);
 </script>
 
 <div
-  class="a-toast bg-{toast.type} text-white rounded w-75 mx-auto my-2 px-4 py-2"
+  class="a-toast bg-{toastType} text-white rounded w-75 mx-auto my-2 px-4 py-2"
   in:fly={{
     delay: 0,
     duration: 300,

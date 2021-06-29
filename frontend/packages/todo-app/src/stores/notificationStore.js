@@ -6,7 +6,7 @@ import {
 } from "@microsoft/signalr";
 import { config } from "../shared/config";
 import { accessToken } from "../shared/auth";
-import { toasterStore } from "todo-app-common";
+import { toasterStore } from "./toasterStore";
 import { getTodos } from "./todoStore";
 
 export const connected = writable(false);

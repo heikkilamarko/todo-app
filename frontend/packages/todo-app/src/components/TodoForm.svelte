@@ -1,5 +1,6 @@
 <script>
-  import { Offcanvas, toasterStore } from "todo-app-common";
+  import { Offcanvas } from "todo-app-common";
+  import { toasterStore } from "../stores/toasterStore";
   import { createTodo, loading } from "../stores/todoStore";
   import {
     name,

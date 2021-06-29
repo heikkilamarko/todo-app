@@ -1,6 +1,8 @@
 <script>
-  import { toasts } from "../stores/toasterStore";
   import Toast from "./Toast.svelte";
+
+  /** @type {import("../types").ToastsStore} */
+  export let toasts;
 </script>
 
 <div class="a-toaster position-fixed start-0 end-0 bottom-0">

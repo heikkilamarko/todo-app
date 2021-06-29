@@ -9,7 +9,10 @@
 
   let offcanvasEl;
 
-  const handleKeydown = (e) => {
+  /**
+   * @param {KeyboardEvent} e
+   */
+  function handleKeydown(e) {
     if (e.key === "Escape") {
       close();
       return;
@@ -30,7 +33,7 @@
       tabbable[index].focus();
       e.preventDefault();
     }
-  };
+  }
 
   const previouslyFocused = document.activeElement;
 

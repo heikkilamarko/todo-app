@@ -1,7 +1,8 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import { Toaster, toasterStore } from "todo-app-common";
+  import { Toaster } from "todo-app-common";
   import { getTodos } from "../stores/todoStore";
+  import { toasterStore } from "../stores/toasterStore";
   import { connect } from "../stores/notificationStore";
   import ConnectionStatus from "./ConnectionStatus.svelte";
   import Header from "./Header.svelte";
@@ -33,4 +34,4 @@
 
 <AppMenu />
 
-<Toaster />
+<Toaster toasts={toasterStore.toasts} />
