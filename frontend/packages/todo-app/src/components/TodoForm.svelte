@@ -1,5 +1,5 @@
 <script>
-  import { Offcanvas } from "todo-app-common";
+  import { Offcanvas, PlusLg } from "todo-app-common";
   import { stores } from "../stores";
 
   const {
@@ -39,7 +39,7 @@
   type="button"
   on:click={toggleOffcanvas}
 >
-  <i class="bi bi-plus-lg" />
+  <PlusLg />
   New Todo
 </button>
 
@@ -89,7 +89,7 @@
         class="btn btn-primary rounded-pill px-3"
         disabled={!canCreate}
       >
-        <i class="bi bi-plus-lg" />
+        <PlusLg />
         Create
       </button>
     </form>

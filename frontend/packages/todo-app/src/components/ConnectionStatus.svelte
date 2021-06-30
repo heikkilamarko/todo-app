@@ -1,4 +1,5 @@
 <script>
+  import { CheckLg, XLg } from "todo-app-common";
   import { stores } from "../stores";
 
   const {
@@ -9,6 +10,6 @@
 </script>
 
 <div class="text-primary fw-bold my-1">
-  <i class="bi" class:bi-check-lg={$connected} class:bi-x-lg={!$connected} />
+  {#if $connected} <CheckLg /> {:else} <XLg /> {/if}
   {status}
 </div>

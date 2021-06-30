@@ -1,4 +1,3 @@
-import "bootstrap-icons/font/bootstrap-icons.css";
 import "./main.scss";
 import "bootstrap/js/dist/dropdown";
 import { load as loadConfig } from "./shared/config";

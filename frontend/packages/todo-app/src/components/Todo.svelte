@@ -1,5 +1,6 @@
 <script>
   import { fly } from "svelte/transition";
+  import { CheckLg } from "todo-app-common";
   import { stores } from "../stores";
 
   /** @type {import("../types").Todo} */
@@ -39,7 +40,7 @@
     disabled={!canComplete}
     on:click={handleComplete}
   >
-    <i class="bi bi-check-lg" />
+    <CheckLg />
     Complete
   </button>
 </div>
