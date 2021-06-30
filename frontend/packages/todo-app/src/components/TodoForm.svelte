@@ -1,5 +1,5 @@
 <script>
-  import { Offcanvas, PlusLg } from "todo-app-common";
+  import { Offcanvas, PlusLgIcon } from "todo-app-common";
   import { stores } from "../stores";
 
   const {
@@ -39,7 +39,7 @@
   type="button"
   on:click={toggleOffcanvas}
 >
-  <PlusLg />
+  <PlusLgIcon />
   New Todo
 </button>
 
@@ -89,7 +89,7 @@
         class="btn btn-primary rounded-pill px-3"
         disabled={!canCreate}
       >
-        <PlusLg />
+        <PlusLgIcon />
         Create
       </button>
     </form>

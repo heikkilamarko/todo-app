@@ -1,5 +1,11 @@
 <script>
-  import { Github, Grid, Person, PersonFill, Power } from "todo-app-common";
+  import {
+    GithubIcon,
+    GridIcon,
+    PersonIcon,
+    PersonFillIcon,
+    PowerIcon,
+  } from "todo-app-common";
   import { config } from "../shared/config";
   import { logout, userName } from "../shared/auth";
 </script>
@@ -11,7 +17,7 @@
     data-bs-toggle="dropdown"
     aria-expanded="false"
   >
-    <PersonFill />
+    <PersonFillIcon />
     {userName()}
   </button>
   <ul class="dropdown-menu">
@@ -22,7 +28,7 @@
         target="_blank"
         rel="noreferrer"
       >
-        <Person clazz="text-primary" />
+        <PersonIcon clazz="text-primary" />
         Profile
       </a>
     </li>
@@ -33,7 +39,7 @@
         target="_blank"
         rel="noreferrer"
       >
-        <Grid clazz="text-primary" />
+        <GridIcon clazz="text-primary" />
         Dashboard
       </a>
     </li>
@@ -44,14 +50,14 @@
         target="_blank"
         rel="noreferrer"
       >
-        <Github clazz="text-primary" />
+        <GithubIcon clazz="text-primary" />
         GitHub
       </a>
     </li>
     <li><hr class="dropdown-divider" /></li>
     <li>
       <a class="dropdown-item" href="/" on:click|preventDefault={logout}>
-        <Power clazz="text-primary" />
+        <PowerIcon clazz="text-primary" />
         Logout
       </a>
     </li>

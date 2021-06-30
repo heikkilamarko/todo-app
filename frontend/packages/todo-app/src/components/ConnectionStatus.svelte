@@ -1,5 +1,5 @@
 <script>
-  import { CheckLg, XLg } from "todo-app-common";
+  import { CheckLgIcon, XLgIcon } from "todo-app-common";
   import { stores } from "../stores";
 
   const {
@@ -10,6 +10,6 @@
 </script>
 
 <div class="text-primary fw-bold my-1">
-  {#if $connected} <CheckLg /> {:else} <XLg /> {/if}
+  {#if $connected} <CheckLgIcon /> {:else} <XLgIcon /> {/if}
   {status}
 </div>

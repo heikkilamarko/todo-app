@@ -1,6 +1,6 @@
 <script>
   import { fly } from "svelte/transition";
-  import { CheckLg } from "todo-app-common";
+  import { CheckLgIcon } from "todo-app-common";
   import { stores } from "../stores";
 
   /** @type {import("../types").Todo} */
@@ -40,7 +40,7 @@
     disabled={!canComplete}
     on:click={handleComplete}
   >
-    <CheckLg />
+    <CheckLgIcon />
     Complete
   </button>
 </div>
