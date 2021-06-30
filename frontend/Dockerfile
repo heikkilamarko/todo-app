@@ -4,7 +4,7 @@ COPY . .
 RUN npm ci -w todo-app
 RUN npm run build -w todo-app
 
-FROM nginx:1.21.0-alpine
+FROM nginx:alpine
 ENV NGINX_ENVSUBST_TEMPLATE_DIR=/etc/todo-app
 ENV NGINX_ENVSUBST_OUTPUT_DIR=/usr/share/nginx/html
 COPY packages/todo-app/nginx.conf /etc/nginx/conf.d/default.conf

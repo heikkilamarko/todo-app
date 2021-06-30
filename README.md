@@ -1,5 +1,7 @@
 # Todo App
 
+Todo App is a **hobby project** that is primarily focused around being a playground for experimenting with different technologies.
+
 ![Todo App Architecture](doc/todo-app.png)
 
 ## Application Architecture

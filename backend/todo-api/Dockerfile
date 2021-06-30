@@ -1,4 +1,4 @@
-FROM golang:1.16.5-alpine3.13 AS build
+FROM golang:alpine AS build
 
 COPY . .
 
