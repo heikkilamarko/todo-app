@@ -1,4 +1,4 @@
-import axios from "axios";
+import ky from "ky";
 
 /** @type {import("../types").Config} */
 export const config = {
@@ -19,8 +19,7 @@ export async function load() {
 }
 
 async function loadProd() {
-  const { data } = await axios.get("/config.json");
-  Object.assign(config, data);
+  Object.assign(config, await ky.get("/config.json").json());
 }
 
 function loadDev() {

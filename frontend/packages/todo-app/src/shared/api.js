@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import ky from "ky";
 import { config } from "../shared/config";
 import { accessToken } from "../shared/auth";
 
@@ -7,44 +7,37 @@ import { accessToken } from "../shared/auth";
  * @returns {Promise<import("../types").GetTodosResponse>}
  */
 export async function getTodos(req) {
-  const { data } = await client().get(
-    `/todos?offset=${req.offset}&limit=${req.limit}`
-  );
-  return data;
+  return await client()
+    .get(`todos?offset=${req.offset}&limit=${req.limit}`)
+    .json();
 }
 
 /**
  * @param {import("../types").NewTodo} todo
  */
 export async function createTodo(todo) {
-  await client().post("/todos", todo);
+  await client().post("todos", { json: todo });
 }
 
 /**
  * @param {number} id
  */
 export async function completeTodo(id) {
-  await client().post(`/todos/${id}/complete`);
+  await client().post(`todos/${id}/complete`);
 }
 
-/** @type {AxiosInstance} */
+/** @type {ky} */
 let _client;
-
 function client() {
-  if (_client) return _client;
-
-  _client = axios.create();
-  _client.defaults.baseURL = config.apiUrl;
-  _client.interceptors.request.use(
-    async (req) => {
-      const token = await accessToken();
-      req.headers["Authorization"] = `Bearer ${token}`;
-      return req;
+  return (_client ??= ky.create({
+    prefixUrl: config.apiUrl,
+    hooks: {
+      beforeRequest: [
+        async (req) => {
+          const token = await accessToken();
+          req.headers.set("Authorization", `Bearer ${token}`);
+        },
+      ],
     },
-    (error) => {
-      console.log(error);
-    }
-  );
-
-  return _client;
+  }));
 }
