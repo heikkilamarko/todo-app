@@ -38,7 +38,7 @@ Host todo-app
   IdentitiesOnly yes
   ControlMaster     auto
   ControlPath       ~/.ssh/control-%C
-  ControlPersist    yes
+  ControlPersist    10m
 ```
 
 ## Connect to VM

@@ -6,7 +6,7 @@ services:
     ports:
       - 443:443
     volumes:
-      - /etc/todo-app/certs/:/etc/api-gateway/certs/
+      - /etc/todo-app/certs/:/etc/api-gateway/certs/:ro
 
   todo-app:
     restart: always
@@ -30,7 +30,7 @@ services:
     restart: always
     volumes:
       - minio:/data
-      - /etc/todo-app/certs/:/root/.minio/certs/
+      - /etc/todo-app/certs/:/root/.minio/certs/:ro
 
   loki:
     restart: always
@@ -46,4 +46,4 @@ services:
     ports:
       - 8443:8443
     volumes:
-      - /etc/todo-app/certs/:/etc/x509/https/
+      - /etc/todo-app/certs/:/etc/x509/https/:ro
