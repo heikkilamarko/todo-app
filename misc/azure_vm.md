@@ -21,27 +21,46 @@ Public IP address > Configuration > DNS name label (VM_DNS_NAME) > Save
 
 Example: `todo-app.westeurope.cloudapp.azure.com`
 
-## Connect to VM
+## Configure SSH
 
 ```bash
 > chmod 700 /path/to/ssh-key.pem
-> ssh -i /path/to/ssh-key.pem azureuser@VM_DNS_NAME
 ```
 
-## Update Packages
+```bash
+# ~/.ssh/config
+
+Host todo-app
+  HostName VM_DNS_NAME
+  Port 22
+  User azureuser
+  IdentityFile /path/to/ssh-key.pem
+  IdentitiesOnly yes
+  ControlMaster     auto
+  ControlPath       ~/.ssh/control-%C
+  ControlPersist    yes
+```
+
+## Connect to VM
+
+```bash
+> ssh todo-app
+```
+
+### Update Packages
 
 ```bash
 > sudo apt update
 > sudo apt upgrade
 ```
 
-## Install Docker
+### Install Docker
 
 1. [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
 2. [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)
 3. [Install Docker Compose](https://docs.docker.com/compose/install/)
 
-## Prepare Certificates
+### Prepare Certificates
 
 1. [Generate certificates](certificates.md)
    - Domain name: `VM_DNS_NAME`
@@ -55,29 +74,10 @@ Example: `todo-app.westeurope.cloudapp.azure.com`
 └── tls.key      # renamed private.key
 ```
 
-## Install Mozilla SOPS
+### Exit from VM
 
 ```bash
-> sudo wget https://github.com/mozilla/sops/releases/download/VERSION/sops-VERSION.linux -O /usr/local/bin/sops
-> sudo chmod +x /usr/local/bin/sops
-```
-
-In the above command, `VERSION` is `v3.7.1` or higher.
-
-## Clone App Repository
-
-```bash
-> cd ~
-> git clone https://github.com/heikkilamarko/todo-app.git
-```
-
-## Configure Mozilla SOPS
-
-Copy the `age` key file.
-
-```bash
-> mkdir -p ~/.config/sops/age
-> cp ~/todo-app/secrets/keys.txt ~/.config/sops/age/
+> exit
 ```
 
 ## Create and Populate `env` Directory
@@ -85,6 +85,13 @@ Copy the `age` key file.
 ```bash
 > mkdir ~/todo-app/env
 > ~/todo-app/secrets/decrypt_env.sh ~/todo-app/secrets/env.prod.enc ~/todo-app/env
+```
+
+## Create and Set Docker Context
+
+```bash
+> docker context create todo-app --docker "host=ssh://todo-app"
+> docker context use todo-app
 ```
 
 ## Run
