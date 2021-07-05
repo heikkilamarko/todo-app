@@ -9,7 +9,7 @@
     "@sveltejs/vite-plugin-svelte": "1.0.0-next.11",
     "sass": "1.35.1",
     "svelte": "3.38.3",
-    "vite": "2.3.8"
+    "vite": "2.4.0"
   },
   "dependencies": {
     "@microsoft/signalr": "5.0.7",

@@ -105,9 +105,15 @@ func (a *App) initNATS() error {
 	nc, err := nats.Connect(
 		a.config.NATSUrl,
 		nats.Token(a.config.NATSToken),
-		nats.RetryOnFailedConnect(true),
-		nats.MaxReconnects(10),
-		nats.ReconnectWait(time.Second),
+		nats.NoReconnect(),
+		nats.DisconnectErrHandler(
+			func(_ *nats.Conn, err error) {
+				a.logFatal(err)
+			}),
+		nats.ErrorHandler(
+			func(_ *nats.Conn, _ *nats.Subscription, err error) {
+				a.logFatal(err)
+			}),
 	)
 
 	if err != nil {
