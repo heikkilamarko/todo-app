@@ -1,15 +1,16 @@
 <script>
-  import { CheckLgIcon, XLgIcon } from "todo-app-common";
+  import { fade } from "svelte/transition";
   import { stores } from "../stores";
 
   const {
     notificationStore: { connected },
   } = stores;
 
-  $: status = $connected ? "CONNECTED" : "NO SIGNAL";
+  $: show = $connected === false;
 </script>
 
-<div class="text-primary fw-bold my-1">
-  {#if $connected} <CheckLgIcon /> {:else} <XLgIcon /> {/if}
-  {status}
-</div>
+{#if show}
+  <section class="mb-4" transition:fade>
+    <span class="badge bg-danger">NO SIGNAL</span>
+  </section>
+{/if}

@@ -17,7 +17,7 @@ export function createNotificationStore(stores) {
     todoStore: { getTodos },
   } = stores;
 
-  const connected = writable(false);
+  const connected = writable(null);
 
   /**
    * @returns {Promise<() => void>} cleanup function
@@ -55,6 +55,7 @@ export function createNotificationStore(stores) {
       connected.set(true);
       return () => connection.stop();
     } catch (error) {
+      connected.set(false);
       showError(`real-time connection error\n${error}`);
     }
   }

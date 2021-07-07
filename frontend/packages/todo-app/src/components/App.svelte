@@ -2,8 +2,8 @@
   import { onMount, onDestroy } from "svelte";
   import { Toaster } from "todo-app-common";
   import { stores, createStores } from "../stores";
-  import ConnectionStatus from "./ConnectionStatus.svelte";
   import Header from "./Header.svelte";
+  import ConnectionStatus from "./ConnectionStatus.svelte";
   import TodoForm from "./TodoForm.svelte";
   import Todos from "./Todos.svelte";
   import AppMenu from "./AppMenu.svelte";
@@ -32,8 +32,8 @@
 </script>
 
 <main class="container">
-  <ConnectionStatus />
   <Header />
+  <ConnectionStatus />
   <TodoForm />
   <Todos />
 </main>
