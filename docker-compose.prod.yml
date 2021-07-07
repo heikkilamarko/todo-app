@@ -2,47 +2,71 @@ version: "3.9"
 
 services:
   api-gateway:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
     ports:
       - 443:443
     volumes:
       - /etc/todo-app/certs/:/etc/api-gateway/certs/:ro
 
   todo-app:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
   todo-api:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
   todo-service:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
   notification-service:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
   nats:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
   db:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
   minio:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
     volumes:
       - minio:/data
       - /etc/todo-app/certs/:/root/.minio/certs/:ro
 
   loki:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
   promtail:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
   grafana:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
   keycloak:
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
     ports:
       - 8443:8443
     volumes:

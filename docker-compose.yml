@@ -3,8 +3,10 @@ version: "3.9"
 services:
   api-gateway:
     build: ./backend/api-gateway
-    image: api-gateway
-    restart: on-failure
+    image: todo-app/api-gateway
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/api-gateway.env
     ports:
@@ -14,8 +16,10 @@ services:
 
   todo-app:
     build: ./frontend
-    image: todo-app
-    restart: on-failure
+    image: todo-app/todo-app
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/todo-app.env
     networks:
@@ -23,8 +27,10 @@ services:
 
   todo-api:
     build: ./backend/todo-api
-    image: todo-api
-    restart: on-failure
+    image: todo-app/todo-api
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/todo-api.env
     networks:
@@ -35,8 +41,10 @@ services:
 
   todo-service:
     build: ./backend/todo-service
-    image: todo-service
-    restart: on-failure
+    image: todo-app/todo-service
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/todo-service.env
     networks:
@@ -47,8 +55,10 @@ services:
 
   notification-service:
     build: ./backend/notification-service
-    image: notification-service
-    restart: on-failure
+    image: todo-app/notification-service
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/notification-service.env
     networks:
@@ -59,8 +69,10 @@ services:
 
   nats:
     build: ./backend/nats/docker
-    image: nats
-    restart: on-failure
+    image: todo-app/nats
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/nats.env
     ports:
@@ -72,8 +84,10 @@ services:
 
   nats-configure:
     build: ./backend/nats/jetstream
-    image: nats-configure
-    restart: on-failure
+    image: todo-app/nats-configure
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/nats.env
     networks:
@@ -83,8 +97,10 @@ services:
 
   db:
     build: ./backend/db/postgres
-    image: db
-    restart: on-failure
+    image: todo-app/db
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/postgres.env
     ports:
@@ -96,8 +112,10 @@ services:
 
   db-migrate:
     build: ./backend/db/migrate
-    image: db-migrate
-    restart: on-failure
+    image: todo-app/db-migrate
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/migrate.env
     networks:
@@ -107,7 +125,9 @@ services:
 
   minio:
     image: minio/minio
-    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
     command: server /data
     env_file:
       - ./env/minio.env
@@ -120,8 +140,10 @@ services:
 
   minio-migrate:
     build: ./monitor/minio/migrate
-    image: minio-migrate
-    restart: on-failure
+    image: todo-app/minio-migrate
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/minio.env
       - ./env/minio-migrate.env
@@ -132,8 +154,10 @@ services:
 
   loki:
     build: ./monitor/loki
-    image: loki
-    restart: on-failure
+    image: todo-app/loki
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/minio.env
       - ./env/loki.env
@@ -144,8 +168,10 @@ services:
 
   promtail:
     build: ./monitor/promtail
-    image: promtail
-    restart: on-failure
+    image: todo-app/promtail
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/promtail.env
     volumes:
@@ -159,7 +185,9 @@ services:
 
   grafana:
     image: grafana/grafana
-    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/grafana.env
     volumes:
@@ -172,8 +200,10 @@ services:
 
   grafana-configure:
     build: ./monitor/grafana
-    image: grafana-configure
-    restart: on-failure
+    image: todo-app/grafana-configure
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/grafana-configure.env
     networks:
@@ -183,8 +213,10 @@ services:
 
   keycloak:
     build: ./backend/keycloak/docker
-    image: keycloak
-    restart: on-failure
+    image: todo-app/keycloak
+    deploy:
+      restart_policy:
+        condition: on-failure
     env_file:
       - ./env/keycloak.env
     ports:
