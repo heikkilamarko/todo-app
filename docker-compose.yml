@@ -131,10 +131,21 @@ services:
     command: server /data
     env_file:
       - ./env/minio.env
-    ports:
-      - 9000:9000
     volumes:
       - minio:/data
+    networks:
+      - monitor
+
+  minio-console:
+    image: minio/console
+    deploy:
+      restart_policy:
+        condition: on-failure
+    command: server
+    env_file:
+      - ./env/minio-console.env
+    ports:
+      - 9090:9090
     networks:
       - monitor
 

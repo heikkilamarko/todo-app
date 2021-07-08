@@ -30,7 +30,7 @@ See [secrets](secrets/) for details.
 - [Loki](https://grafana.com/oss/loki/)
 - [Promtail](https://grafana.com/docs/loki/latest/clients/promtail/)
 - [MinIO](https://min.io/)
-  - URL: http://localhost:9000
+  - URL: http://localhost:9090
   - username: `minio`
   - password: `S3c_r3t!`
 
@@ -39,7 +39,7 @@ See [secrets](secrets/) for details.
 Before running the below command, make sure you have the unencrypted secrets in the `/env` directory. See [secrets](secrets/) for details.
 
 ```bash
-> docker compose up --build
+> docker compose up --build -d
 ```
 
 App: http://localhost

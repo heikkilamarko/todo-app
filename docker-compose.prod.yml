@@ -7,8 +7,11 @@ services:
         condition: any
     ports:
       - 443:443
-    volumes:
-      - /etc/todo-app/certs/:/etc/api-gateway/certs/:ro
+    secrets:
+      - source: private.key
+        target: /etc/api-gateway/certs/private.key
+      - source: public.crt
+        target: /etc/api-gateway/certs/public.crt
 
   todo-app:
     deploy:
@@ -44,9 +47,18 @@ services:
     deploy:
       restart_policy:
         condition: any
-    volumes:
-      - minio:/data
-      - /etc/todo-app/certs/:/root/.minio/certs/:ro
+
+  minio-console:
+    deploy:
+      restart_policy:
+        condition: any
+    ports:
+      - 9443:9443
+    secrets:
+      - source: private.key
+        target: /root/.console/certs/private.key
+      - source: public.crt
+        target: /root/.console/certs/public.crt
 
   loki:
     deploy:
@@ -69,5 +81,14 @@ services:
         condition: any
     ports:
       - 8443:8443
-    volumes:
-      - /etc/todo-app/certs/:/etc/x509/https/:ro
+    secrets:
+      - source: private.key
+        target: /etc/x509/https/tls.key
+      - source: public.crt
+        target: /etc/x509/https/tls.crt
+
+secrets:
+  private.key:
+    file: ./certs/private.key
+  public.crt:
+    file: ./certs/public.crt

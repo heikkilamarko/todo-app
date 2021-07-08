@@ -365,6 +365,7 @@ FodyWeavers.xsd
 dist
 
 env
+certs
 
 .idea
 .vscode

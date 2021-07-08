@@ -24,8 +24,8 @@ storage_config:
   aws:
     endpoint: ${MINIO_URL}
     bucketnames: ${MINIO_BUCKET_NAME}
-    access_key_id: ${MINIO_ACCESS_KEY}
-    secret_access_key: ${MINIO_SECRET_KEY}
+    access_key_id: ${MINIO_ROOT_USER}
+    secret_access_key: ${MINIO_ROOT_PASSWORD}
     insecure: false
     sse_encryption: false
     s3forcepathstyle: true

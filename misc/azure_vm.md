@@ -10,7 +10,7 @@ Download the SSH key file (`ssh-key.pem`) when asked.
 
 `Allow`:
 
-- HTTP(S): `443`, `8443`, `9000`
+- HTTP(S): `443`, `8443`, `9443`
 - SSH: `22`
 
 ## Setup DNS Name
@@ -24,7 +24,7 @@ Example: `todo-app.westeurope.cloudapp.azure.com`
 ## Configure SSH
 
 ```bash
-> chmod 700 /path/to/ssh-key.pem
+> chmod 400 /path/to/ssh-key.pem
 ```
 
 ```bash
@@ -36,9 +36,9 @@ Host todo-app
   User azureuser
   IdentityFile /path/to/ssh-key.pem
   IdentitiesOnly yes
-  ControlMaster     auto
-  ControlPath       ~/.ssh/control-%C
-  ControlPersist    10m
+  ControlMaster auto
+  ControlPath ~/.ssh/control-%C
+  ControlPersist 10m
 ```
 
 ## Connect to VM
@@ -58,21 +58,18 @@ Host todo-app
 
 1. [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
 2. [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)
-3. [Install Docker Compose](https://docs.docker.com/compose/install/)
 
-### Prepare Certificates
+### Initialize Docker Swarm
 
-1. [Generate certificates](certificates.md)
-   - Domain name: `VM_DNS_NAME`
-2. Copy and rename the certificates into `/etc/todo-app/certs/`
-
-```text
-/etc/todo-app/certs/
-├── private.key
-├── public.crt
-├── tls.crt      # renamed public.crt
-└── tls.key      # renamed private.key
+```bash
+> docker swarm init
 ```
+
+### Generate Certificates
+
+[Generate certificates](certificates.md)
+
+Domain name: `VM_DNS_NAME`
 
 ### Exit from VM
 
@@ -80,11 +77,25 @@ Host todo-app
 > exit
 ```
 
+## Create and Populate `certs` Directory
+
+Copy (`scp`) and rename the certificates from VM into `certs` directory.
+
+```bash
+# In repository root directory
+
+certs/
+├── private.key
+└── public.crt
+```
+
 ## Create and Populate `env` Directory
 
 ```bash
-> mkdir ~/todo-app/env
-> ~/todo-app/secrets/decrypt_env.sh ~/todo-app/secrets/env.prod.enc ~/todo-app/env
+# In repository root directory
+
+> mkdir env
+> secrets/decrypt_env.sh secrets/env.prod.enc env
 ```
 
 ## Create and Set Docker Context
@@ -97,6 +108,8 @@ Host todo-app
 ## Run
 
 ```bash
-> cd ~/todo-app
-> docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
+# In repository root directory
+
+> docker compose -f docker-compose.yml -f docker-compose.prod.yml build
+> docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml todo-app
 ```
