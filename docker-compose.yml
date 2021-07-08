@@ -12,7 +12,7 @@ services:
     ports:
       - 80:80
     networks:
-      - backend
+      - todo-app
 
   todo-app:
     build: ./frontend
@@ -23,7 +23,7 @@ services:
     env_file:
       - ./env/todo-app.env
     networks:
-      - backend
+      - todo-app
 
   todo-api:
     build: ./backend/todo-api
@@ -34,7 +34,7 @@ services:
     env_file:
       - ./env/todo-api.env
     networks:
-      - backend
+      - todo-app
     depends_on:
       - db
       - nats-configure
@@ -48,7 +48,7 @@ services:
     env_file:
       - ./env/todo-service.env
     networks:
-      - backend
+      - todo-app
     depends_on:
       - db
       - nats-configure
@@ -62,7 +62,7 @@ services:
     env_file:
       - ./env/notification-service.env
     networks:
-      - backend
+      - todo-app
     depends_on:
       - nats
       - api-gateway
@@ -80,7 +80,7 @@ services:
     volumes:
       - nats:/nats
     networks:
-      - backend
+      - todo-app
 
   nats-configure:
     build: ./backend/nats/jetstream
@@ -91,7 +91,7 @@ services:
     env_file:
       - ./env/nats.env
     networks:
-      - backend
+      - todo-app
     depends_on:
       - nats
 
@@ -108,7 +108,7 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
     networks:
-      - backend
+      - todo-app
 
   db-migrate:
     build: ./backend/db/migrate
@@ -119,7 +119,7 @@ services:
     env_file:
       - ./env/migrate.env
     networks:
-      - backend
+      - todo-app
     depends_on:
       - db
 
@@ -134,7 +134,7 @@ services:
     volumes:
       - minio:/data
     networks:
-      - monitor
+      - todo-app
 
   minio-console:
     image: minio/console
@@ -147,7 +147,7 @@ services:
     ports:
       - 9090:9090
     networks:
-      - monitor
+      - todo-app
 
   minio-migrate:
     build: ./monitor/minio/migrate
@@ -159,7 +159,7 @@ services:
       - ./env/minio.env
       - ./env/minio-migrate.env
     networks:
-      - monitor
+      - todo-app
     depends_on:
       - minio
 
@@ -173,7 +173,7 @@ services:
       - ./env/minio.env
       - ./env/loki.env
     networks:
-      - monitor
+      - todo-app
     depends_on:
       - minio
 
@@ -189,8 +189,7 @@ services:
       - promtail:/tmp/promtail
       - /var/lib/docker/containers:/var/lib/docker/containers
     networks:
-      - monitor
-      - backend
+      - todo-app
     depends_on:
       - loki
 
@@ -204,8 +203,7 @@ services:
     volumes:
       - grafana:/var/lib/grafana
     networks:
-      - monitor
-      - backend
+      - todo-app
     depends_on:
       - db
 
@@ -218,7 +216,7 @@ services:
     env_file:
       - ./env/grafana-configure.env
     networks:
-      - backend
+      - todo-app
     depends_on:
       - grafana
 
@@ -233,13 +231,12 @@ services:
     ports:
       - 8080:8080
     networks:
-      - backend
+      - todo-app
     depends_on:
       - db
 
 networks:
-  backend:
-  monitor:
+  todo-app:
 
 volumes:
   db:

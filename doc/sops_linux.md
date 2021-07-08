@@ -9,11 +9,6 @@
 
 Substitute `VERSION` with the version of SOPS you want to use. For example: `v3.7.1`
 
-## Configure
+## Configure age
 
-Copy the `age` key file.
-
-```bash
-> mkdir -p ~/.config/sops/age
-> cp ~/todo-app/secrets/keys.txt ~/.config/sops/age/
-```
+Copy the age key file (`keys.txt`) into `~/.config/sops/age` directory.

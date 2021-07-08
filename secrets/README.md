@@ -16,10 +16,14 @@ This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://
 > mkdir ../env
 ```
 
-4. Decrypt the secrets by running the following command.
+4. Decrypt secrets:
 
 ```bash
-> ./decrypt_env.sh env.enc ../env
+# dev environment
+> ./decrypt_env.sh dev ../env
+
+# prod environment
+> ./decrypt_env.sh prod ../env
 ```
 
 ## Tips

@@ -89,6 +89,6 @@ services:
 
 secrets:
   private.key:
-    file: ./certs/private.key
+    file: ./env/private.key
   public.crt:
-    file: ./certs/public.crt
+    file: ./env/public.crt

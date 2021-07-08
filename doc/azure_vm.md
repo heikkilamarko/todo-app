@@ -67,26 +67,22 @@ Host todo-app
 
 ### Generate Certificates
 
-[Generate certificates](certificates.md)
+1. Generate certificates (see [here](certificates.md))
 
-Domain name: `VM_DNS_NAME`
+   - Domain name: `VM_DNS_NAME`
+
+2. Copy, rename, and [encrypt](../secrets/) the certificates from VM into `/secrets/prod` directory.
+   ```bash
+   /secrets/prod/
+   ├── ...
+   ├── private.key # encrypted
+   └── public.crt  # encrypted
+   ```
 
 ### Exit from VM
 
 ```bash
 > exit
-```
-
-## Create and Populate `certs` Directory
-
-Copy (`scp`) and rename the certificates from VM into `certs` directory.
-
-```bash
-# In repository root directory
-
-certs/
-├── private.key
-└── public.crt
 ```
 
 ## Create and Populate `env` Directory
@@ -95,7 +91,7 @@ certs/
 # In repository root directory
 
 > mkdir env
-> secrets/decrypt_env.sh secrets/env.prod.enc env
+> secrets/decrypt_env.sh secrets/prod env
 ```
 
 ## Create and Set Docker Context
