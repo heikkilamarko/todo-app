@@ -48,7 +48,7 @@ Set values ​​to variables in `azure_vm/terraform.tfvars`
 
 ### Generate Certificates
 
-1. Generate certificate (see [here](certificates.md))
+1. Generate certificate (see [here](../doc/certificates.md))
 
    - Domain name: `<domain_name_label>.westeurope.cloudapp.azure.com`
 
