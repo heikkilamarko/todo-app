@@ -1,0 +1,5 @@
+name                  = "todo-app"
+location              = "West Europe"
+domain_name_label     = "todo-app"
+public_key_file_path  = "<keyfile>.pub"
+private_key_file_path = "<keyfile>"

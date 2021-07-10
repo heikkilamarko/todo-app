@@ -371,3 +371,6 @@ certs
 .vscode
 
 .DS_Store
+
+.terraform*
+*.tfstate*

@@ -1,44 +1,43 @@
 # Host Todo App in Azure VM
 
-## Create VM
-
-[Quickstart: Create a Linux virtual machine in the Azure portal](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-portal)
-
-Download the SSH key file (`ssh-key.pem`) when asked.
-
-## Setup Networking
-
-`Allow`:
-
-- HTTP(S): `443`, `8443`, `9443`
-- SSH: `22`
-
-## Setup DNS Name
-
-```text
-Public IP address > Configuration > DNS name label (VM_DNS_NAME) > Save
-```
-
-Example: `todo-app.westeurope.cloudapp.azure.com`
-
 ## Configure SSH
 
 ```bash
-> chmod 400 /path/to/ssh-key.pem
+# Generate SSH key pair
+
+> ssh-keygen -t rsa -b 4096 -f <keyfile>
+
+# Outputs:
+
+- <keyfile>        # private key file
+- <keyfile>.pub    # public key file
 ```
 
 ```bash
 # ~/.ssh/config
 
 Host todo-app
-  HostName VM_DNS_NAME
+  HostName <domain_name_label>.westeurope.cloudapp.azure.com
   Port 22
   User azureuser
-  IdentityFile /path/to/ssh-key.pem
+  IdentityFile <keyfile>
   IdentitiesOnly yes
   ControlMaster auto
   ControlPath ~/.ssh/control-%C
   ControlPersist 10m
+```
+
+## Set Terraform Variables
+
+Set values ​​to variables in `azure_vm/terraform.tfvars`
+
+## Run Terraform
+
+```bash
+# In azure_vm directory
+
+> terraform init
+> terraform apply
 ```
 
 ## Connect to VM
@@ -47,29 +46,11 @@ Host todo-app
 > ssh todo-app
 ```
 
-### Update Packages
-
-```bash
-> sudo apt update
-> sudo apt upgrade
-```
-
-### Install Docker
-
-1. [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
-2. [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)
-
-### Initialize Docker Swarm
-
-```bash
-> docker swarm init
-```
-
 ### Generate Certificates
 
-1. Generate certificates (see [here](certificates.md))
+1. Generate certificate (see [here](certificates.md))
 
-   - Domain name: `VM_DNS_NAME`
+   - Domain name: `<domain_name_label>.westeurope.cloudapp.azure.com`
 
 2. Copy, rename, and [encrypt](../secrets/) the certificates from VM into `/secrets/prod` directory.
    ```bash
