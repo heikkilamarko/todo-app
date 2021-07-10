@@ -62,17 +62,14 @@ resource "azurerm_network_security_group" "app" {
   resource_group_name = azurerm_resource_group.app.name
 
   security_rule {
-    name                   = "SSH"
-    priority               = 300
-    direction              = "Inbound"
-    access                 = "Allow"
-    protocol               = "Tcp"
-    source_port_range      = "*"
-    destination_port_range = "22"
-    source_address_prefixes = [
-      "194.252.179.70",
-      "88.196.5.77"
-    ]
+    name                       = "SSH"
+    priority                   = 300
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 
