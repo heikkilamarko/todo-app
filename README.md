@@ -31,7 +31,7 @@ See [secrets](secrets/) for details.
 - [Promtail](https://grafana.com/docs/loki/latest/clients/promtail/)
 - [MinIO](https://min.io/)
   - URL: http://localhost:9090
-  - username: `minio`
+  - username: `console`
   - password: `S3c_r3t!`
 
 ## Running the App

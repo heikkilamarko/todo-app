@@ -148,6 +148,8 @@ services:
       - 9090:9090
     networks:
       - todo-app
+    depends_on:
+      - minio
 
   minio-migrate:
     build: ./monitor/minio/migrate
@@ -206,6 +208,7 @@ services:
       - todo-app
     depends_on:
       - db
+      - loki
 
   grafana-configure:
     build: ./monitor/grafana
