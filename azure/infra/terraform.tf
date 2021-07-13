@@ -74,8 +74,20 @@ resource "azurerm_network_security_group" "app" {
   }
 
   security_rule {
-    name                       = "HTTPS"
+    name                       = "HTTP"
     priority                   = 310
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "HTTPS"
+    priority                   = 320
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
@@ -87,7 +99,7 @@ resource "azurerm_network_security_group" "app" {
 
   security_rule {
     name                       = "Keycloak"
-    priority                   = 320
+    priority                   = 330
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
@@ -99,7 +111,7 @@ resource "azurerm_network_security_group" "app" {
 
   security_rule {
     name                       = "MinIO"
-    priority                   = 330
+    priority                   = 340
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"

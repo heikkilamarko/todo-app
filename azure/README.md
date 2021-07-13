@@ -1,4 +1,4 @@
-# Host Todo App in Azure VM
+# Hosting Todo App in Azure VM
 
 ## Configure SSH
 
@@ -27,43 +27,27 @@ Host todo-app
   ControlPersist 10m
 ```
 
-## Set Terraform Variables
-
-Set values ​​to variables in `azure_vm/terraform.tfvars`
-
 ## Run Terraform
 
 ```bash
-# In azure_vm directory
+# In 'infra' directory
+
+# Before running the below commands, set
+# values ​​to variables in 'terraform.tfvars'
 
 > terraform init
 > terraform apply
-```
 
-## Connect to VM
-
-```bash
+# Test SSH connection
 > ssh todo-app
 ```
 
-### Generate Certificates
-
-1. Generate certificate (see [here](../doc/certificates.md))
-
-   - Domain name: `<domain_name_label>.westeurope.cloudapp.azure.com`
-
-2. Copy, rename, and [encrypt](../secrets/) the certificates from VM into `/secrets/prod` directory.
-   ```bash
-   /secrets/prod/
-   ├── ...
-   ├── private.key # encrypted
-   └── public.crt  # encrypted
-   ```
-
-### Exit from VM
+## Generate Certificates
 
 ```bash
-> exit
+# In 'azure' directory
+
+> ./generate_certs.sh <domain_name_label>.westeurope.cloudapp.azure.com
 ```
 
 ## Create and Populate `env` Directory

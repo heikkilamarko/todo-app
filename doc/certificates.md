@@ -1,16 +1,8 @@
-# TLS Certificates
+# Certificates
 
 ## Certbot
 
 [Docs](https://certbot.eff.org/docs/install.html)
-
-```bash
-sudo docker run -it --rm --name certbot \
-  -v "/etc/letsencrypt:/etc/letsencrypt" \
-  -v "/var/lib/letsencrypt:/var/lib/letsencrypt" \
-  -p 80:80 \
-  certbot/certbot certonly
-```
 
 ## Kestrel
 
