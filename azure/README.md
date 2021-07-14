@@ -27,6 +27,13 @@ Host todo-app
   ControlPersist 10m
 ```
 
+## Create and Set Docker Context
+
+```bash
+> docker context create todo-app --docker "host=ssh://todo-app"
+> docker context use todo-app
+```
+
 ## Run Terraform
 
 ```bash
@@ -57,13 +64,6 @@ Host todo-app
 
 > mkdir env
 > secrets/decrypt_env.sh secrets/prod env
-```
-
-## Create and Set Docker Context
-
-```bash
-> docker context create todo-app --docker "host=ssh://todo-app"
-> docker context use todo-app
 ```
 
 ## Run

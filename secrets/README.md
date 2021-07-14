@@ -6,17 +6,33 @@ This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://
 
 ⚠️ `keys.txt` (contains one or more secret keys) is included in this repository just for demo purposes.
 
-## Decrypting Secrets
+## Installing and Configuring SOPS
 
 1. Install [SOPS](https://github.com/mozilla/sops).
 2. Copy the `keys.txt` file to the [correct location](https://github.com/mozilla/sops#22encrypting-using-age) on your computer.
-3. Create `/env` directory into the root of the repository. Secrets will be decrypted to this directory.
+
+## Encrypting Secrets
+
+```bash
+# Encrypt a file
+> sops -e <file> > <encrypted_file>
+
+# Encrypt a file (in-place)
+> sops -e -i <file>
+
+# Encrypt all files (in-place) in a directory
+> ./encrypt_env.sh <directory>
+```
+
+## Decrypting Todo App Secrets
+
+Create `env` directory into the root of the repository. Secrets will be decrypted into this directory.
 
 ```bash
 > mkdir ../env
 ```
 
-4. Decrypt secrets:
+Decrypt secrets:
 
 ```bash
 # dev environment
@@ -28,9 +44,24 @@ This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://
 
 ## Tips
 
+### Configuring SOPS to Use Visual Studio Code
+
 With SOPS, editing will happen in whatever `$EDITOR` is set to, or, if it's not set, in `vim`. SOPS will wait for the editor to exit, and then try to reencrypt the file. Here is how to configure SOPS to use `Visual Studio Code` as the editor:
 
 ```bash
 # Add this to your ~/.zshrc or ~/.bashrc
 export EDITOR="code --wait"
 ```
+
+### Installing SOPS on Linux
+
+```bash
+> sudo wget https://github.com/mozilla/sops/releases/download/VERSION/sops-VERSION.linux -O /usr/local/bin/sops
+> sudo chmod +x /usr/local/bin/sops
+```
+
+Substitute `VERSION` with the version of SOPS you want to use. For example: `v3.7.1`
+
+#### Configuring age
+
+Copy the age key file (`keys.txt`) into `~/.config/sops/age` directory.
