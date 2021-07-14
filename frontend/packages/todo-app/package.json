@@ -6,13 +6,13 @@
     "serve": "vite preview"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "1.0.0-next.11",
+    "@sveltejs/vite-plugin-svelte": "1.0.0-next.12",
     "sass": "1.35.2",
     "svelte": "3.38.3",
-    "vite": "2.4.1"
+    "vite": "2.4.2"
   },
   "dependencies": {
-    "@microsoft/signalr": "5.0.7",
+    "@microsoft/signalr": "5.0.8",
     "bootstrap": "5.0.2",
     "bootstrap-icons": "1.5.0",
     "keycloak-js": "14.0.0",

@@ -3,7 +3,6 @@
 import { Writable } from "svelte/store";
 
 export * from "./components";
-export * from "./icons";
 export * from "./stores";
 
 export type ToastType = "info" | "error";

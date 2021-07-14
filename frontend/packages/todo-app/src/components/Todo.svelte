@@ -1,6 +1,6 @@
 <script>
   import { fly } from "svelte/transition";
-  import { CheckLgIcon } from "todo-app-common";
+  import CheckLgIcon from "bootstrap-icons/icons/check-lg.svg";
   import { stores } from "../stores";
 
   /** @type {import("../types").Todo} */

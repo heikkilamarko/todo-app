@@ -1,5 +1,6 @@
 <script>
-  import { Offcanvas, PlusLgIcon } from "todo-app-common";
+  import PlusLgIcon from "bootstrap-icons/icons/plus-lg.svg";
+  import { Offcanvas } from "todo-app-common";
   import { stores } from "../stores";
 
   const {

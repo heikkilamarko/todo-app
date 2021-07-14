@@ -1,11 +1,9 @@
 <script>
-  import {
-    GithubIcon,
-    GridIcon,
-    PersonIcon,
-    PersonFillIcon,
-    PowerIcon,
-  } from "todo-app-common";
+  import GithubIcon from "bootstrap-icons/icons/github.svg";
+  import GridIcon from "bootstrap-icons/icons/grid.svg";
+  import PersonIcon from "bootstrap-icons/icons/person.svg";
+  import PersonFillIcon from "bootstrap-icons/icons/person-fill.svg";
+  import PowerIcon from "bootstrap-icons/icons/power.svg";
   import { config } from "../shared/config";
   import { logout, userName } from "../shared/auth";
 </script>
@@ -28,7 +26,7 @@
         target="_blank"
         rel="noreferrer"
       >
-        <PersonIcon clazz="text-primary" />
+        <PersonIcon />
         Profile
       </a>
     </li>
@@ -39,7 +37,7 @@
         target="_blank"
         rel="noreferrer"
       >
-        <GridIcon clazz="text-primary" />
+        <GridIcon />
         Dashboard
       </a>
     </li>
@@ -50,14 +48,14 @@
         target="_blank"
         rel="noreferrer"
       >
-        <GithubIcon clazz="text-primary" />
+        <GithubIcon />
         GitHub
       </a>
     </li>
     <li><hr class="dropdown-divider" /></li>
     <li>
       <a class="dropdown-item" href="/" on:click|preventDefault={logout}>
-        <PowerIcon clazz="text-primary" />
+        <PowerIcon />
         Logout
       </a>
     </li>
@@ -67,5 +65,9 @@
 <style>
   .dropdown-toggle::after {
     content: none;
+  }
+
+  .dropdown-item :global(svg) {
+    color: var(--bs-primary);
   }
 </style>
