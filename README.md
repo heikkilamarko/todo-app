@@ -36,7 +36,7 @@ See [secrets](secrets/) for details.
 
 ## Running the App
 
-Before running the below command, make sure you have the unencrypted secrets in the `/env` directory. See [secrets](secrets/) for details.
+Before running the below command, make sure you have the unencrypted secrets in the `env` directory. See [secrets](secrets/) for details.
 
 ```bash
 > docker compose up --build -d

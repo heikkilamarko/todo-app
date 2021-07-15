@@ -21,7 +21,7 @@ This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://
 > sops -e -i <file>
 
 # Encrypt all files (in-place) in a directory
-> ./encrypt_env.sh <directory>
+> ./encrypt_secrets.sh <directory>
 ```
 
 ## Decrypting Todo App Secrets
@@ -36,10 +36,10 @@ Decrypt secrets:
 
 ```bash
 # dev environment
-> ./decrypt_env.sh dev ../env
+> ./decrypt_secrets.sh dev ../env
 
 # prod environment
-> ./decrypt_env.sh prod ../env
+> ./decrypt_secrets.sh prod ../env
 ```
 
 ## Tips

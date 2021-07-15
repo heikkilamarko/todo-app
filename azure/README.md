@@ -57,16 +57,16 @@ Host todo-app
 > ./generate_certs.sh <domain_name_label>.westeurope.cloudapp.azure.com
 ```
 
-## Create and Populate `env` Directory
+## Decrypt Secrets
 
 ```bash
 # In repository root directory
 
 > mkdir env
-> secrets/decrypt_env.sh secrets/prod env
+> secrets/decrypt_secrets.sh secrets/prod env
 ```
 
-## Run
+## Deploy
 
 ```bash
 # In repository root directory

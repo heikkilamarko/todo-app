@@ -48,16 +48,15 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <div
-  id="offcanvas-right"
   class="offcanvas offcanvas-end show"
   role="dialog"
-  aria-modal="true"
+  aria-labelledby="offcanvas-label"
   bind:this={offcanvasEl}
   in:fly={{ x: 400, duration: 300 }}
   out:fly={{ x: 400, duration: 300 }}
 >
   <div class="offcanvas-header">
-    <h5 id="offcanvas-right-label">{title}</h5>
+    <h5 id="offcanvas-label">{title}</h5>
     <button
       type="button"
       class="btn-close text-reset"
