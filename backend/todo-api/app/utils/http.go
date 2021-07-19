@@ -8,51 +8,29 @@ import (
 
 // DataResponse struct
 type DataResponse struct {
-	Meta interface{} `json:"meta,omitempty"`
 	Data interface{} `json:"data"`
-}
-
-// NewDataResponse func
-func NewDataResponse(data, meta interface{}) *DataResponse {
-	return &DataResponse{meta, data}
+	Meta interface{} `json:"meta,omitempty"`
 }
 
 // ErrorResponse struct
 type ErrorResponse struct {
-	Error *ErrorResponseError `json:"error"`
+	Error ErrorResponseError `json:"error"`
 }
 
 // ErrorResponseError struct
 type ErrorResponseError struct {
-	Code    string            `json:"code"`
-	Details map[string]string `json:"details,omitempty"`
+	Code    string      `json:"code"`
+	Details interface{} `json:"details,omitempty"`
+}
+
+// NewDataResponse func
+func NewDataResponse(data, meta interface{}) *DataResponse {
+	return &DataResponse{data, meta}
 }
 
 // NewErrorResponse func
-func NewErrorResponse(code string, details map[string]string) *ErrorResponse {
-	return &ErrorResponse{
-		Error: &ErrorResponseError{code, details},
-	}
-}
-
-// NewBadRequestResponse func
-func NewBadRequestResponse(details map[string]string) *ErrorResponse {
-	return NewErrorResponse(ErrCodeBadRequest, details)
-}
-
-// NewUnauthorizedResponse func
-func NewUnauthorizedResponse(details map[string]string) *ErrorResponse {
-	return NewErrorResponse(ErrCodeUnauthorized, details)
-}
-
-// NewNotFoundResponse func
-func NewNotFoundResponse(details map[string]string) *ErrorResponse {
-	return NewErrorResponse(ErrCodeNotFound, details)
-}
-
-// NewInternalErrorResponse func
-func NewInternalErrorResponse(details map[string]string) *ErrorResponse {
-	return NewErrorResponse(ErrCodeInternalError, details)
+func NewErrorResponse(code string, details interface{}) *ErrorResponse {
+	return &ErrorResponse{Error: ErrorResponseError{code, details}}
 }
 
 // WriteOK writes 200 response
@@ -71,23 +49,23 @@ func WriteNoContent(w http.ResponseWriter) {
 }
 
 // WriteBadRequest writes 400 response
-func WriteBadRequest(w http.ResponseWriter, details map[string]string) {
-	WriteResponse(w, http.StatusBadRequest, NewBadRequestResponse(details))
+func WriteBadRequest(w http.ResponseWriter, details interface{}) {
+	WriteResponse(w, http.StatusBadRequest, NewErrorResponse(ErrCodeBadRequest, details))
 }
 
 // WriteUnauthorized writes 401 response
-func WriteUnauthorized(w http.ResponseWriter, details map[string]string) {
-	WriteResponse(w, http.StatusUnauthorized, NewUnauthorizedResponse(details))
+func WriteUnauthorized(w http.ResponseWriter, details interface{}) {
+	WriteResponse(w, http.StatusUnauthorized, NewErrorResponse(ErrCodeUnauthorized, details))
 }
 
 // WriteNotFound writes 404 response
-func WriteNotFound(w http.ResponseWriter, details map[string]string) {
-	WriteResponse(w, http.StatusNotFound, NewNotFoundResponse(details))
+func WriteNotFound(w http.ResponseWriter, details interface{}) {
+	WriteResponse(w, http.StatusNotFound, NewErrorResponse(ErrCodeNotFound, details))
 }
 
 // WriteInternalError writes 500 response
-func WriteInternalError(w http.ResponseWriter, details map[string]string) {
-	WriteResponse(w, http.StatusInternalServerError, NewInternalErrorResponse(details))
+func WriteInternalError(w http.ResponseWriter, details interface{}) {
+	WriteResponse(w, http.StatusInternalServerError, NewErrorResponse(ErrCodeInternalError, details))
 }
 
 // WriteValidationError writes 400 or 500 response

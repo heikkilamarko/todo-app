@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS todos;
-
 CREATE TABLE todos (
     id serial,
     name text NOT NULL,
