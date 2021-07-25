@@ -33,7 +33,6 @@ func (r *repository) createTodo(ctx context.Context, command *createTodoCommand)
 }
 
 func (r *repository) completeTodo(ctx context.Context, command *completeTodoCommand) error {
-
 	if _, err := r.db.ExecContext(ctx, sqlCompleteTodo, command.ID); err != nil {
 		return err
 	}

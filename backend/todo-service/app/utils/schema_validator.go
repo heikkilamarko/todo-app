@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 
+	"github.com/heikkilamarko/goutils"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -20,7 +21,6 @@ func NewSchemaValidator(fs embed.FS) *SchemaValidator {
 
 // Validate method
 func (v *SchemaValidator) Validate(schemaName string, doc []byte) error {
-
 	schema, err := v.getSchema(schemaName)
 	if err != nil {
 		return err
@@ -36,14 +36,13 @@ func (v *SchemaValidator) Validate(schemaName string, doc []byte) error {
 		for _, e := range r.Errors() {
 			m[e.Field()] = e.Description()
 		}
-		return NewValidationError(m)
+		return goutils.NewValidationError(m)
 	}
 
 	return nil
 }
 
 func (v *SchemaValidator) getSchema(schemaName string) (*gojsonschema.Schema, error) {
-
 	schema, found := v.schemas[schemaName]
 
 	if !found {

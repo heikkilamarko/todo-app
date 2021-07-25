@@ -31,7 +31,6 @@ func NewController(config *config.Config, logger *zerolog.Logger, db *sql.DB, nc
 
 // Start method
 func (c *Controller) Start(ctx context.Context) error {
-
 	sub, err := c.js.PullSubscribe(subjectTodo, durableTodo)
 
 	if err != nil {
@@ -39,7 +38,6 @@ func (c *Controller) Start(ctx context.Context) error {
 	}
 
 	go func() {
-
 		c.logInfo("todos controller started")
 
 		for {
@@ -80,7 +78,6 @@ func (c *Controller) handleMessage(ctx context.Context, m *nats.Msg) {
 }
 
 func (c *Controller) publishMessage(subject string, message interface{}) error {
-
 	data, err := json.Marshal(message)
 
 	if err != nil {

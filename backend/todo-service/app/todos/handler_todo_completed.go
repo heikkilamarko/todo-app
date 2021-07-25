@@ -3,8 +3,8 @@ package todos
 import (
 	"context"
 	"errors"
-	"todo-service/app/utils"
 
+	"github.com/heikkilamarko/goutils"
 	"github.com/nats-io/nats.go"
 )
 
@@ -18,9 +18,9 @@ func (c *Controller) handleTodoCompleted(ctx context.Context, m *nats.Msg) {
 
 		var message string
 
-		var vErr *utils.ValidationError
-		if errors.As(err, &vErr) {
-			message = vErr.Error()
+		var verr *goutils.ValidationError
+		if errors.As(err, &verr) {
+			message = verr.Error()
 		}
 
 		_ = c.publishMessage(

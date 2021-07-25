@@ -6,6 +6,7 @@ import (
 	"todo-api/app/utils"
 
 	"github.com/gorilla/mux"
+	"github.com/heikkilamarko/goutils"
 )
 
 // CompleteTodo method
@@ -14,17 +15,17 @@ func (c *Controller) CompleteTodo(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		c.logError(err)
-		utils.WriteValidationError(w, err)
+		goutils.WriteValidationError(w, err)
 		return
 	}
 
 	if err := c.publishMessage(subjectTodoCompleted, command); err != nil {
 		c.logError(err)
-		utils.WriteInternalError(w, nil)
+		goutils.WriteInternalError(w, nil)
 		return
 	}
 
-	utils.WriteResponse(w, http.StatusAccepted, nil)
+	goutils.WriteResponse(w, http.StatusAccepted, nil)
 }
 
 func parseCompleteTodoRequest(r *http.Request) (*completeTodoCommand, error) {
@@ -36,7 +37,7 @@ func parseCompleteTodoRequest(r *http.Request) (*completeTodoCommand, error) {
 	}
 
 	if 0 < len(errorMap) {
-		return nil, utils.NewValidationError(errorMap)
+		return nil, goutils.NewValidationError(errorMap)
 	}
 
 	return &completeTodoCommand{id}, nil

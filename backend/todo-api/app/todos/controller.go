@@ -25,7 +25,6 @@ func NewController(config *config.Config, logger *zerolog.Logger, db *sql.DB, js
 }
 
 func (c *Controller) publishMessage(subject string, message interface{}) error {
-
 	data, err := json.Marshal(message)
 
 	if err != nil {

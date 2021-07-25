@@ -18,7 +18,6 @@ func NewMessageParser(v *SchemaValidator) *MessageParser {
 
 // Parse method
 func (p *MessageParser) Parse(message *nats.Msg, model interface{}) error {
-
 	if err := p.v.Validate(message.Subject, message.Data); err != nil {
 		return err
 	}

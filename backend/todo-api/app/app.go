@@ -10,10 +10,11 @@ import (
 	"syscall"
 	"time"
 	"todo-api/app/config"
-	"todo-api/app/middleware"
 	"todo-api/app/todos"
 
 	"github.com/gorilla/mux"
+	"github.com/heikkilamarko/goutils"
+	"github.com/heikkilamarko/goutils/middleware"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 
@@ -34,7 +35,6 @@ type App struct {
 
 // Run method
 func (a *App) Run() {
-
 	a.loadConfig()
 	a.initLogger()
 
@@ -69,7 +69,6 @@ func (a *App) loadConfig() {
 }
 
 func (a *App) initLogger() {
-
 	level, err := zerolog.ParseLevel(a.config.LogLevel)
 	if err != nil {
 		level = zerolog.WarnLevel
@@ -87,7 +86,6 @@ func (a *App) initLogger() {
 }
 
 func (a *App) initDB(ctx context.Context) error {
-
 	db, err := sql.Open("pgx", a.config.DBConnectionString)
 	if err != nil {
 		return err
@@ -108,7 +106,6 @@ func (a *App) initDB(ctx context.Context) error {
 }
 
 func (a *App) initNATS() error {
-
 	nc, err := nats.Connect(
 		a.config.NATSUrl,
 		nats.Token(a.config.NATSToken),
@@ -140,7 +137,6 @@ func (a *App) initNATS() error {
 }
 
 func (a *App) initRouter() {
-
 	router := mux.NewRouter()
 
 	router.Use(
@@ -149,13 +145,12 @@ func (a *App) initRouter() {
 		middleware.ErrorRecovery(),
 	)
 
-	router.NotFoundHandler = http.HandlerFunc(middleware.NotFoundHandler)
+	router.NotFoundHandler = goutils.NotFoundHandler()
 
 	a.router = router
 }
 
 func (a *App) registerRoutes() {
-
 	c := todos.NewController(a.config, a.logger, a.db, a.js)
 
 	a.router.HandleFunc("/todos", c.GetTodos).
@@ -169,7 +164,6 @@ func (a *App) registerRoutes() {
 }
 
 func (a *App) initServer() {
-
 	a.server = &http.Server{
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
@@ -180,7 +174,6 @@ func (a *App) initServer() {
 }
 
 func (a *App) serve(ctx context.Context) error {
-
 	errChan := make(chan error)
 
 	go func() {

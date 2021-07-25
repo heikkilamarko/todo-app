@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"todo-api/app/utils"
+
+	"github.com/heikkilamarko/goutils"
 )
 
 // CreateTodo method
@@ -12,17 +14,17 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		c.logError(err)
-		utils.WriteValidationError(w, err)
+		goutils.WriteValidationError(w, err)
 		return
 	}
 
 	if err := c.publishMessage(subjectTodoCreated, command); err != nil {
 		c.logError(err)
-		utils.WriteInternalError(w, nil)
+		goutils.WriteInternalError(w, nil)
 		return
 	}
 
-	utils.WriteResponse(w, http.StatusAccepted, nil)
+	goutils.WriteResponse(w, http.StatusAccepted, nil)
 }
 
 func parseCreateTodoRequest(r *http.Request) (*createTodoCommand, error) {
@@ -34,7 +36,7 @@ func parseCreateTodoRequest(r *http.Request) (*createTodoCommand, error) {
 	}
 
 	if 0 < len(errorMap) {
-		return nil, utils.NewValidationError(errorMap)
+		return nil, goutils.NewValidationError(errorMap)
 	}
 
 	return &createTodoCommand{todo}, nil

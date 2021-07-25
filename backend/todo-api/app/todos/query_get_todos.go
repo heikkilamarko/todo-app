@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strconv"
 	"todo-api/app/utils"
+
+	"github.com/heikkilamarko/goutils"
 )
 
 // GetTodos method
@@ -12,7 +14,7 @@ func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		c.logError(err)
-		utils.WriteValidationError(w, err)
+		goutils.WriteValidationError(w, err)
 		return
 	}
 
@@ -20,11 +22,11 @@ func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		c.logError(err)
-		utils.WriteInternalError(w, nil)
+		goutils.WriteInternalError(w, nil)
 		return
 	}
 
-	utils.WriteOK(w, todos, query)
+	goutils.WriteOK(w, todos, query)
 }
 
 func parseGetTodosRequest(r *http.Request) (*getTodosQuery, error) {
@@ -50,7 +52,7 @@ func parseGetTodosRequest(r *http.Request) (*getTodosQuery, error) {
 	}
 
 	if 0 < len(errorMap) {
-		return nil, utils.NewValidationError(errorMap)
+		return nil, goutils.NewValidationError(errorMap)
 	}
 
 	return &getTodosQuery{offset, limit}, nil

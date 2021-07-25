@@ -12,16 +12,23 @@ const (
 
 	// ErrCodeInvalidRequestBody error code
 	ErrCodeInvalidRequestBody = "invalid_request_body"
+)
 
-	// ErrCodeBadRequest error code
-	ErrCodeBadRequest = "bad_request"
+const (
+	// FieldID field
+	FieldID = "id"
 
-	// ErrCodeNotFound error code
-	ErrCodeNotFound = "not_found"
+	// FieldPaginationOffset field
+	FieldPaginationOffset = "offset"
 
-	// ErrCodeUnauthorized error code
-	ErrCodeUnauthorized = "unauthorized"
+	// FieldPaginationLimit field
+	FieldPaginationLimit = "limit"
 
-	// ErrCodeInternalError error code
-	ErrCodeInternalError = "internal_error"
+	// FieldRequestBody field
+	FieldRequestBody = "request_body"
+)
+
+const (
+	// LimitMaxPageSize limit
+	LimitMaxPageSize = 100
 )
