@@ -27,8 +27,8 @@ github.com/hashicorp/go-cleanhttp v0.5.2/go.mod h1:kO/YDlP8L1346E6Sodw+PrpBSV4/S
 github.com/hashicorp/go-hclog v0.16.1/go.mod h1:whpDNt7SSdeAju8AWKIWsul05p54N/39EeqMAyrmvFQ=
 github.com/hashicorp/go-multierror v1.1.1/go.mod h1:iw975J/qwKPdAO1clOe2L8331t/9/fmwbPZ6JB6eMoM=
 github.com/hashicorp/go-uuid v1.0.2/go.mod h1:6SBZvOh/SIDV7/2o3Jml5SYk/TvGqwFJ/bN7x4byOro=
-github.com/heikkilamarko/goutils v1.0.20 h1:IPXzbj0F2TGalxBqNoDPL9TBc76tN1c+7DZ3U2hL934=
-github.com/heikkilamarko/goutils v1.0.20/go.mod h1:0KvLB2Xm8oPfPQ6rwj/2SDkpsLaWTvZDhhRU+Sv/X7w=
+github.com/heikkilamarko/goutils v1.0.22 h1:xhXNX4GDhAzsPg/c9WAaDS8br37ttISJf82rmUFFsLk=
+github.com/heikkilamarko/goutils v1.0.22/go.mod h1:0KvLB2Xm8oPfPQ6rwj/2SDkpsLaWTvZDhhRU+Sv/X7w=
 github.com/jackc/chunkreader v1.0.0 h1:4s39bBR8ByfqH+DKm8rQA3E1LHZWB9XWcrz8fqaZbe0=
 github.com/jackc/chunkreader v1.0.0/go.mod h1:RT6O25fNZIuasFJRyZ4R/Y2BbhasbmZXF9QQ7T3kePo=
 github.com/jackc/chunkreader/v2 v2.0.0/go.mod h1:odVSm741yZoC3dpHEUXIqA9tQRhFrgOHwnPIn9lDKlk=
