@@ -1,8 +1,7 @@
 package main
 
-import "todo-api/app"
+import "todo-api/service"
 
 func main() {
-	var a app.App
-	a.Run()
+	(&service.Service{}).Run()
 }
