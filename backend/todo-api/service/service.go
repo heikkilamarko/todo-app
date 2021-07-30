@@ -13,7 +13,6 @@ import (
 	"todo-api/app"
 	"todo-api/app/command"
 	"todo-api/app/query"
-	"todo-api/ports"
 
 	"github.com/gorilla/mux"
 	"github.com/heikkilamarko/goutils"
@@ -35,15 +34,13 @@ type config struct {
 }
 
 type Service struct {
-	config     *config
-	logger     *zerolog.Logger
-	db         *sql.DB
-	nc         *nats.Conn
-	js         nats.JetStreamContext
-	app        *app.App
-	httpServer *ports.HTTPServer
-	router     *mux.Router
-	server     *http.Server
+	config *config
+	logger *zerolog.Logger
+	db     *sql.DB
+	nc     *nats.Conn
+	js     nats.JetStreamContext
+	app    *app.App
+	server *http.Server
 }
 
 func (s *Service) Run() {
@@ -64,9 +61,7 @@ func (s *Service) Run() {
 	}
 
 	s.initApp()
-	s.initRouter()
 	s.initHTTPServer()
-	s.initServer()
 
 	if err := s.serve(ctx); err != nil {
 		s.logFatal(err)
@@ -155,20 +150,21 @@ func (s *Service) initNATS() error {
 }
 
 func (s *Service) initApp() {
-	todoRepo := adapters.NewTodoRepository(s.db, s.js)
+	todoRepository := adapters.NewTodoRepository(s.db)
+	todoMessagePublisher := adapters.NewTodoMessagePublisher(s.js)
 
 	s.app = &app.App{
 		Commands: app.Commands{
-			CreateTodo:   command.NewCreateTodoHandler(todoRepo),
-			CompleteTodo: command.NewCompleteTodoHandler(todoRepo),
+			CreateTodo:   command.NewCreateTodoHandler(todoMessagePublisher),
+			CompleteTodo: command.NewCompleteTodoHandler(todoMessagePublisher),
 		},
 		Queries: app.Queries{
-			GetTodos: query.NewGetTodosHandler(todoRepo),
+			GetTodos: query.NewGetTodosHandler(todoRepository),
 		},
 	}
 }
 
-func (s *Service) initRouter() {
+func (s *Service) initHTTPServer() {
 	router := mux.NewRouter()
 
 	router.Use(
@@ -179,20 +175,14 @@ func (s *Service) initRouter() {
 
 	router.NotFoundHandler = goutils.NotFoundHandler()
 
-	s.router = router
-}
+	adapters.NewTodoAPIController(s.app, s.logger).RegisterRoutes(router)
 
-func (s *Service) initHTTPServer() {
-	s.httpServer = ports.NewHTTPServer(s.app, s.router, s.logger)
-}
-
-func (s *Service) initServer() {
 	s.server = &http.Server{
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
 		Addr:         s.config.Address,
-		Handler:      s.router,
+		Handler:      router,
 	}
 }
 

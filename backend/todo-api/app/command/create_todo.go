@@ -11,13 +11,13 @@ type CreateTodo struct {
 }
 
 type CreateTodoHandler struct {
-	r domain.TodoRepository
+	mp domain.TodoMessagePublisher
 }
 
-func NewCreateTodoHandler(r domain.TodoRepository) *CreateTodoHandler {
-	return &CreateTodoHandler{r}
+func NewCreateTodoHandler(mp domain.TodoMessagePublisher) *CreateTodoHandler {
+	return &CreateTodoHandler{mp}
 }
 
 func (h *CreateTodoHandler) Handle(ctx context.Context, c *CreateTodo) error {
-	return h.r.CreateTodo(ctx, c.Todo)
+	return h.mp.CreateTodo(ctx, c.Todo)
 }

@@ -10,13 +10,13 @@ type CompleteTodo struct {
 }
 
 type CompleteTodoHandler struct {
-	r domain.TodoRepository
+	mp domain.TodoMessagePublisher
 }
 
-func NewCompleteTodoHandler(r domain.TodoRepository) *CompleteTodoHandler {
-	return &CompleteTodoHandler{r}
+func NewCompleteTodoHandler(mp domain.TodoMessagePublisher) *CompleteTodoHandler {
+	return &CompleteTodoHandler{mp}
 }
 
 func (h *CompleteTodoHandler) Handle(ctx context.Context, c *CompleteTodo) error {
-	return h.r.CompleteTodo(ctx, c.ID)
+	return h.mp.CompleteTodo(ctx, c.ID)
 }

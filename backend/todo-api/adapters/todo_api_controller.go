@@ -1,15 +1,17 @@
-package ports
+package adapters
 
 import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"todo-api/app"
 	"todo-api/app/command"
 	"todo-api/app/query"
 	"todo-api/domain"
 
 	"github.com/gorilla/mux"
 	"github.com/heikkilamarko/goutils"
+	"github.com/rs/zerolog"
 )
 
 const (
@@ -29,6 +31,81 @@ const (
 const (
 	limitMaxPageSize = 100
 )
+
+type TodoAPIController struct {
+	app    *app.App
+	logger *zerolog.Logger
+}
+
+func NewTodoAPIController(app *app.App, logger *zerolog.Logger) *TodoAPIController {
+	return &TodoAPIController{app, logger}
+}
+
+func (c *TodoAPIController) RegisterRoutes(r *mux.Router) {
+	r.HandleFunc("/todos", c.getTodos).Methods(http.MethodGet)
+	r.HandleFunc("/todos", c.createTodo).Methods(http.MethodPost)
+	r.HandleFunc("/todos/{id:[0-9]+}/complete", c.completeTodo).Methods(http.MethodPost)
+}
+
+// Handlers
+
+func (c *TodoAPIController) getTodos(w http.ResponseWriter, r *http.Request) {
+	query, err := parseGetTodosQuery(r)
+
+	if err != nil {
+		c.logError(err)
+		goutils.WriteValidationError(w, err)
+		return
+	}
+
+	todos, err := c.app.Queries.GetTodos.Handle(r.Context(), query)
+
+	if err != nil {
+		c.logError(err)
+		goutils.WriteInternalError(w, nil)
+		return
+	}
+
+	goutils.WriteOK(w, todos, query)
+}
+
+func (c *TodoAPIController) createTodo(w http.ResponseWriter, r *http.Request) {
+	command, err := parseCreateTodoCommand(r)
+
+	if err != nil {
+		c.logError(err)
+		goutils.WriteValidationError(w, err)
+		return
+	}
+
+	if err := c.app.Commands.CreateTodo.Handle(r.Context(), command); err != nil {
+		c.logError(err)
+		goutils.WriteInternalError(w, nil)
+		return
+	}
+
+	goutils.WriteResponse(w, http.StatusAccepted, nil)
+}
+
+func (c *TodoAPIController) completeTodo(w http.ResponseWriter, r *http.Request) {
+	command, err := parseCompleteTodoCommand(r)
+
+	if err != nil {
+		c.logError(err)
+		goutils.WriteValidationError(w, err)
+		return
+	}
+
+	if err := c.app.Commands.CompleteTodo.Handle(r.Context(), command); err != nil {
+		c.logError(err)
+		goutils.WriteInternalError(w, nil)
+		return
+	}
+
+	goutils.WriteResponse(w, http.StatusAccepted, nil)
+}
+
+// Input parsers
 
 func parseGetTodosQuery(r *http.Request) (*query.GetTodos, error) {
 	errorMap := map[string]string{}
@@ -94,4 +171,10 @@ func parseCompleteTodoCommand(r *http.Request) (*command.CompleteTodo, error) {
 	return &command.CompleteTodo{
 		ID: id,
 	}, nil
+}
+
+// Utils
+
+func (c *TodoAPIController) logError(err error) {
+	c.logger.Error().Err(err).Send()
 }
