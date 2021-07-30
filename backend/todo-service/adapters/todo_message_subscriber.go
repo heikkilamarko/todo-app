@@ -39,8 +39,8 @@ func NewTodoMessageSubscriber(app *app.App, js nats.JetStreamContext, logger *ze
 	ms.messageParser = utils.NewMessageParser(utils.NewSchemaValidator(schemaFS))
 
 	ms.routes = map[string]func(context.Context, *nats.Msg){
-		subjectTodoCreated:   ms.TodoCreated,
-		subjectTodoCompleted: ms.TodoCompleted,
+		subjectTodoCreated:   ms.todoCreated,
+		subjectTodoCompleted: ms.todoCompleted,
 	}
 
 	return ms
@@ -89,7 +89,7 @@ func (ms *TodoMessageSubscriber) Subscribe(ctx context.Context) error {
 
 // Handlers
 
-func (ms *TodoMessageSubscriber) TodoCreated(ctx context.Context, m *nats.Msg) {
+func (ms *TodoMessageSubscriber) todoCreated(ctx context.Context, m *nats.Msg) {
 	_ = m.Ack()
 
 	command := &command.CreateTodo{}
@@ -105,7 +105,7 @@ func (ms *TodoMessageSubscriber) TodoCreated(ctx context.Context, m *nats.Msg) {
 	}
 }
 
-func (ms *TodoMessageSubscriber) TodoCompleted(ctx context.Context, m *nats.Msg) {
+func (ms *TodoMessageSubscriber) todoCompleted(ctx context.Context, m *nats.Msg) {
 	_ = m.Ack()
 
 	command := &command.CompleteTodo{}
