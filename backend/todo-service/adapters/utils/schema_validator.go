@@ -2,24 +2,27 @@ package utils
 
 import (
 	"embed"
+	"errors"
 	"fmt"
 
 	"github.com/heikkilamarko/goutils"
 	"github.com/xeipuuv/gojsonschema"
 )
 
-// SchemaValidator struct
+var (
+	ErrSchemaNotFound = errors.New("schema not found")
+	ErrInvalidSchema  = errors.New("invalid schema")
+)
+
 type SchemaValidator struct {
 	fs      embed.FS
 	schemas map[string]*gojsonschema.Schema
 }
 
-// NewSchemaValidator func
 func NewSchemaValidator(fs embed.FS) *SchemaValidator {
 	return &SchemaValidator{fs, make(map[string]*gojsonschema.Schema)}
 }
 
-// Validate method
 func (v *SchemaValidator) Validate(schemaName string, doc []byte) error {
 	schema, err := v.getSchema(schemaName)
 	if err != nil {
