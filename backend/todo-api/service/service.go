@@ -64,9 +64,8 @@ func (s *Service) Run() {
 	}
 
 	s.initApp()
-	s.initHTTPServer()
 	s.initRouter()
-	s.registerRoutes()
+	s.initHTTPServer()
 	s.initServer()
 
 	if err := s.serve(ctx); err != nil {
@@ -169,10 +168,6 @@ func (s *Service) initApp() {
 	}
 }
 
-func (s *Service) initHTTPServer() {
-	s.httpServer = ports.NewHTTPServer(s.app, s.logger)
-}
-
 func (s *Service) initRouter() {
 	router := mux.NewRouter()
 
@@ -187,15 +182,8 @@ func (s *Service) initRouter() {
 	s.router = router
 }
 
-func (s *Service) registerRoutes() {
-	s.router.HandleFunc("/todos", s.httpServer.GetTodos).
-		Methods(http.MethodGet)
-
-	s.router.HandleFunc("/todos", s.httpServer.CreateTodo).
-		Methods(http.MethodPost)
-
-	s.router.HandleFunc("/todos/{id:[0-9]+}/complete", s.httpServer.CompleteTodo).
-		Methods(http.MethodPost)
+func (s *Service) initHTTPServer() {
+	s.httpServer = ports.NewHTTPServer(s.app, s.router, s.logger)
 }
 
 func (s *Service) initServer() {

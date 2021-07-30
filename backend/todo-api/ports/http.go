@@ -5,75 +5,29 @@ import (
 	"net/http"
 	"todo-api/app"
 
-	"github.com/heikkilamarko/goutils"
+	"github.com/gorilla/mux"
 	"github.com/rs/zerolog"
 )
 
 type HTTPServer struct {
 	app    *app.App
+	router *mux.Router
 	logger *zerolog.Logger
 }
 
-func NewHTTPServer(app *app.App, logger *zerolog.Logger) *HTTPServer {
-	return &HTTPServer{app, logger}
+func NewHTTPServer(app *app.App, router *mux.Router, logger *zerolog.Logger) *HTTPServer {
+	s := &HTTPServer{app, router, logger}
+	s.registerRoutes()
+	return s
 }
 
-func (s *HTTPServer) GetTodos(w http.ResponseWriter, r *http.Request) {
-	query, err := parseGetTodosQuery(r)
+func (s *HTTPServer) registerRoutes() {
+	s.router.HandleFunc("/todos", s.getTodos).
+		Methods(http.MethodGet)
 
-	if err != nil {
-		s.logError(err)
-		goutils.WriteValidationError(w, err)
-		return
-	}
+	s.router.HandleFunc("/todos", s.createTodo).
+		Methods(http.MethodPost)
 
-	todos, err := s.app.Queries.GetTodos.Handle(r.Context(), query)
-
-	if err != nil {
-		s.logError(err)
-		goutils.WriteInternalError(w, nil)
-		return
-	}
-
-	goutils.WriteOK(w, todos, query)
-}
-
-func (s *HTTPServer) CreateTodo(w http.ResponseWriter, r *http.Request) {
-	command, err := parseCreateTodoCommand(r)
-
-	if err != nil {
-		s.logError(err)
-		goutils.WriteValidationError(w, err)
-		return
-	}
-
-	if err := s.app.Commands.CreateTodo.Handle(r.Context(), command); err != nil {
-		s.logError(err)
-		goutils.WriteInternalError(w, nil)
-		return
-	}
-
-	goutils.WriteResponse(w, http.StatusAccepted, nil)
-}
-
-func (s *HTTPServer) CompleteTodo(w http.ResponseWriter, r *http.Request) {
-	command, err := parseCompleteTodoCommand(r)
-
-	if err != nil {
-		s.logError(err)
-		goutils.WriteValidationError(w, err)
-		return
-	}
-
-	if err := s.app.Commands.CompleteTodo.Handle(r.Context(), command); err != nil {
-		s.logError(err)
-		goutils.WriteInternalError(w, nil)
-		return
-	}
-
-	goutils.WriteResponse(w, http.StatusAccepted, nil)
-}
-
-func (s *HTTPServer) logError(err error) {
-	s.logger.Error().Err(err).Send()
+	s.router.HandleFunc("/todos/{id:[0-9]+}/complete", s.completeTodo).
+		Methods(http.MethodPost)
 }
