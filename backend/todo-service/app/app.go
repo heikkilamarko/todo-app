@@ -1,4 +1,3 @@
-// Package app ...
 package app
 
 import "todo-service/app/command"

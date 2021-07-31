@@ -3,8 +3,8 @@ package domain
 import "context"
 
 type TodoMessagePublisher interface {
-	TodoCreatedOk(ctx context.Context, todo *Todo) error
-	TodoCreatedError(ctx context.Context, message string) error
-	TodoCompletedOk(ctx context.Context, id int) error
-	TodoCompletedError(ctx context.Context, message string) error
+	TodoCreateOk(ctx context.Context, todo *Todo) error
+	TodoCreateError(ctx context.Context, message string) error
+	TodoCompleteOk(ctx context.Context, id int) error
+	TodoCompleteError(ctx context.Context, message string) error
 }

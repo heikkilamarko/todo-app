@@ -18,5 +18,5 @@ func NewCompleteTodoHandler(mp domain.TodoMessagePublisher) *CompleteTodoHandler
 }
 
 func (h *CompleteTodoHandler) Handle(ctx context.Context, c *CompleteTodo) error {
-	return h.mp.CompleteTodo(ctx, c.ID)
+	return h.mp.TodoComplete(ctx, c.ID)
 }

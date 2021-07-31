@@ -1,4 +1,3 @@
-// Package command ...
 package command
 
 import (
@@ -21,11 +20,11 @@ func NewCompleteTodoHandler(r domain.TodoRepository, mp domain.TodoMessagePublis
 
 func (h *CompleteTodoHandler) Handle(ctx context.Context, c *CompleteTodo) error {
 	if err := h.r.CompleteTodo(ctx, c.ID); err != nil {
-		_ = h.mp.TodoCompletedError(ctx, "")
+		_ = h.mp.TodoCompleteError(ctx, "")
 		return err
 	}
 
-	if err := h.mp.TodoCompletedOk(ctx, c.ID); err != nil {
+	if err := h.mp.TodoCompleteOk(ctx, c.ID); err != nil {
 		return err
 	}
 

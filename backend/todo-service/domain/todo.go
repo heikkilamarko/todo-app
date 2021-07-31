@@ -1,4 +1,3 @@
-// Package domain ...
 package domain
 
 import "time"

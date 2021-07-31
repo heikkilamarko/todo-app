@@ -29,11 +29,11 @@ func NewTodoMessagePublisher(js nats.JetStreamContext) *TodoMessagePublisher {
 	return &TodoMessagePublisher{js}
 }
 
-func (mp *TodoMessagePublisher) CreateTodo(_ context.Context, todo *domain.Todo) error {
+func (mp *TodoMessagePublisher) TodoCreate(_ context.Context, todo *domain.Todo) error {
 	return mp.publish(subjectTodoCreate, &todoCreateMessage{todo})
 }
 
-func (mp *TodoMessagePublisher) CompleteTodo(_ context.Context, id int) error {
+func (mp *TodoMessagePublisher) TodoComplete(_ context.Context, id int) error {
 	return mp.publish(subjectTodoComplete, &todoCompleteMessage{id})
 }
 

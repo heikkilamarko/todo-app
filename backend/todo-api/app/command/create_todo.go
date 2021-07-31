@@ -1,4 +1,3 @@
-// Package command ...
 package command
 
 import (
@@ -19,5 +18,5 @@ func NewCreateTodoHandler(mp domain.TodoMessagePublisher) *CreateTodoHandler {
 }
 
 func (h *CreateTodoHandler) Handle(ctx context.Context, c *CreateTodo) error {
-	return h.mp.CreateTodo(ctx, c.Todo)
+	return h.mp.TodoCreate(ctx, c.Todo)
 }

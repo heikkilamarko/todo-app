@@ -31,11 +31,11 @@ func NewTodoMessagePublisher(nc *nats.Conn) *TodoMessagePublisher {
 	return &TodoMessagePublisher{nc}
 }
 
-func (mp *TodoMessagePublisher) TodoCreatedOk(_ context.Context, todo *domain.Todo) error {
+func (mp *TodoMessagePublisher) TodoCreateOk(_ context.Context, todo *domain.Todo) error {
 	return mp.publish(subjectTodoCreateOk, &todoCreateOkMessage{todo})
 }
 
-func (mp *TodoMessagePublisher) TodoCreatedError(_ context.Context, message string) error {
+func (mp *TodoMessagePublisher) TodoCreateError(_ context.Context, message string) error {
 	return mp.publish(
 		subjectTodoCreateError,
 		&domain.ErrorMessage{
@@ -45,11 +45,11 @@ func (mp *TodoMessagePublisher) TodoCreatedError(_ context.Context, message stri
 	)
 }
 
-func (mp *TodoMessagePublisher) TodoCompletedOk(_ context.Context, id int) error {
+func (mp *TodoMessagePublisher) TodoCompleteOk(_ context.Context, id int) error {
 	return mp.publish(subjectTodoCompleteOk, &todoCompleteOkMessage{id})
 }
 
-func (mp *TodoMessagePublisher) TodoCompletedError(_ context.Context, message string) error {
+func (mp *TodoMessagePublisher) TodoCompleteError(_ context.Context, message string) error {
 	return mp.publish(
 		subjectTodoCompleteError,
 		&domain.ErrorMessage{

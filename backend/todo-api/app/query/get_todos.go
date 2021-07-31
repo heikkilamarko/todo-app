@@ -1,4 +1,3 @@
-// Package query ...
 package query
 
 import (
