@@ -55,7 +55,7 @@ func (s *Service) Run() {
 	}
 
 	s.initApp()
-	s.initMessageSubscriber(ctx)
+	s.initMessageSubscriber()
 
 	if err := s.serve(ctx); err != nil {
 		s.logFatal(err)
@@ -154,7 +154,7 @@ func (s *Service) initApp() {
 	}
 }
 
-func (s *Service) initMessageSubscriber(ctx context.Context) {
+func (s *Service) initMessageSubscriber() {
 	s.todoMessageSubscriber = adapters.NewTodoMessageSubscriber(s.app, s.js, s.logger)
 }
 

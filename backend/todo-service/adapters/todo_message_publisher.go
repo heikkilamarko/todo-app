@@ -9,17 +9,17 @@ import (
 )
 
 const (
-	subjectTodoCreatedOk      = "todo.created.ok"
-	subjectTodoCreatedError   = "todo.created.error"
-	subjectTodoCompletedOk    = "todo.completed.ok"
-	subjectTodoCompletedError = "todo.completed.error"
+	subjectTodoCreateOk      = "todo.create.ok"
+	subjectTodoCreateError   = "todo.create.error"
+	subjectTodoCompleteOk    = "todo.complete.ok"
+	subjectTodoCompleteError = "todo.complete.error"
 )
 
-type todoCreatedOkMessage struct {
+type todoCreateOkMessage struct {
 	Todo *domain.Todo `json:"todo"`
 }
 
-type todoCompletedOkMessage struct {
+type todoCompleteOkMessage struct {
 	ID int `json:"id"`
 }
 
@@ -32,28 +32,28 @@ func NewTodoMessagePublisher(nc *nats.Conn) *TodoMessagePublisher {
 }
 
 func (mp *TodoMessagePublisher) TodoCreatedOk(_ context.Context, todo *domain.Todo) error {
-	return mp.publish(subjectTodoCreatedOk, &todoCreatedOkMessage{todo})
+	return mp.publish(subjectTodoCreateOk, &todoCreateOkMessage{todo})
 }
 
 func (mp *TodoMessagePublisher) TodoCreatedError(_ context.Context, message string) error {
 	return mp.publish(
-		subjectTodoCreatedError,
+		subjectTodoCreateError,
 		&domain.ErrorMessage{
-			Code:    subjectTodoCreatedError,
+			Code:    subjectTodoCreateError,
 			Message: message,
 		},
 	)
 }
 
 func (mp *TodoMessagePublisher) TodoCompletedOk(_ context.Context, id int) error {
-	return mp.publish(subjectTodoCompletedOk, &todoCompletedOkMessage{id})
+	return mp.publish(subjectTodoCompleteOk, &todoCompleteOkMessage{id})
 }
 
 func (mp *TodoMessagePublisher) TodoCompletedError(_ context.Context, message string) error {
 	return mp.publish(
-		subjectTodoCompletedError,
+		subjectTodoCompleteError,
 		&domain.ErrorMessage{
-			Code:    subjectTodoCompletedError,
+			Code:    subjectTodoCompleteError,
 			Message: message,
 		},
 	)

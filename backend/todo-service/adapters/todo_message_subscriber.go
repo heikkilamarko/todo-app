@@ -15,18 +15,20 @@ import (
 var schemaFS embed.FS
 
 const (
-	subjectTodo          = "todo.*"
-	durableTodo          = "todo"
-	subjectTodoCreated   = "todo.created"
-	subjectTodoCompleted = "todo.completed"
+	subjectTodo         = "todo.*"
+	durableTodo         = "todo"
+	subjectTodoCreate   = "todo.create"
+	subjectTodoComplete = "todo.complete"
 )
+
+type messageHandler func(context.Context, *nats.Msg)
 
 type TodoMessageSubscriber struct {
 	app           *app.App
 	js            nats.JetStreamContext
 	logger        *zerolog.Logger
 	messageParser *utils.MessageParser
-	routes        map[string]func(context.Context, *nats.Msg)
+	handlerMap    map[string]messageHandler
 }
 
 func NewTodoMessageSubscriber(app *app.App, js nats.JetStreamContext, logger *zerolog.Logger) *TodoMessageSubscriber {
@@ -38,9 +40,9 @@ func NewTodoMessageSubscriber(app *app.App, js nats.JetStreamContext, logger *ze
 
 	ms.messageParser = utils.NewMessageParser(utils.NewSchemaValidator(schemaFS))
 
-	ms.routes = map[string]func(context.Context, *nats.Msg){
-		subjectTodoCreated:   ms.todoCreated,
-		subjectTodoCompleted: ms.todoCompleted,
+	ms.handlerMap = map[string]messageHandler{
+		subjectTodoCreate:   ms.todoCreate,
+		subjectTodoComplete: ms.todoComplete,
 	}
 
 	return ms
@@ -73,11 +75,11 @@ func (ms *TodoMessageSubscriber) Subscribe(ctx context.Context) error {
 
 			ms.logInfo("message received (%s)", message.Subject)
 
-			route, ok := ms.routes[message.Subject]
+			handler, ok := ms.handlerMap[message.Subject]
 			if ok {
-				route(ctx, message)
+				handler(ctx, message)
 			} else {
-				ms.logInfo("no route found for subject '%s'", message.Subject)
+				ms.logInfo("no handler found for subject '%s'", message.Subject)
 			}
 
 			ms.logInfo("message handled (%s)", message.Subject)
@@ -89,7 +91,7 @@ func (ms *TodoMessageSubscriber) Subscribe(ctx context.Context) error {
 
 // Handlers
 
-func (ms *TodoMessageSubscriber) todoCreated(ctx context.Context, m *nats.Msg) {
+func (ms *TodoMessageSubscriber) todoCreate(ctx context.Context, m *nats.Msg) {
 	_ = m.Ack()
 
 	command := &command.CreateTodo{}
@@ -105,7 +107,7 @@ func (ms *TodoMessageSubscriber) todoCreated(ctx context.Context, m *nats.Msg) {
 	}
 }
 
-func (ms *TodoMessageSubscriber) todoCompleted(ctx context.Context, m *nats.Msg) {
+func (ms *TodoMessageSubscriber) todoComplete(ctx context.Context, m *nats.Msg) {
 	_ = m.Ack()
 
 	command := &command.CompleteTodo{}

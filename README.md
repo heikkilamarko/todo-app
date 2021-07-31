@@ -6,7 +6,7 @@ Todo App is a **hobby project** that is primarily focused around being a playgro
 
 ## Application Architecture
 
-![Todo App Architecture](doc/architecture.png)
+![Todo App Architecture](doc/architecture.svg)
 
 ## Secrets Management
 

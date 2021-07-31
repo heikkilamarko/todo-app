@@ -4,10 +4,10 @@ info:
   version: 1.0.0
   description: |
     - Subscribes to the following notification messages:
-      - `todo.created.ok`
-      - `todo.created.error`
-      - `todo.completed.ok`
-      - `todo.completed.error`
+      - `todo.create.ok`
+      - `todo.create.error`
+      - `todo.complete.ok`
+      - `todo.complete.error`
 
     - Delivers notifications to Todo App.
 servers:
@@ -15,25 +15,25 @@ servers:
     url: nats://nats:4222
     protocol: nats
 channels:
-  todo.created.ok:
+  todo.create.ok:
     publish:
       message:
-        $ref: "#/components/messages/TodoCreatedOk"
-  todo.created.error:
+        $ref: "#/components/messages/TodoCreateOk"
+  todo.create.error:
     publish:
       message:
         $ref: "#/components/messages/TodoError"
-  todo.completed.ok:
+  todo.complete.ok:
     publish:
       message:
-        $ref: "#/components/messages/TodoCompletedOk"
-  todo.completed.error:
+        $ref: "#/components/messages/TodoCompleteOk"
+  todo.complete.error:
     publish:
       message:
         $ref: "#/components/messages/TodoError"
 components:
   messages:
-    TodoCreatedOk:
+    TodoCreateOk:
       payload:
         type: object
         required: [todo]
@@ -72,7 +72,7 @@ components:
                 description: Updated at
                 example: "2021-05-01T18:00:00Z"
                 format: date-time
-    TodoCompletedOk:
+    TodoCompleteOk:
       payload:
         type: object
         required: [id]
@@ -90,7 +90,7 @@ components:
           code:
             type: string
             description: Error code
-            example: todo.completed.error
+            example: todo.complete.error
             minLength: 1
             maxLength: 100
           message:

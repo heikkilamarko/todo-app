@@ -4,46 +4,46 @@ info:
   version: 1.0.0
   description: |
     Subscribes to the following messages:
-    - `todo.created`
-    - `todo.completed`
+    - `todo.create`
+    - `todo.complete`
 
     Publishes the following notification messages:
-    - `todo.created.ok`
-    - `todo.created.error`
-    - `todo.completed.ok`
-    - `todo.completed.error`
+    - `todo.create.ok`
+    - `todo.create.error`
+    - `todo.complete.ok`
+    - `todo.complete.error`
 servers:
   nats:
     url: nats://nats:4222
     protocol: nats
 channels:
-  todo.created:
+  todo.create:
     publish:
       message:
-        $ref: "#/components/messages/TodoCreated"
-  todo.completed:
+        $ref: "#/components/messages/TodoCreate"
+  todo.complete:
     publish:
       message:
-        $ref: "#/components/messages/TodoCompleted"
-  todo.created.ok:
+        $ref: "#/components/messages/TodoComplete"
+  todo.create.ok:
     subscribe:
       message:
-        $ref: "#/components/messages/TodoCreatedOk"
-  todo.created.error:
+        $ref: "#/components/messages/TodoCreateOk"
+  todo.create.error:
     subscribe:
       message:
         $ref: "#/components/messages/TodoError"
-  todo.completed.ok:
+  todo.complete.ok:
     subscribe:
       message:
-        $ref: "#/components/messages/TodoCompleted"
-  todo.completed.error:
+        $ref: "#/components/messages/TodoComplete"
+  todo.complete.error:
     subscribe:
       message:
         $ref: "#/components/messages/TodoError"
 components:
   messages:
-    TodoCreated:
+    TodoCreate:
       payload:
         type: object
         required: [todo]
@@ -66,7 +66,7 @@ components:
                     minLength: 1
                     maxLength: 1000
                   - type: "null"
-    TodoCompleted:
+    TodoComplete:
       payload:
         type: object
         required: [id]
@@ -76,7 +76,7 @@ components:
             description: ID
             example: 1
             minimum: 1
-    TodoCreatedOk:
+    TodoCreateOk:
       payload:
         type: object
         required: [todo]
@@ -123,7 +123,7 @@ components:
           code:
             type: string
             description: Error code
-            example: todo.completed.error
+            example: todo.complete.error
             minLength: 1
             maxLength: 100
           message:

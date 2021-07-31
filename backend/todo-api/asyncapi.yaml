@@ -4,24 +4,24 @@ info:
   version: 1.0.0
   description: |
     Publishes the following messages:
-    - `todo.created`
-    - `todo.completed`
+    - `todo.create`
+    - `todo.complete`
 servers:
   nats:
     url: nats://nats:4222
     protocol: nats
 channels:
-  todo.created:
+  todo.create:
     subscribe:
       message:
-        $ref: "#/components/messages/TodoCreated"
-  todo.completed:
+        $ref: "#/components/messages/TodoCreate"
+  todo.complete:
     subscribe:
       message:
-        $ref: "#/components/messages/TodoCompleted"
+        $ref: "#/components/messages/TodoComplete"
 components:
   messages:
-    TodoCreated:
+    TodoCreate:
       payload:
         type: object
         required: [todo]
@@ -44,7 +44,7 @@ components:
                     minLength: 1
                     maxLength: 1000
                   - type: "null"
-    TodoCompleted:
+    TodoComplete:
       payload:
         type: object
         required: [id]

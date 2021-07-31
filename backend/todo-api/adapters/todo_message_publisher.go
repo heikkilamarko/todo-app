@@ -9,15 +9,15 @@ import (
 )
 
 const (
-	subjectTodoCreated   = "todo.created"
-	subjectTodoCompleted = "todo.completed"
+	subjectTodoCreate   = "todo.create"
+	subjectTodoComplete = "todo.complete"
 )
 
-type createTodoMessage struct {
+type todoCreateMessage struct {
 	Todo *domain.Todo `json:"todo"`
 }
 
-type completeTodoMessage struct {
+type todoCompleteMessage struct {
 	ID int `json:"id"`
 }
 
@@ -30,11 +30,11 @@ func NewTodoMessagePublisher(js nats.JetStreamContext) *TodoMessagePublisher {
 }
 
 func (mp *TodoMessagePublisher) CreateTodo(_ context.Context, todo *domain.Todo) error {
-	return mp.publish(subjectTodoCreated, &createTodoMessage{todo})
+	return mp.publish(subjectTodoCreate, &todoCreateMessage{todo})
 }
 
 func (mp *TodoMessagePublisher) CompleteTodo(_ context.Context, id int) error {
-	return mp.publish(subjectTodoCompleted, &completeTodoMessage{id})
+	return mp.publish(subjectTodoComplete, &todoCompleteMessage{id})
 }
 
 func (mp *TodoMessagePublisher) publish(subject string, message interface{}) error {

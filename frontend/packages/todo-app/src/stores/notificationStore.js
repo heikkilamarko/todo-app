@@ -35,16 +35,16 @@ export function createNotificationStore(stores) {
       /** @type {{type: import("../types").NotificationType, data: any}} */
       const { type, data } = notification ?? {};
       switch (type) {
-        case "todo.created.ok":
-        case "todo.completed.ok":
+        case "todo.create.ok":
+        case "todo.complete.ok":
           try {
             await getTodos();
           } catch (error) {
             showError(`todo loading failed\n${error}`);
           }
           break;
-        case "todo.created.error":
-        case "todo.completed.error":
+        case "todo.create.error":
+        case "todo.complete.error":
           showError(`error: ${data.code}\n${data.message || "-"}`);
           break;
       }

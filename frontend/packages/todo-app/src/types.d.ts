@@ -13,10 +13,10 @@ interface Config {
 }
 
 type NotificationType =
-  | "todo.created.ok"
-  | "todo.created.error"
-  | "todo.completed.ok"
-  | "todo.completed.error";
+  | "todo.create.ok"
+  | "todo.create.error"
+  | "todo.complete.ok"
+  | "todo.complete.error";
 
 interface NewTodo {
   name: string;
