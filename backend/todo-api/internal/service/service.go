@@ -3,14 +3,19 @@ package service
 import (
 	"context"
 	"database/sql"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-	"todo-service/adapters"
-	"todo-service/app"
-	"todo-service/app/command"
+	"todo-api/internal/adapters"
+	"todo-api/internal/app"
+	"todo-api/internal/app/command"
+	"todo-api/internal/app/query"
 
+	"github.com/gorilla/mux"
+	"github.com/heikkilamarko/goutils"
+	"github.com/heikkilamarko/goutils/middleware"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 
@@ -20,6 +25,7 @@ import (
 
 type config struct {
 	App                string `json:"app"`
+	Address            string `json:"address"`
 	DBConnectionString string `json:"db_connection_string"`
 	NATSUrl            string `json:"nats_url"`
 	NATSToken          string `json:"nats_token"`
@@ -27,13 +33,13 @@ type config struct {
 }
 
 type Service struct {
-	config                *config
-	logger                *zerolog.Logger
-	db                    *sql.DB
-	nc                    *nats.Conn
-	js                    nats.JetStreamContext
-	app                   *app.App
-	todoMessageSubscriber *adapters.TodoMessageSubscriber
+	config *config
+	logger *zerolog.Logger
+	db     *sql.DB
+	nc     *nats.Conn
+	js     nats.JetStreamContext
+	app    *app.App
+	server *http.Server
 }
 
 func (s *Service) Run() {
@@ -54,7 +60,7 @@ func (s *Service) Run() {
 	}
 
 	s.initApp()
-	s.initMessageSubscriber()
+	s.initHTTPServer()
 
 	if err := s.serve(ctx); err != nil {
 		s.logFatal(err)
@@ -66,6 +72,7 @@ func (s *Service) Run() {
 func (s *Service) loadConfig() {
 	s.config = &config{
 		App:                env("APP_NAME", ""),
+		Address:            env("APP_ADDRESS", ":8080"),
 		DBConnectionString: env("APP_DB_CONNECTION_STRING", ""),
 		NATSUrl:            env("APP_NATS_URL", ""),
 		NATSToken:          env("APP_NATS_TOKEN", ""),
@@ -143,18 +150,39 @@ func (s *Service) initNATS() error {
 
 func (s *Service) initApp() {
 	todoRepository := adapters.NewTodoRepository(s.db)
-	todoMessagePublisher := adapters.NewTodoMessagePublisher(s.nc)
+	todoMessagePublisher := adapters.NewTodoMessagePublisher(s.js)
 
 	s.app = &app.App{
 		Commands: app.Commands{
-			CreateTodo:   command.NewCreateTodoHandler(todoRepository, todoMessagePublisher),
-			CompleteTodo: command.NewCompleteTodoHandler(todoRepository, todoMessagePublisher),
+			CreateTodo:   command.NewCreateTodoHandler(todoMessagePublisher),
+			CompleteTodo: command.NewCompleteTodoHandler(todoMessagePublisher),
+		},
+		Queries: app.Queries{
+			GetTodos: query.NewGetTodosHandler(todoRepository),
 		},
 	}
 }
 
-func (s *Service) initMessageSubscriber() {
-	s.todoMessageSubscriber = adapters.NewTodoMessageSubscriber(s.app, s.js, s.logger)
+func (s *Service) initHTTPServer() {
+	router := mux.NewRouter()
+
+	router.Use(
+		middleware.Logger(s.logger),
+		middleware.RequestLogger(),
+		middleware.ErrorRecovery(),
+	)
+
+	router.NotFoundHandler = goutils.NotFoundHandler()
+
+	adapters.NewTodoAPIController(s.app, s.logger).RegisterRoutes(router)
+
+	s.server = &http.Server{
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
+		Addr:         s.config.Address,
+		Handler:      router,
+	}
 }
 
 func (s *Service) serve(ctx context.Context) error {
@@ -165,17 +193,21 @@ func (s *Service) serve(ctx context.Context) error {
 
 		s.logInfo("application is shutting down...")
 
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		_ = s.server.Shutdown(ctx)
 		_ = s.nc.Drain()
 		_ = s.db.Close()
 
 		errChan <- nil
 	}()
 
-	if err := s.todoMessageSubscriber.Subscribe(ctx); err != nil {
+	s.logInfo("application is running at %s", s.server.Addr)
+
+	if err := s.server.ListenAndServe(); err != http.ErrServerClosed {
 		return err
 	}
-
-	s.logInfo("application is running")
 
 	return <-errChan
 }

@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"todo-service/domain"
+	"todo-service/internal/domain"
 )
 
 type CompleteTodo struct {

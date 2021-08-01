@@ -3,9 +3,9 @@ package adapters
 import (
 	"context"
 	"embed"
-	"todo-service/adapters/utils"
-	"todo-service/app"
-	"todo-service/app/command"
+	"todo-service/internal/adapters/utils"
+	"todo-service/internal/app"
+	"todo-service/internal/app/command"
 
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"

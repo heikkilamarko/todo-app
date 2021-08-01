@@ -3,7 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"todo-api/domain"
+	"todo-api/internal/domain"
 
 	"github.com/nats-io/nats.go"
 )

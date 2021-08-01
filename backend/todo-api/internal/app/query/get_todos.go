@@ -2,7 +2,7 @@ package query
 
 import (
 	"context"
-	"todo-api/domain"
+	"todo-api/internal/domain"
 )
 
 type GetTodos struct {

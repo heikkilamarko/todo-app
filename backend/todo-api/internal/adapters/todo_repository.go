@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	_ "embed"
-	"todo-api/domain"
+	"todo-api/internal/domain"
 )
 
 //go:embed sql/get_todos.sql

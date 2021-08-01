@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	_ "embed"
 	"time"
-	"todo-service/domain"
+	"todo-service/internal/domain"
 )
 
 var (

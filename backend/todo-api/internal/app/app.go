@@ -1,8 +1,8 @@
 package app
 
 import (
-	"todo-api/app/command"
-	"todo-api/app/query"
+	"todo-api/internal/app/command"
+	"todo-api/internal/app/query"
 )
 
 type App struct {

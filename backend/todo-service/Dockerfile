@@ -6,7 +6,7 @@ ENV GOPATH=""
 ENV CGO_ENABLED=0
 ENV GOOS=linux
 ENV GOARCH=amd64
-RUN go build -trimpath -a -ldflags="-w -s" -o todo-service
+RUN go build -trimpath -a -ldflags="-w -s" ./cmd/todo-service
 
 FROM scratch
 
