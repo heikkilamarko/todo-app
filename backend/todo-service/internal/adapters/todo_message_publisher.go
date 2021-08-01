@@ -65,6 +65,5 @@ func (mp *TodoMessagePublisher) publish(subject string, message interface{}) err
 		return err
 	}
 
-	err = mp.nc.Publish(subject, data)
-	return err
+	return mp.nc.Publish(subject, data)
 }
