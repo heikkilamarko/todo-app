@@ -29,23 +29,15 @@ func (r *TodoRepository) CreateTodo(ctx context.Context, todo *domain.Todo) erro
 	todo.CreatedAt = now
 	todo.UpdatedAt = now
 
-	err := r.db.QueryRowContext(ctx, createTodoSQL,
+	return r.db.QueryRowContext(ctx, createTodoSQL,
 		todo.Name,
 		todo.Description,
 		todo.CreatedAt,
 		todo.UpdatedAt).
 		Scan(&todo.ID)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (r *TodoRepository) CompleteTodo(ctx context.Context, id int) error {
-	if _, err := r.db.ExecContext(ctx, completeTodoSQL, id); err != nil {
-		return err
-	}
-	return nil
+	_, err := r.db.ExecContext(ctx, completeTodoSQL, id)
+	return err
 }
