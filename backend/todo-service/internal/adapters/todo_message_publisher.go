@@ -61,14 +61,10 @@ func (mp *TodoMessagePublisher) TodoCompleteError(_ context.Context, message str
 
 func (mp *TodoMessagePublisher) publish(subject string, message interface{}) error {
 	data, err := json.Marshal(message)
-
 	if err != nil {
 		return err
 	}
 
-	if err := mp.nc.Publish(subject, data); err != nil {
-		return err
-	}
-
-	return nil
+	err = mp.nc.Publish(subject, data)
+	return err
 }
