@@ -21,23 +21,23 @@ type todoCompleteMessage struct {
 	ID int `json:"id"`
 }
 
-type TodoMessagePublisher struct {
+type TodoNATSMessagePublisher struct {
 	js nats.JetStreamContext
 }
 
-func NewTodoMessagePublisher(js nats.JetStreamContext) *TodoMessagePublisher {
-	return &TodoMessagePublisher{js}
+func NewTodoNATSMessagePublisher(js nats.JetStreamContext) *TodoNATSMessagePublisher {
+	return &TodoNATSMessagePublisher{js}
 }
 
-func (mp *TodoMessagePublisher) TodoCreate(_ context.Context, todo *domain.Todo) error {
+func (mp *TodoNATSMessagePublisher) TodoCreate(_ context.Context, todo *domain.Todo) error {
 	return mp.publish(subjectTodoCreate, &todoCreateMessage{todo})
 }
 
-func (mp *TodoMessagePublisher) TodoComplete(_ context.Context, id int) error {
+func (mp *TodoNATSMessagePublisher) TodoComplete(_ context.Context, id int) error {
 	return mp.publish(subjectTodoComplete, &todoCompleteMessage{id})
 }
 
-func (mp *TodoMessagePublisher) publish(subject string, message interface{}) error {
+func (mp *TodoNATSMessagePublisher) publish(subject string, message interface{}) error {
 	data, err := json.Marshal(message)
 	if err != nil {
 		return err

@@ -5,20 +5,21 @@ import (
 	"database/sql"
 	_ "embed"
 	"todo-api/internal/domain"
+	"todo-api/internal/ports"
 )
 
 //go:embed sql/get_todos.sql
 var getTodosSQL string
 
-type TodoRepository struct {
+type TodoPostgresRepository struct {
 	db *sql.DB
 }
 
-func NewTodoRepository(db *sql.DB) *TodoRepository {
-	return &TodoRepository{db}
+func NewTodoPostgresRepository(db *sql.DB) *TodoPostgresRepository {
+	return &TodoPostgresRepository{db}
 }
 
-func (r *TodoRepository) GetTodos(ctx context.Context, query *domain.GetTodosQuery) ([]*domain.Todo, error) {
+func (r *TodoPostgresRepository) GetTodos(ctx context.Context, query *ports.GetTodosQuery) ([]*domain.Todo, error) {
 	rows, err := r.db.QueryContext(
 		ctx,
 		getTodosSQL,

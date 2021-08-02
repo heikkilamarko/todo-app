@@ -15,15 +15,15 @@ var (
 	completeTodoSQL string
 )
 
-type TodoRepository struct {
+type TodoPostgresRepository struct {
 	db *sql.DB
 }
 
-func NewTodoRepository(db *sql.DB) *TodoRepository {
-	return &TodoRepository{db}
+func NewTodoPostgresRepository(db *sql.DB) *TodoPostgresRepository {
+	return &TodoPostgresRepository{db}
 }
 
-func (r *TodoRepository) CreateTodo(ctx context.Context, todo *domain.Todo) error {
+func (r *TodoPostgresRepository) CreateTodo(ctx context.Context, todo *domain.Todo) error {
 	now := time.Now()
 
 	todo.CreatedAt = now
@@ -37,7 +37,7 @@ func (r *TodoRepository) CreateTodo(ctx context.Context, todo *domain.Todo) erro
 		Scan(&todo.ID)
 }
 
-func (r *TodoRepository) CompleteTodo(ctx context.Context, id int) error {
+func (r *TodoPostgresRepository) CompleteTodo(ctx context.Context, id int) error {
 	_, err := r.db.ExecContext(ctx, completeTodoSQL, id)
 	return err
 }

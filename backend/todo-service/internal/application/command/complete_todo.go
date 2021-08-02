@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"todo-service/internal/domain"
+	"todo-service/internal/ports"
 )
 
 type CompleteTodo struct {
@@ -10,11 +10,11 @@ type CompleteTodo struct {
 }
 
 type CompleteTodoHandler struct {
-	r  domain.TodoRepository
-	mp domain.TodoMessagePublisher
+	r  ports.TodoRepository
+	mp ports.TodoMessagePublisher
 }
 
-func NewCompleteTodoHandler(r domain.TodoRepository, mp domain.TodoMessagePublisher) *CompleteTodoHandler {
+func NewCompleteTodoHandler(r ports.TodoRepository, mp ports.TodoMessagePublisher) *CompleteTodoHandler {
 	return &CompleteTodoHandler{r, mp}
 }
 
@@ -24,9 +24,5 @@ func (h *CompleteTodoHandler) Handle(ctx context.Context, c *CompleteTodo) error
 		return err
 	}
 
-	if err := h.mp.TodoCompleteOk(ctx, c.ID); err != nil {
-		return err
-	}
-
-	return nil
+	return h.mp.TodoCompleteOk(ctx, c.ID)
 }

@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"todo-api/internal/domain"
+	"todo-api/internal/ports"
 )
 
 type CreateTodo struct {
@@ -10,10 +11,10 @@ type CreateTodo struct {
 }
 
 type CreateTodoHandler struct {
-	mp domain.TodoMessagePublisher
+	mp ports.TodoMessagePublisher
 }
 
-func NewCreateTodoHandler(mp domain.TodoMessagePublisher) *CreateTodoHandler {
+func NewCreateTodoHandler(mp ports.TodoMessagePublisher) *CreateTodoHandler {
 	return &CreateTodoHandler{mp}
 }
 

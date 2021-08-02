@@ -1,11 +1,11 @@
-package app
+package application
 
 import (
-	"todo-api/internal/app/command"
-	"todo-api/internal/app/query"
+	"todo-api/internal/application/command"
+	"todo-api/internal/application/query"
 )
 
-type App struct {
+type Application struct {
 	Commands Commands
 	Queries  Queries
 }

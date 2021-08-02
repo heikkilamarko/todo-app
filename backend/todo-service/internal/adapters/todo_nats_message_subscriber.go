@@ -4,8 +4,8 @@ import (
 	"context"
 	"embed"
 	"todo-service/internal/adapters/utils"
-	"todo-service/internal/app"
-	"todo-service/internal/app/command"
+	"todo-service/internal/application"
+	"todo-service/internal/application/command"
 
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
@@ -23,16 +23,16 @@ const (
 
 type messageHandler func(context.Context, *nats.Msg)
 
-type TodoMessageSubscriber struct {
-	app           *app.App
+type TodoNATSMessageSubscriber struct {
+	app           *application.Application
 	js            nats.JetStreamContext
 	logger        *zerolog.Logger
 	messageParser *utils.MessageParser
 	handlerMap    map[string]messageHandler
 }
 
-func NewTodoMessageSubscriber(app *app.App, js nats.JetStreamContext, logger *zerolog.Logger) *TodoMessageSubscriber {
-	ms := &TodoMessageSubscriber{
+func NewTodoNATSMessageSubscriber(app *application.Application, js nats.JetStreamContext, logger *zerolog.Logger) *TodoNATSMessageSubscriber {
+	ms := &TodoNATSMessageSubscriber{
 		app:    app,
 		js:     js,
 		logger: logger,
@@ -48,7 +48,7 @@ func NewTodoMessageSubscriber(app *app.App, js nats.JetStreamContext, logger *ze
 	return ms
 }
 
-func (ms *TodoMessageSubscriber) Subscribe(ctx context.Context) error {
+func (ms *TodoNATSMessageSubscriber) Subscribe(ctx context.Context) error {
 	sub, err := ms.js.PullSubscribe(subjectTodo, durableTodo)
 
 	if err != nil {
@@ -91,7 +91,7 @@ func (ms *TodoMessageSubscriber) Subscribe(ctx context.Context) error {
 
 // Handlers
 
-func (ms *TodoMessageSubscriber) todoCreate(ctx context.Context, m *nats.Msg) {
+func (ms *TodoNATSMessageSubscriber) todoCreate(ctx context.Context, m *nats.Msg) {
 	_ = m.Ack()
 
 	command := &command.CreateTodo{}
@@ -107,7 +107,7 @@ func (ms *TodoMessageSubscriber) todoCreate(ctx context.Context, m *nats.Msg) {
 	}
 }
 
-func (ms *TodoMessageSubscriber) todoComplete(ctx context.Context, m *nats.Msg) {
+func (ms *TodoNATSMessageSubscriber) todoComplete(ctx context.Context, m *nats.Msg) {
 	_ = m.Ack()
 
 	command := &command.CompleteTodo{}
@@ -125,10 +125,10 @@ func (ms *TodoMessageSubscriber) todoComplete(ctx context.Context, m *nats.Msg) 
 
 // Utils
 
-func (ms *TodoMessageSubscriber) logInfo(msg string, v ...interface{}) {
+func (ms *TodoNATSMessageSubscriber) logInfo(msg string, v ...interface{}) {
 	ms.logger.Info().Msgf(msg, v...)
 }
 
-func (ms *TodoMessageSubscriber) logError(err error) {
+func (ms *TodoNATSMessageSubscriber) logError(err error) {
 	ms.logger.Error().Err(err).Send()
 }

@@ -8,8 +8,8 @@ import (
 	"syscall"
 	"time"
 	"todo-service/internal/adapters"
-	"todo-service/internal/app"
-	"todo-service/internal/app/command"
+	"todo-service/internal/application"
+	"todo-service/internal/application/command"
 
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
@@ -32,8 +32,8 @@ type Service struct {
 	db                    *sql.DB
 	nc                    *nats.Conn
 	js                    nats.JetStreamContext
-	app                   *app.App
-	todoMessageSubscriber *adapters.TodoMessageSubscriber
+	app                   *application.Application
+	todoMessageSubscriber *adapters.TodoNATSMessageSubscriber
 }
 
 func (s *Service) Run() {
@@ -53,7 +53,7 @@ func (s *Service) Run() {
 		s.logFatal(err)
 	}
 
-	s.initApp()
+	s.initApplication()
 	s.initMessageSubscriber()
 
 	if err := s.serve(ctx); err != nil {
@@ -141,12 +141,12 @@ func (s *Service) initNATS() error {
 	return nil
 }
 
-func (s *Service) initApp() {
-	todoRepository := adapters.NewTodoRepository(s.db)
-	todoMessagePublisher := adapters.NewTodoMessagePublisher(s.nc)
+func (s *Service) initApplication() {
+	todoRepository := adapters.NewTodoPostgresRepository(s.db)
+	todoMessagePublisher := adapters.NewTodoNATSMessagePublisher(s.nc)
 
-	s.app = &app.App{
-		Commands: app.Commands{
+	s.app = &application.Application{
+		Commands: application.Commands{
 			CreateTodo:   command.NewCreateTodoHandler(todoRepository, todoMessagePublisher),
 			CompleteTodo: command.NewCompleteTodoHandler(todoRepository, todoMessagePublisher),
 		},
@@ -154,7 +154,7 @@ func (s *Service) initApp() {
 }
 
 func (s *Service) initMessageSubscriber() {
-	s.todoMessageSubscriber = adapters.NewTodoMessageSubscriber(s.app, s.js, s.logger)
+	s.todoMessageSubscriber = adapters.NewTodoNATSMessageSubscriber(s.app, s.js, s.logger)
 }
 
 func (s *Service) serve(ctx context.Context) error {

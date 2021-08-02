@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"todo-api/internal/app"
-	"todo-api/internal/app/command"
-	"todo-api/internal/app/query"
+	"todo-api/internal/application"
+	"todo-api/internal/application/command"
+	"todo-api/internal/application/query"
 	"todo-api/internal/domain"
 
 	"github.com/gorilla/mux"
@@ -32,24 +32,18 @@ const (
 	limitMaxPageSize = 100
 )
 
-type TodoAPIController struct {
-	app    *app.App
+type TodoHTTPHandlers struct {
+	app    *application.Application
 	logger *zerolog.Logger
 }
 
-func NewTodoAPIController(app *app.App, logger *zerolog.Logger) *TodoAPIController {
-	return &TodoAPIController{app, logger}
-}
-
-func (c *TodoAPIController) RegisterRoutes(r *mux.Router) {
-	r.HandleFunc("/todos", c.getTodos).Methods(http.MethodGet)
-	r.HandleFunc("/todos", c.createTodo).Methods(http.MethodPost)
-	r.HandleFunc("/todos/{id:[0-9]+}/complete", c.completeTodo).Methods(http.MethodPost)
+func NewTodoHTTPHandlers(app *application.Application, logger *zerolog.Logger) *TodoHTTPHandlers {
+	return &TodoHTTPHandlers{app, logger}
 }
 
 // Handlers
 
-func (c *TodoAPIController) getTodos(w http.ResponseWriter, r *http.Request) {
+func (c *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
 	query, err := parseGetTodosQuery(r)
 
 	if err != nil {
@@ -69,7 +63,7 @@ func (c *TodoAPIController) getTodos(w http.ResponseWriter, r *http.Request) {
 	goutils.WriteOK(w, todos, query)
 }
 
-func (c *TodoAPIController) createTodo(w http.ResponseWriter, r *http.Request) {
+func (c *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	command, err := parseCreateTodoCommand(r)
 
 	if err != nil {
@@ -87,7 +81,7 @@ func (c *TodoAPIController) createTodo(w http.ResponseWriter, r *http.Request) {
 	goutils.WriteResponse(w, http.StatusAccepted, nil)
 }
 
-func (c *TodoAPIController) completeTodo(w http.ResponseWriter, r *http.Request) {
+func (c *TodoHTTPHandlers) CompleteTodo(w http.ResponseWriter, r *http.Request) {
 	command, err := parseCompleteTodoCommand(r)
 
 	if err != nil {
@@ -175,6 +169,6 @@ func parseCompleteTodoCommand(r *http.Request) (*command.CompleteTodo, error) {
 
 // Utils
 
-func (c *TodoAPIController) logError(err error) {
+func (c *TodoHTTPHandlers) logError(err error) {
 	c.logger.Error().Err(err).Send()
 }

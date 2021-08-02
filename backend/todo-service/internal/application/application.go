@@ -1,8 +1,8 @@
-package app
+package application
 
-import "todo-service/internal/app/command"
+import "todo-service/internal/application/command"
 
-type App struct {
+type Application struct {
 	Commands Commands
 }
 

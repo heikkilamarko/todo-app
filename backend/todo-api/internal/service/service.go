@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 	"todo-api/internal/adapters"
-	"todo-api/internal/app"
-	"todo-api/internal/app/command"
-	"todo-api/internal/app/query"
+	"todo-api/internal/application"
+	"todo-api/internal/application/command"
+	"todo-api/internal/application/query"
 
 	"github.com/gorilla/mux"
 	"github.com/heikkilamarko/goutils"
@@ -38,7 +38,7 @@ type Service struct {
 	db     *sql.DB
 	nc     *nats.Conn
 	js     nats.JetStreamContext
-	app    *app.App
+	app    *application.Application
 	server *http.Server
 }
 
@@ -59,7 +59,7 @@ func (s *Service) Run() {
 		s.logFatal(err)
 	}
 
-	s.initApp()
+	s.initApplication()
 	s.initHTTPServer()
 
 	if err := s.serve(ctx); err != nil {
@@ -148,16 +148,16 @@ func (s *Service) initNATS() error {
 	return nil
 }
 
-func (s *Service) initApp() {
-	todoRepository := adapters.NewTodoRepository(s.db)
-	todoMessagePublisher := adapters.NewTodoMessagePublisher(s.js)
+func (s *Service) initApplication() {
+	todoRepository := adapters.NewTodoPostgresRepository(s.db)
+	todoMessagePublisher := adapters.NewTodoNATSMessagePublisher(s.js)
 
-	s.app = &app.App{
-		Commands: app.Commands{
+	s.app = &application.Application{
+		Commands: application.Commands{
 			CreateTodo:   command.NewCreateTodoHandler(todoMessagePublisher),
 			CompleteTodo: command.NewCompleteTodoHandler(todoMessagePublisher),
 		},
-		Queries: app.Queries{
+		Queries: application.Queries{
 			GetTodos: query.NewGetTodosHandler(todoRepository),
 		},
 	}
@@ -174,7 +174,11 @@ func (s *Service) initHTTPServer() {
 
 	router.NotFoundHandler = goutils.NotFoundHandler()
 
-	adapters.NewTodoAPIController(s.app, s.logger).RegisterRoutes(router)
+	todoHandlers := adapters.NewTodoHTTPHandlers(s.app, s.logger)
+
+	router.HandleFunc("/todos", todoHandlers.GetTodos).Methods(http.MethodGet)
+	router.HandleFunc("/todos", todoHandlers.CreateTodo).Methods(http.MethodPost)
+	router.HandleFunc("/todos/{id:[0-9]+}/complete", todoHandlers.CompleteTodo).Methods(http.MethodPost)
 
 	s.server = &http.Server{
 		ReadTimeout:  5 * time.Second,

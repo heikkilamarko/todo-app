@@ -9,8 +9,3 @@ type Todo struct {
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at,omitempty"`
 }
-
-type GetTodosQuery struct {
-	Offset int `json:"offset"`
-	Limit  int `json:"limit"`
-}

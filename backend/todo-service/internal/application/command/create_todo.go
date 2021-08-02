@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"todo-service/internal/domain"
+	"todo-service/internal/ports"
 )
 
 type CreateTodo struct {
@@ -10,11 +11,11 @@ type CreateTodo struct {
 }
 
 type CreateTodoHandler struct {
-	r  domain.TodoRepository
-	mp domain.TodoMessagePublisher
+	r  ports.TodoRepository
+	mp ports.TodoMessagePublisher
 }
 
-func NewCreateTodoHandler(r domain.TodoRepository, mp domain.TodoMessagePublisher) *CreateTodoHandler {
+func NewCreateTodoHandler(r ports.TodoRepository, mp ports.TodoMessagePublisher) *CreateTodoHandler {
 	return &CreateTodoHandler{r, mp}
 }
 
@@ -24,9 +25,5 @@ func (h *CreateTodoHandler) Handle(ctx context.Context, c *CreateTodo) error {
 		return err
 	}
 
-	if err := h.mp.TodoCreateOk(ctx, c.Todo); err != nil {
-		return err
-	}
-
-	return nil
+	return h.mp.TodoCreateOk(ctx, c.Todo)
 }
