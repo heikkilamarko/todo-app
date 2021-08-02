@@ -43,19 +43,19 @@ func NewTodoHTTPHandlers(app *application.Application, logger *zerolog.Logger) *
 
 // Handlers
 
-func (c *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
+func (h *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
 	query, err := parseGetTodosQuery(r)
 
 	if err != nil {
-		c.logError(err)
+		h.logError(err)
 		goutils.WriteValidationError(w, err)
 		return
 	}
 
-	todos, err := c.app.Queries.GetTodos.Handle(r.Context(), query)
+	todos, err := h.app.Queries.GetTodos.Handle(r.Context(), query)
 
 	if err != nil {
-		c.logError(err)
+		h.logError(err)
 		goutils.WriteInternalError(w, nil)
 		return
 	}
@@ -63,17 +63,17 @@ func (c *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
 	goutils.WriteOK(w, todos, query)
 }
 
-func (c *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
+func (h *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	command, err := parseCreateTodoCommand(r)
 
 	if err != nil {
-		c.logError(err)
+		h.logError(err)
 		goutils.WriteValidationError(w, err)
 		return
 	}
 
-	if err := c.app.Commands.CreateTodo.Handle(r.Context(), command); err != nil {
-		c.logError(err)
+	if err := h.app.Commands.CreateTodo.Handle(r.Context(), command); err != nil {
+		h.logError(err)
 		goutils.WriteInternalError(w, nil)
 		return
 	}
@@ -81,22 +81,28 @@ func (c *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	goutils.WriteResponse(w, http.StatusAccepted, nil)
 }
 
-func (c *TodoHTTPHandlers) CompleteTodo(w http.ResponseWriter, r *http.Request) {
+func (h *TodoHTTPHandlers) CompleteTodo(w http.ResponseWriter, r *http.Request) {
 	command, err := parseCompleteTodoCommand(r)
 
 	if err != nil {
-		c.logError(err)
+		h.logError(err)
 		goutils.WriteValidationError(w, err)
 		return
 	}
 
-	if err := c.app.Commands.CompleteTodo.Handle(r.Context(), command); err != nil {
-		c.logError(err)
+	if err := h.app.Commands.CompleteTodo.Handle(r.Context(), command); err != nil {
+		h.logError(err)
 		goutils.WriteInternalError(w, nil)
 		return
 	}
 
 	goutils.WriteResponse(w, http.StatusAccepted, nil)
+}
+
+// Utils
+
+func (h *TodoHTTPHandlers) logError(err error) {
+	h.logger.Error().Err(err).Send()
 }
 
 // Input parsers
@@ -165,10 +171,4 @@ func parseCompleteTodoCommand(r *http.Request) (*command.CompleteTodo, error) {
 	return &command.CompleteTodo{
 		ID: id,
 	}, nil
-}
-
-// Utils
-
-func (c *TodoHTTPHandlers) logError(err error) {
-	c.logger.Error().Err(err).Send()
 }
