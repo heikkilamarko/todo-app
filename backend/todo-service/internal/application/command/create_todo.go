@@ -20,6 +20,8 @@ func NewCreateTodoHandler(r ports.TodoRepository, mp ports.TodoMessagePublisher)
 }
 
 func (h *CreateTodoHandler) Handle(ctx context.Context, c *CreateTodo) error {
+	c.Todo.SetCreateTimestamps()
+
 	if err := h.r.CreateTodo(ctx, c.Todo); err != nil {
 		_ = h.mp.TodoCreateError(ctx, "")
 		return err

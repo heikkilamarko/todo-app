@@ -9,3 +9,9 @@ type Todo struct {
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at,omitempty"`
 }
+
+func (t *Todo) SetCreateTimestamps() {
+	now := time.Now()
+	t.CreatedAt = now
+	t.UpdatedAt = now
+}

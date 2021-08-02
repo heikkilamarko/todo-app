@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	_ "embed"
-	"time"
 	"todo-service/internal/domain"
 )
 
@@ -24,11 +23,6 @@ func NewTodoPostgresRepository(db *sql.DB) *TodoPostgresRepository {
 }
 
 func (r *TodoPostgresRepository) CreateTodo(ctx context.Context, todo *domain.Todo) error {
-	now := time.Now()
-
-	todo.CreatedAt = now
-	todo.UpdatedAt = now
-
 	return r.db.QueryRowContext(ctx, createTodoSQL,
 		todo.Name,
 		todo.Description,
