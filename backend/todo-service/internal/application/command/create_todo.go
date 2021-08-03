@@ -7,7 +7,7 @@ import (
 )
 
 type CreateTodo struct {
-	Todo *domain.Todo `json:"todo"`
+	Todo *domain.Todo
 }
 
 type CreateTodoHandler struct {

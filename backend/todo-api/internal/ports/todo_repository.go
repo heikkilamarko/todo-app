@@ -6,8 +6,8 @@ import (
 )
 
 type GetTodosQuery struct {
-	Offset int `json:"offset"`
-	Limit  int `json:"limit"`
+	Offset int
+	Limit  int
 }
 
 type TodoRepository interface {

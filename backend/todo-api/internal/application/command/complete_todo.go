@@ -6,7 +6,7 @@ import (
 )
 
 type CompleteTodo struct {
-	ID int `json:"id"`
+	ID int
 }
 
 type CompleteTodoHandler struct {

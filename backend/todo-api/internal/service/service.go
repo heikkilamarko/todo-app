@@ -24,12 +24,12 @@ import (
 )
 
 type config struct {
-	App                string `json:"app"`
-	Address            string `json:"address"`
-	DBConnectionString string `json:"db_connection_string"`
-	NATSUrl            string `json:"nats_url"`
-	NATSToken          string `json:"nats_token"`
-	LogLevel           string `json:"log_level"`
+	App                string
+	Address            string
+	DBConnectionString string
+	NATSUrl            string
+	NATSToken          string
+	LogLevel           string
 }
 
 type Service struct {

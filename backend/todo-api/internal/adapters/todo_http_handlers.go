@@ -60,7 +60,12 @@ func (h *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	goutils.WriteOK(w, todos, query)
+	meta := &paginationMeta{
+		Offset: query.Offset,
+		Limit:  query.Limit,
+	}
+
+	goutils.WriteOK(w, todos, meta)
 }
 
 func (h *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
