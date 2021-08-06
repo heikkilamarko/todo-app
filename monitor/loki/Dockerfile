@@ -1,4 +1,4 @@
-FROM grafana/loki:2.2.1
+FROM grafana/loki:2.3.0
 
 COPY ./loki.yml /etc/loki/config.yml
 
