@@ -44,7 +44,7 @@ func NewTodoHTTPHandlers(app *application.Application, logger *zerolog.Logger) *
 // Handlers
 
 func (h *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
-	query, err := parseGetTodosQuery(r)
+	q, err := parseGetTodosQuery(r)
 
 	if err != nil {
 		h.logError(err)
@@ -52,7 +52,7 @@ func (h *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	todos, err := h.app.Queries.GetTodos.Handle(r.Context(), query)
+	todos, err := h.app.Queries.GetTodos.Handle(r.Context(), q)
 
 	if err != nil {
 		h.logError(err)
@@ -61,15 +61,15 @@ func (h *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
 	}
 
 	meta := &paginationMeta{
-		Offset: query.Offset,
-		Limit:  query.Limit,
+		Offset: q.Offset,
+		Limit:  q.Limit,
 	}
 
 	goutils.WriteOK(w, todos, meta)
 }
 
 func (h *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
-	command, err := parseCreateTodoCommand(r)
+	c, err := parseCreateTodoCommand(r)
 
 	if err != nil {
 		h.logError(err)
@@ -77,7 +77,7 @@ func (h *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.app.Commands.CreateTodo.Handle(r.Context(), command); err != nil {
+	if err := h.app.Commands.CreateTodo.Handle(r.Context(), c); err != nil {
 		h.logError(err)
 		goutils.WriteInternalError(w, nil)
 		return
@@ -87,7 +87,7 @@ func (h *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *TodoHTTPHandlers) CompleteTodo(w http.ResponseWriter, r *http.Request) {
-	command, err := parseCompleteTodoCommand(r)
+	c, err := parseCompleteTodoCommand(r)
 
 	if err != nil {
 		h.logError(err)
@@ -95,7 +95,7 @@ func (h *TodoHTTPHandlers) CompleteTodo(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	if err := h.app.Commands.CompleteTodo.Handle(r.Context(), command); err != nil {
+	if err := h.app.Commands.CompleteTodo.Handle(r.Context(), c); err != nil {
 		h.logError(err)
 		goutils.WriteInternalError(w, nil)
 		return

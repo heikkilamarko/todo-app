@@ -94,14 +94,14 @@ func (ms *TodoNATSMessageSubscriber) Subscribe(ctx context.Context) error {
 func (ms *TodoNATSMessageSubscriber) todoCreate(ctx context.Context, m *nats.Msg) {
 	_ = m.Ack()
 
-	command := &command.CreateTodo{}
+	c := &command.CreateTodo{}
 
-	if err := ms.messageParser.Parse(m, command); err != nil {
+	if err := ms.messageParser.Parse(m, c); err != nil {
 		ms.logError(err)
 		return
 	}
 
-	if err := ms.app.Commands.CreateTodo.Handle(ctx, command); err != nil {
+	if err := ms.app.Commands.CreateTodo.Handle(ctx, c); err != nil {
 		ms.logError(err)
 		return
 	}
@@ -110,14 +110,14 @@ func (ms *TodoNATSMessageSubscriber) todoCreate(ctx context.Context, m *nats.Msg
 func (ms *TodoNATSMessageSubscriber) todoComplete(ctx context.Context, m *nats.Msg) {
 	_ = m.Ack()
 
-	command := &command.CompleteTodo{}
+	c := &command.CompleteTodo{}
 
-	if err := ms.messageParser.Parse(m, command); err != nil {
+	if err := ms.messageParser.Parse(m, c); err != nil {
 		ms.logError(err)
 		return
 	}
 
-	if err := ms.app.Commands.CompleteTodo.Handle(ctx, command); err != nil {
+	if err := ms.app.Commands.CompleteTodo.Handle(ctx, c); err != nil {
 		ms.logError(err)
 		return
 	}
