@@ -83,7 +83,7 @@ services:
       - todo-app
 
   nats-configure:
-    build: ./backend/nats/jetstream
+    build: ./backend/nats/configure
     image: todo-app/nats-configure
     deploy:
       restart_policy:
@@ -196,7 +196,8 @@ services:
       - loki
 
   grafana:
-    image: grafana/grafana
+    build: ./monitor/grafana/docker
+    image: todo-app/grafana
     deploy:
       restart_policy:
         condition: on-failure
@@ -211,7 +212,7 @@ services:
       - loki
 
   grafana-configure:
-    build: ./monitor/grafana
+    build: ./monitor/grafana/configure
     image: todo-app/grafana-configure
     deploy:
       restart_policy:
