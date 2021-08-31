@@ -17,6 +17,6 @@
     "@sveltejs/vite-plugin-svelte": "1.0.0-next.19",
     "sass": "1.38.2",
     "svelte": "3.42.4",
-    "vite": "2.5.1"
+    "vite": "2.5.2"
   }
 }
