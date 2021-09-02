@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/gorilla/mux v1.8.0
-	github.com/heikkilamarko/goutils v1.0.23
+	github.com/heikkilamarko/goutils v1.0.24
 	github.com/jackc/pgx/v4 v4.13.0
 	github.com/nats-io/nats.go v1.12.0
 	github.com/rs/zerolog v1.24.0

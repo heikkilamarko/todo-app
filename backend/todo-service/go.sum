@@ -13,8 +13,8 @@ github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/me
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
 github.com/gofrs/uuid v4.0.0+incompatible/go.mod h1:b2aQJv3Z4Fp6yNu3cdSllBxTCLRxnplIgP/c0N/04lM=
 github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm40UhjYkI=
-github.com/heikkilamarko/goutils v1.0.23 h1:YSherNJFlK87iO+LuLhDqPFKJF4elLHBPckDY88eOKc=
-github.com/heikkilamarko/goutils v1.0.23/go.mod h1:IfjcKMhqr1dgcQXvVtofnKZaAFYzFDwkrSfdxvBlxh4=
+github.com/heikkilamarko/goutils v1.0.24 h1:ZykuAQAvNKR5T3MD6XI5xVsPSegBeP0g72s/UI34PO4=
+github.com/heikkilamarko/goutils v1.0.24/go.mod h1:IfjcKMhqr1dgcQXvVtofnKZaAFYzFDwkrSfdxvBlxh4=
 github.com/jackc/chunkreader v1.0.0 h1:4s39bBR8ByfqH+DKm8rQA3E1LHZWB9XWcrz8fqaZbe0=
 github.com/jackc/chunkreader v1.0.0/go.mod h1:RT6O25fNZIuasFJRyZ4R/Y2BbhasbmZXF9QQ7T3kePo=
 github.com/jackc/chunkreader/v2 v2.0.0/go.mod h1:odVSm741yZoC3dpHEUXIqA9tQRhFrgOHwnPIn9lDKlk=

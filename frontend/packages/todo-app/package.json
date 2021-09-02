@@ -14,9 +14,9 @@
     "todo-app-common": "1.0.0"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "1.0.0-next.19",
-    "sass": "1.38.2",
+    "@sveltejs/vite-plugin-svelte": "1.0.0-next.21",
+    "sass": "1.39.0",
     "svelte": "3.42.4",
-    "vite": "2.5.2"
+    "vite": "2.5.3"
   }
 }
