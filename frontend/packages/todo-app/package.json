@@ -7,16 +7,16 @@
   },
   "dependencies": {
     "@microsoft/signalr": "5.0.9",
-    "bootstrap": "5.1.0",
+    "bootstrap": "5.1.1",
     "bootstrap-icons": "1.5.0",
     "keycloak-js": "15.0.2",
     "ky": "0.28.5",
     "todo-app-common": "1.0.0"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "1.0.0-next.21",
+    "@sveltejs/vite-plugin-svelte": "1.0.0-next.22",
     "sass": "1.39.0",
     "svelte": "3.42.4",
-    "vite": "2.5.3"
+    "vite": "2.5.5"
   }
 }
