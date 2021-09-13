@@ -1,11 +1,6 @@
 import { writable } from "svelte/store";
-import {
-  HubConnection,
-  HubConnectionBuilder,
-  LogLevel,
-} from "@microsoft/signalr";
+import Centrifuge from "centrifuge";
 import { config } from "../shared/config";
-import { accessToken } from "../shared/auth";
 
 /**
  * @param {import("../types").Stores} stores
@@ -20,20 +15,17 @@ export function createNotificationStore(stores) {
   const connected = writable(null);
 
   /**
-   * @returns {Promise<() => void>} cleanup function
+   * @returns {() => void}
    */
-  async function connect() {
-    const url = `${config.apiUrl}/notifications`;
+  function connect() {
+    const centrifuge = new Centrifuge(config.notificationsUrl);
 
-    const connection = buildConnection(url);
+    centrifuge.on("connect", () => connected.set(true));
+    centrifuge.on("disconnect", () => connected.set(false));
 
-    connection.onclose(() => connected.set(false));
-    connection.onreconnecting(() => connected.set(false));
-    connection.onreconnected(() => connected.set(true));
-
-    connection.on(config.notificationMethod, async (notification) => {
+    centrifuge.subscribe("notifications", async (ctx) => {
       /** @type {{type: import("../types").NotificationType, data: any}} */
-      const { type, data } = notification ?? {};
+      const { type, data } = ctx.data ?? {};
       switch (type) {
         case "todo.create.ok":
         case "todo.complete.ok":
@@ -51,9 +43,8 @@ export function createNotificationStore(stores) {
     });
 
     try {
-      await connection.start();
-      connected.set(true);
-      return () => connection.stop();
+      centrifuge.connect();
+      return () => centrifuge.disconnect();
     } catch (error) {
       connected.set(false);
       showError(`real-time connection error\n${error}`);
@@ -64,20 +55,4 @@ export function createNotificationStore(stores) {
     connected,
     connect,
   };
-}
-
-/**
- * @param {string} url
- * @returns {HubConnection}
- */
-function buildConnection(url) {
-  return new HubConnectionBuilder()
-    .withUrl(url, {
-      accessTokenFactory: () => accessToken(),
-    })
-    .configureLogging(LogLevel.Critical)
-    .withAutomaticReconnect({
-      nextRetryDelayInMilliseconds: () => 5000,
-    })
-    .build();
 }

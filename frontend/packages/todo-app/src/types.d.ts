@@ -6,7 +6,7 @@ import { ToasterStore } from "todo-app-common";
 
 interface Config {
   apiUrl: string;
-  notificationMethod: string;
+  notificationsUrl: string;
   auth: Keycloak.KeycloakConfig;
   profileUrl: string;
   dashboardUrl: string;
@@ -60,7 +60,7 @@ interface GetTodosResponseMeta {
 
 interface NotificationStore {
   connected: Writable<boolean>;
-  connect: () => Promise<() => void>;
+  connect: () => () => void;
 }
 
 interface TodoFormStore {

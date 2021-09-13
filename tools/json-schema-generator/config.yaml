@@ -2,6 +2,3 @@ services:
   - name: todo-service
     apiFile: ../../backend/todo-service/api/asyncapi.yaml
     outputDir: ../../backend/todo-service/internal/adapters/schemas
-  - name: notification-service
-    apiFile: ../../backend/notification-service/api/asyncapi.yaml
-    outputDir: ../../backend/notification-service/NotificationService/Schemas

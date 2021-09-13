@@ -21,8 +21,10 @@ import (
 type config struct {
 	App                string
 	DBConnectionString string
-	NATSUrl            string
+	NATSURL            string
 	NATSToken          string
+	CentrifugoURL      string
+	CentrifugoKey      string
 	LogLevel           string
 }
 
@@ -67,8 +69,10 @@ func (s *Service) loadConfig() {
 	s.config = &config{
 		App:                env("APP_NAME", ""),
 		DBConnectionString: env("APP_DB_CONNECTION_STRING", ""),
-		NATSUrl:            env("APP_NATS_URL", ""),
+		NATSURL:            env("APP_NATS_URL", ""),
 		NATSToken:          env("APP_NATS_TOKEN", ""),
+		CentrifugoURL:      env("APP_CENTRIFUGO_URL", ""),
+		CentrifugoKey:      env("APP_CENTRIFUGO_KEY", ""),
 		LogLevel:           env("APP_LOG_LEVEL", "warn"),
 	}
 }
@@ -112,7 +116,7 @@ func (s *Service) initDB(ctx context.Context) error {
 
 func (s *Service) initNATS() error {
 	nc, err := nats.Connect(
-		s.config.NATSUrl,
+		s.config.NATSURL,
 		nats.Token(s.config.NATSToken),
 		nats.NoReconnect(),
 		nats.DisconnectErrHandler(
@@ -143,7 +147,10 @@ func (s *Service) initNATS() error {
 
 func (s *Service) initApplication() {
 	todoRepository := adapters.NewTodoPostgresRepository(s.db)
-	todoMessagePublisher := adapters.NewTodoNATSMessagePublisher(s.nc)
+	todoMessagePublisher := adapters.NewTodoCentrifugoMessagePublisher(
+		s.config.CentrifugoURL,
+		s.config.CentrifugoKey,
+	)
 
 	s.app = &application.Application{
 		Commands: application.Commands{

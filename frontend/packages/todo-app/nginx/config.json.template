@@ -1,6 +1,6 @@
 {
   "apiUrl": "${VITE_PUBLIC_API_URL}",
-  "notificationMethod": "${VITE_PUBLIC_NOTIFICATION_METHOD}",
+  "notificationsUrl": "${VITE_PUBLIC_NOTIFICATIONS_URL}",
   "auth": {
     "url": "${VITE_PUBLIC_AUTH_URL}",
     "realm": "${VITE_PUBLIC_AUTH_REALM}",

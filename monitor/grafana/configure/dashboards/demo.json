@@ -85,12 +85,6 @@
             "hide": false,
             "legendFormat": "Todo Service",
             "refId": "Todo Service"
-          },
-          {
-            "expr": "sum by (host) (rate({job=\"containers\"} | json | app = \"notification-service\" [10s]))",
-            "hide": false,
-            "legendFormat": "Notification Service",
-            "refId": "Notification Service"
           }
         ],
         "thresholds": [],
@@ -157,7 +151,7 @@
         "pluginVersion": "7.5.5",
         "targets": [
           {
-            "expr": "{job=\"containers\"} \n| json \n| app=\"api-gateway\" or app=\"todo-api\" or app=\"todo-service\" or app=\"notification-service\"",
+            "expr": "{job=\"containers\"} \n| json \n| app=\"api-gateway\" or app=\"todo-api\" or app=\"todo-service\"",
             "refId": "A"
           }
         ],

@@ -28,12 +28,12 @@ services:
       restart_policy:
         condition: any
 
-  notification-service:
+  nats:
     deploy:
       restart_policy:
         condition: any
 
-  nats:
+  centrifugo:
     deploy:
       restart_policy:
         condition: any

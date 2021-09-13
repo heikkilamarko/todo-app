@@ -3,7 +3,7 @@ import ky from "ky";
 /** @type {import("../types").Config} */
 export const config = {
   apiUrl: null,
-  notificationMethod: null,
+  notificationsUrl: null,
   auth: null,
   profileUrl: null,
   dashboardUrl: null,
@@ -25,7 +25,7 @@ async function loadProd() {
 function loadDev() {
   Object.assign(config, {
     apiUrl: import.meta.env.VITE_PUBLIC_API_URL,
-    notificationMethod: import.meta.env.VITE_PUBLIC_NOTIFICATION_METHOD,
+    notificationsUrl: import.meta.env.VITE_PUBLIC_NOTIFICATIONS_URL,
     auth: {
       url: import.meta.env.VITE_PUBLIC_AUTH_URL,
       realm: import.meta.env.VITE_PUBLIC_AUTH_REALM,

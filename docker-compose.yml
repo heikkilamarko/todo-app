@@ -53,20 +53,6 @@ services:
       - db
       - nats-configure
 
-  notification-service:
-    build: ./backend/notification-service
-    image: todo-app/notification-service
-    deploy:
-      restart_policy:
-        condition: on-failure
-    env_file:
-      - ./env/notification-service.env
-    networks:
-      - todo-app
-    depends_on:
-      - nats
-      - api-gateway
-
   nats:
     build: ./backend/nats/docker
     image: todo-app/nats
@@ -94,6 +80,22 @@ services:
       - todo-app
     depends_on:
       - nats
+
+  centrifugo:
+    image: centrifugo/centrifugo
+    deploy:
+      restart_policy:
+        condition: on-failure
+    env_file:
+      - ./env/centrifugo.env
+    ports:
+      - 8000:8000
+    networks:
+      - todo-app
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
 
   db:
     build: ./backend/db/postgres
