@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,21 +38,6 @@ namespace ApiGateway
                 o.MetadataAddress = Configuration["Auth:MetadataAddress"];
                 o.TokenValidationParameters.ValidIssuers = Configuration["Auth:ValidIssuers"].Split(",");
                 o.RequireHttpsMetadata = false;
-                o.Events = new JwtBearerEvents
-                {
-                    // SignalR
-                    OnMessageReceived = context =>
-                    {
-                        var accessToken = context.Request.Query["access_token"];
-
-                        if (!string.IsNullOrWhiteSpace(accessToken))
-                        {
-                            context.Token = accessToken;
-                        }
-
-                        return Task.CompletedTask;
-                    }
-                };
             });
 
             services.AddAuthorization(o => o.AddPolicy("app", b => b.RequireAuthenticatedUser()));
