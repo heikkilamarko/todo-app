@@ -8,14 +8,14 @@
   "dependencies": {
     "bootstrap": "5.1.1",
     "bootstrap-icons": "1.5.0",
-    "centrifuge": "2.8.1",
+    "centrifuge": "2.8.2",
     "keycloak-js": "15.0.2",
     "ky": "0.28.5",
     "todo-app-common": "1.0.0"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "1.0.0-next.23",
-    "sass": "1.39.2",
+    "@sveltejs/vite-plugin-svelte": "1.0.0-next.24",
+    "sass": "1.40.1",
     "svelte": "3.42.5",
     "vite": "2.5.7"
   }
