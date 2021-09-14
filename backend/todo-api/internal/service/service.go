@@ -24,12 +24,13 @@ import (
 )
 
 type config struct {
-	App                string
-	Address            string
-	DBConnectionString string
-	NATSUrl            string
-	NATSToken          string
-	LogLevel           string
+	App                          string
+	Address                      string
+	DBConnectionString           string
+	NATSURL                      string
+	NATSToken                    string
+	CentrifugoTokenHMACSecretKey string
+	LogLevel                     string
 }
 
 type Service struct {
@@ -71,12 +72,13 @@ func (s *Service) Run() {
 
 func (s *Service) loadConfig() {
 	s.config = &config{
-		App:                env("APP_NAME", ""),
-		Address:            env("APP_ADDRESS", ":8080"),
-		DBConnectionString: env("APP_DB_CONNECTION_STRING", ""),
-		NATSUrl:            env("APP_NATS_URL", ""),
-		NATSToken:          env("APP_NATS_TOKEN", ""),
-		LogLevel:           env("APP_LOG_LEVEL", "warn"),
+		App:                          env("APP_NAME", ""),
+		Address:                      env("APP_ADDRESS", ":8080"),
+		DBConnectionString:           env("APP_DB_CONNECTION_STRING", ""),
+		NATSURL:                      env("APP_NATS_URL", ""),
+		NATSToken:                    env("APP_NATS_TOKEN", ""),
+		CentrifugoTokenHMACSecretKey: env("APP_CENTRIFUGO_TOKEN_HMAC_SECRET_KEY", ""),
+		LogLevel:                     env("APP_LOG_LEVEL", "warn"),
 	}
 }
 
@@ -119,7 +121,7 @@ func (s *Service) initDB(ctx context.Context) error {
 
 func (s *Service) initNATS() error {
 	nc, err := nats.Connect(
-		s.config.NATSUrl,
+		s.config.NATSURL,
 		nats.Token(s.config.NATSToken),
 		nats.NoReconnect(),
 		nats.DisconnectErrHandler(
@@ -173,6 +175,10 @@ func (s *Service) initHTTPServer() {
 	)
 
 	router.NotFoundHandler = goutils.NotFoundHandler()
+
+	centrifugoHandler := adapters.NewCentrifugoHTTPHandler(s.config.CentrifugoTokenHMACSecretKey, s.logger)
+
+	router.HandleFunc("/todos/token", centrifugoHandler.GetToken).Methods(http.MethodGet)
 
 	todoHandlers := adapters.NewTodoHTTPHandlers(s.app, s.logger)
 

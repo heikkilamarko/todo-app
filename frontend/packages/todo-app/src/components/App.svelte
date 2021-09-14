@@ -25,7 +25,7 @@
       showError(`todo loading failed\n${error}`);
     }
 
-    disconnect = connect();
+    disconnect = await connect();
   });
 
   onDestroy(() => disconnect?.());

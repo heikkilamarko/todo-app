@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
 import Centrifuge from "centrifuge";
 import { config } from "../shared/config";
+import * as api from "../shared/api";
 
 /**
  * @param {import("../types").Stores} stores
@@ -15,10 +16,20 @@ export function createNotificationStore(stores) {
   const connected = writable(null);
 
   /**
-   * @returns {() => void}
+   * @returns {Promise<() => void>}
    */
-  function connect() {
+  async function connect() {
+    let token;
+
+    try {
+      token = await api.getToken();
+    } catch (error) {
+      showError(`real-time connection error\n${error}`);
+      return;
+    }
+
     const centrifuge = new Centrifuge(config.notificationsUrl);
+    centrifuge.setToken(token);
 
     centrifuge.on("connect", () => connected.set(true));
     centrifuge.on("disconnect", () => connected.set(false));

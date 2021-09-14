@@ -3,6 +3,14 @@ import { config } from "../shared/config";
 import { accessToken } from "../shared/auth";
 
 /**
+ * @returns {Promise<string>}
+ */
+export async function getToken() {
+  const { data } = await client().get("todos/token").json();
+  return data?.token;
+}
+
+/**
  * @param {import("../types").GetTodosRequest} req
  * @returns {Promise<import("../types").GetTodosResponse>}
  */

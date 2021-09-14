@@ -60,7 +60,7 @@ interface GetTodosResponseMeta {
 
 interface NotificationStore {
   connected: Writable<boolean>;
-  connect: () => () => void;
+  connect: () => Promise<() => void>;
 }
 
 interface TodoFormStore {
