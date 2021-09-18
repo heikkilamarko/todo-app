@@ -8,8 +8,11 @@ docker run -it --rm --name certbot \
   -p 80:80 \
   certbot/certbot certonly \
   --standalone \
+  --agree-tos \
+  --no-eff-email \
   --cert-name todo-app \
-  -d $1
+  -d $1 \
+  -m $2
 
 ssh todo-app 'sudo cp -Lr /etc/letsencrypt/live/todo-app/ ~/certs && sudo chown -R azureuser ~/certs'
 

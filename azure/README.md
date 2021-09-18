@@ -54,7 +54,7 @@ Host todo-app
 ```bash
 # In 'azure' directory
 
-> ./generate_certs.sh <domain_name_label>.westeurope.cloudapp.azure.com
+> ./generate_certs.sh <domain_name_label>.westeurope.cloudapp.azure.com <email_for_account_notifications>
 ```
 
 ## Decrypt Secrets
