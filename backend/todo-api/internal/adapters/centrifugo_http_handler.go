@@ -4,10 +4,10 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/go-jose/go-jose/v3"
+	"github.com/go-jose/go-jose/v3/jwt"
 	"github.com/heikkilamarko/goutils"
 	"github.com/rs/zerolog"
-	"gopkg.in/square/go-jose.v2"
-	"gopkg.in/square/go-jose.v2/jwt"
 )
 
 type tokenClaims struct {

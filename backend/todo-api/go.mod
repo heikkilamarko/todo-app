@@ -3,12 +3,12 @@ module todo-api
 go 1.17
 
 require (
+	github.com/go-jose/go-jose/v3 v3.0.0
 	github.com/gorilla/mux v1.8.0
 	github.com/heikkilamarko/goutils v1.0.24
 	github.com/jackc/pgx/v4 v4.13.0
-	github.com/nats-io/nats.go v1.12.1
+	github.com/nats-io/nats.go v1.12.3
 	github.com/rs/zerolog v1.25.0
-	gopkg.in/square/go-jose.v2 v2.6.0
 )
 
 require (
@@ -31,4 +31,5 @@ require (
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
 	golang.org/x/text v0.3.6 // indirect
 	google.golang.org/appengine v1.4.0 // indirect
+	gopkg.in/square/go-jose.v2 v2.5.1 // indirect
 )

@@ -1,4 +1,4 @@
-FROM nats:2.5.0
+FROM nats
 
 COPY ./server.conf /server.conf
 
