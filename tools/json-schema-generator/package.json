@@ -1,7 +1,7 @@
 {
   "type": "module",
   "dependencies": {
-    "@asyncapi/parser": "1.9.1",
+    "@asyncapi/parser": "1.10.0",
     "chalk": "4.1.2",
     "yaml": "1.10.2"
   }
