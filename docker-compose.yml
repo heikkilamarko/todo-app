@@ -14,6 +14,18 @@ services:
     networks:
       - todo-app
 
+  # traefik:
+  #   build: ./backend/traefik
+  #   image: todo-app/traefik
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #   ports:
+  #     - 80:80
+  #     - 8090:8080
+  #   networks:
+  #     - todo-app
+
   todo-app:
     build: ./frontend
     image: todo-app/todo-app
