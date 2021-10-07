@@ -13,6 +13,18 @@ services:
       - source: public.crt
         target: /etc/api-gateway/certs/public.crt
 
+  # traefik:
+  #   deploy:
+  #     restart_policy:
+  #       condition: any
+  #   ports:
+  #     - 443:443
+  #   secrets:
+  #     - source: private.key
+  #       target: /etc/traefik/certs/private.key
+  #     - source: public.crt
+  #       target: /etc/traefik/certs/public.crt
+
   todo-app:
     deploy:
       restart_policy:

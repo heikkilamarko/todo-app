@@ -1,0 +1,55 @@
+tls:
+  certificates:
+    - certFile: /etc/traefik/certs/public.crt
+      keyFile: /etc/traefik/certs/private.key
+
+http:
+  routers:
+    todo-app:
+      entryPoints:
+        - web
+      service: todo-app
+      rule: PathPrefix(`/`)
+      tls: {}
+
+    todo-api:
+      entryPoints:
+        - web
+      service: todo-api
+      rule: PathPrefix(`/todos`)
+      tls: {}
+
+    centrifugo:
+      entryPoints:
+        - web
+      service: centrifugo
+      rule: PathPrefix(`/connection`)
+      tls: {}
+
+    grafana:
+      entryPoints:
+        - web
+      service: grafana
+      rule: PathPrefix(`/grafana`)
+      tls: {}
+
+  services:
+    todo-app:
+      loadBalancer:
+        servers:
+          - url: http://todo-app
+
+    todo-api:
+      loadBalancer:
+        servers:
+          - url: http://todo-api
+
+    centrifugo:
+      loadBalancer:
+        servers:
+          - url: http://centrifugo:8000
+
+    grafana:
+      loadBalancer:
+        servers:
+          - url: http://grafana:3000
