@@ -31,6 +31,9 @@ type config struct {
 	NATSToken                    string
 	CentrifugoTokenHMACSecretKey string
 	LogLevel                     string
+	AuthIssuer                   string
+	AuthClaimIss                 string
+	AuthClaimAud                 string
 }
 
 type Service struct {
@@ -61,7 +64,7 @@ func (s *Service) Run() {
 	}
 
 	s.initApplication()
-	s.initHTTPServer()
+	s.initHTTPServer(ctx)
 
 	if err := s.serve(ctx); err != nil {
 		s.logFatal(err)
@@ -79,6 +82,9 @@ func (s *Service) loadConfig() {
 		NATSToken:                    env("APP_NATS_TOKEN", ""),
 		CentrifugoTokenHMACSecretKey: env("APP_CENTRIFUGO_TOKEN_HMAC_SECRET_KEY", ""),
 		LogLevel:                     env("APP_LOG_LEVEL", "warn"),
+		AuthIssuer:                   env("APP_AUTH_ISSUER", ""),
+		AuthClaimIss:                 env("APP_AUTH_CLAIM_ISS", ""),
+		AuthClaimAud:                 env("APP_AUTH_CLAIM_AUD", ""),
 	}
 }
 
@@ -165,13 +171,21 @@ func (s *Service) initApplication() {
 	}
 }
 
-func (s *Service) initHTTPServer() {
+func (s *Service) initHTTPServer(ctx context.Context) {
 	router := mux.NewRouter()
+
+	jwtConfig := &middleware.JWTConfig{
+		Issuer:   s.config.AuthIssuer,
+		Iss:      s.config.AuthClaimIss,
+		Aud:      []string{s.config.AuthClaimAud},
+		TokenKey: "access_token", // TODO: Use non-string key.
+	}
 
 	router.Use(
 		middleware.Logger(s.logger),
 		middleware.RequestLogger(),
 		middleware.ErrorRecovery(),
+		middleware.JWT(ctx, jwtConfig),
 	)
 
 	router.NotFoundHandler = goutils.NotFoundHandler()

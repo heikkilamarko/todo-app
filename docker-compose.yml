@@ -1,30 +1,14 @@
 version: "3.9"
 
 services:
-  api-gateway:
-    build: ./backend/api-gateway
-    image: todo-app/api-gateway
+  traefik:
+    build: ./backend/traefik/dev
+    image: todo-app/traefik
     deploy:
       restart_policy:
         condition: on-failure
-    env_file:
-      - ./env/api-gateway.env
-    ports:
-      - 80:80
     networks:
       - todo-app
-
-  # traefik:
-  #   build: ./backend/traefik
-  #   image: todo-app/traefik
-  #   deploy:
-  #     restart_policy:
-  #       condition: on-failure
-  #   ports:
-  #     - 80:80
-  #     - 8090:8080
-  #   networks:
-  #     - todo-app
 
   todo-app:
     build: ./frontend
@@ -158,8 +142,6 @@ services:
     command: server
     env_file:
       - ./env/minio-console.env
-    ports:
-      - 9090:9090
     networks:
       - todo-app
     depends_on:
@@ -246,8 +228,6 @@ services:
         condition: on-failure
     env_file:
       - ./env/keycloak.env
-    ports:
-      - 8080:8080
     networks:
       - todo-app
     depends_on:

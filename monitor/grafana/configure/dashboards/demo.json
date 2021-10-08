@@ -68,12 +68,6 @@
         "steppedLine": false,
         "targets": [
           {
-            "expr": "sum by (host) (rate({job=\"containers\"} | json | app = \"api-gateway\" [10s]))",
-            "hide": false,
-            "legendFormat": "API Gateway",
-            "refId": "API Gateway"
-          },
-          {
             "expr": "sum by (host) (rate({job=\"containers\"} | json | app = \"todo-api\" [10s]))",
             "instant": false,
             "legendFormat": "Todo API",
@@ -151,7 +145,7 @@
         "pluginVersion": "7.5.5",
         "targets": [
           {
-            "expr": "{job=\"containers\"} \n| json \n| app=\"api-gateway\" or app=\"todo-api\" or app=\"todo-service\"",
+            "expr": "{job=\"containers\"} \n| json \n| app=\"todo-api\" or app=\"todo-service\"",
             "refId": "A"
           }
         ],

@@ -1,7 +1,8 @@
 version: "3.9"
 
 services:
-  api-gateway:
+  traefik:
+    build: ./backend/traefik/prod
     deploy:
       restart_policy:
         condition: any
@@ -9,21 +10,9 @@ services:
       - 443:443
     secrets:
       - source: private.key
-        target: /etc/api-gateway/certs/private.key
+        target: /etc/traefik/certs/private.key
       - source: public.crt
-        target: /etc/api-gateway/certs/public.crt
-
-  # traefik:
-  #   deploy:
-  #     restart_policy:
-  #       condition: any
-  #   ports:
-  #     - 443:443
-  #   secrets:
-  #     - source: private.key
-  #       target: /etc/traefik/certs/private.key
-  #     - source: public.crt
-  #       target: /etc/traefik/certs/public.crt
+        target: /etc/traefik/certs/public.crt
 
   todo-app:
     deploy:

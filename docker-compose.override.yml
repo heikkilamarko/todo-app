@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  traefik:
+    ports:
+      - 80:80
+      - 8090:8080
+
+  minio-console:
+    ports:
+      - 9090:9090
+
+  keycloak:
+    ports:
+      - 8080:8080
