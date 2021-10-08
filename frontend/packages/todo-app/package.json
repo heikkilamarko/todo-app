@@ -6,7 +6,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "bootstrap": "5.1.1",
+    "bootstrap": "5.1.2",
     "bootstrap-icons": "1.5.0",
     "centrifuge": "2.8.2",
     "keycloak-js": "15.0.2",
@@ -17,6 +17,6 @@
     "@sveltejs/vite-plugin-svelte": "1.0.0-next.26",
     "sass": "1.42.1",
     "svelte": "3.43.1",
-    "vite": "2.6.2"
+    "vite": "2.6.5"
   }
 }

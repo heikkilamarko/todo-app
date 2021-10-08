@@ -1,71 +1,7 @@
 # Certificates
 
-## Certbot
+[Certbot](https://certbot.eff.org/docs/install.html)
 
-[Docs](https://certbot.eff.org/docs/install.html)
+[Keycloak](https://hub.docker.com/r/jboss/keycloak/)
 
-## Kestrel
-
-[Docs](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints)
-
-### `appsettings.json`
-
-```json
-{
-  "Kestrel": {
-    "Endpoints": {
-      "Https": {
-        "Url": "https://+:443",
-        "Certificate": {
-          "Path": "<path to .pem/.crt file>",
-          "KeyPath": "<path to .key file>",
-          "Password": "<certificate password>"
-        }
-      }
-    }
-  }
-}
-```
-
-## Keycloak
-
-[Docs](https://hub.docker.com/r/jboss/keycloak/)
-
-Section: **Setting up TLS(SSL)**
-
-## MinIO
-
-[Docs](https://docs.min.io/docs/how-to-secure-access-to-minio-server-with-tls.html)
-
-## Bypassing Certificate Check
-
-⚠️ You shouldn't do this in production environments.
-
-### .NET
-
-```csharp
-// using System.Net.Http;
-
-services
-  .AddHttpClient<MyHttpClient>()
-  .ConfigurePrimaryHttpMessageHandler(
-      () => new HttpClientHandler
-      {
-          ServerCertificateCustomValidationCallback = (_, _, _, _) => true
-      }
-  )
-```
-
-```csharp
-// using System.Net.Http;
-
-services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
-{
-    // ...
-    o.BackchannelHttpHandler = new HttpClientHandler
-    {
-        ServerCertificateCustomValidationCallback = (_, _, _, _) => true
-    };
-    // ...
-}
-```
+[MinIO](https://docs.min.io/docs/how-to-secure-access-to-minio-server-with-tls.html)

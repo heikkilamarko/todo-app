@@ -6,7 +6,7 @@ require (
 	github.com/centrifugal/gocent/v3 v3.0.0
 	github.com/heikkilamarko/goutils v1.0.24
 	github.com/jackc/pgx/v4 v4.13.0
-	github.com/nats-io/nats.go v1.12.3
+	github.com/nats-io/nats.go v1.13.0
 	github.com/rs/zerolog v1.25.0
 	github.com/xeipuuv/gojsonschema v1.2.0
 )
