@@ -10,6 +10,7 @@ import (
 	"time"
 	"todo-api/internal/adapters"
 	"todo-api/internal/application"
+	"todo-api/internal/application/auth"
 	"todo-api/internal/application/command"
 	"todo-api/internal/application/query"
 
@@ -178,7 +179,7 @@ func (s *Service) initHTTPServer(ctx context.Context) {
 		Issuer:   s.config.AuthIssuer,
 		Iss:      s.config.AuthClaimIss,
 		Aud:      []string{s.config.AuthClaimAud},
-		TokenKey: "access_token", // TODO: Use non-string key.
+		TokenKey: auth.ContextKeyAccessToken,
 	}
 
 	router.Use(
