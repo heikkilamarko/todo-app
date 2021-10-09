@@ -1,4 +1,5 @@
 name                  = "todo-app"
+seqno                 = "01"
 location              = "West Europe"
 domain_name_label     = "<domain_name_label>"
 public_key_file_path  = "<keyfile>.pub"

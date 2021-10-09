@@ -1,0 +1,13 @@
+http:
+  routers:
+    dashboard:
+      rule: "PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+      service: api@internal
+      middlewares:
+        - dashboard-auth
+
+  middlewares:
+    dashboard-auth:
+      basicAuth:
+        users:
+          - "admin:$apr1$yYLS54A7$xT/jrVa0wChfusY6q1P.01"

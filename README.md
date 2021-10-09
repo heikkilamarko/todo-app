@@ -14,6 +14,13 @@ This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://
 
 See [secrets](secrets/) for details.
 
+## Application Proxy / Edge Router
+
+- [Traefik](https://traefik.io/traefik/)
+  - URL: http://localhost/dashboard/
+  - username: `admin`
+  - password: `S3c_r3t!`
+
 ## Identity and Access Management
 
 - [Keycloak](https://www.keycloak.org/)

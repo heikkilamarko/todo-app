@@ -12,6 +12,7 @@ provider "azurerm" {
 }
 
 variable "name" {}
+variable "seqno" {}
 variable "location" {}
 variable "domain_name_label" {}
 variable "public_key_file_path" {}
@@ -149,7 +150,7 @@ resource "azurerm_network_interface_security_group_association" "app" {
 }
 
 resource "azurerm_storage_account" "app" {
-  name                     = "st${replace(var.name, "-", "")}001"
+  name                     = "st${replace(var.name, "-", "")}${var.seqno}"
   resource_group_name      = azurerm_resource_group.app.name
   location                 = azurerm_resource_group.app.location
   account_tier             = "Standard"

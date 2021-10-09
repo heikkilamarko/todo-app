@@ -6,31 +6,23 @@ tls:
 http:
   routers:
     todo-app:
-      entryPoints:
-        - web
-      service: todo-app
       rule: PathPrefix(`/`)
+      service: todo-app
       tls: {}
 
     todo-api:
-      entryPoints:
-        - web
-      service: todo-api
       rule: PathPrefix(`/todos`)
+      service: todo-api
       tls: {}
 
     centrifugo:
-      entryPoints:
-        - web
-      service: centrifugo
       rule: PathPrefix(`/connection`)
+      service: centrifugo
       tls: {}
 
     grafana:
-      entryPoints:
-        - web
-      service: grafana
       rule: PathPrefix(`/grafana`)
+      service: grafana
       tls: {}
 
   services:

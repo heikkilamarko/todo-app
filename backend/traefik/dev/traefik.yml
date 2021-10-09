@@ -6,5 +6,4 @@ providers:
   file:
     directory: /etc/traefik/config
 
-api:
-  insecure: true
+api: {}
