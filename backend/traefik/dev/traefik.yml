@@ -6,4 +6,9 @@ providers:
   file:
     directory: /etc/traefik/config
 
+experimental:
+  localPlugins:
+    envplugin:
+      moduleName: envplugin
+
 api: {}

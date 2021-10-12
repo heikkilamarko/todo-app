@@ -1,0 +1,6 @@
+displayName: Env Plugin
+type: middleware
+import: envplugin
+summary: Adds X-Env response header
+testData:
+  env: dev

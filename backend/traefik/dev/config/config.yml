@@ -3,10 +3,14 @@ http:
     todo-app:
       rule: PathPrefix(`/`)
       service: todo-app
+      middlewares:
+        - env-middleware
 
     todo-api:
       rule: PathPrefix(`/todos`)
       service: todo-api
+      middlewares:
+        - env-middleware
 
     centrifugo:
       rule: PathPrefix(`/connection`)
@@ -36,3 +40,9 @@ http:
       loadBalancer:
         servers:
           - url: http://grafana:3000
+
+  middlewares:
+    env-middleware:
+      plugin:
+        envplugin:
+          env: dev
