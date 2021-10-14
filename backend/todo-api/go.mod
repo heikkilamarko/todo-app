@@ -7,6 +7,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/heikkilamarko/goutils v1.0.24
 	github.com/jackc/pgx/v4 v4.13.0
+	github.com/mitchellh/mapstructure v1.4.2
 	github.com/nats-io/nats.go v1.13.0
 	github.com/rs/zerolog v1.25.0
 )

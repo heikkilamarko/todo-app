@@ -1,6 +1,10 @@
 package auth
 
-import "context"
+import (
+	"context"
+
+	"github.com/mitchellh/mapstructure"
+)
 
 type contextKey string
 
@@ -11,29 +15,21 @@ func GetAccessToken(ctx context.Context) map[string]interface{} {
 }
 
 func GetUserName(token map[string]interface{}) string {
-	switch v := token["name"].(type) {
-	case string:
-		return v
-	default:
-		return ""
+	var c struct {
+		Name string `mapstructure:"name"`
 	}
+	mapstructure.Decode(token, &c)
+	return c.Name
 }
 
 func GetRoles(token map[string]interface{}) []string {
-	var roles []string
-
-	switch v1 := token["resource_access"].(type) {
-	case map[string]interface{}:
-		switch v2 := v1["todo-api"].(type) {
-		case map[string]interface{}:
-			switch v3 := v2["roles"].(type) {
-			case []interface{}:
-				for _, role := range v3 {
-					roles = append(roles, role.(string))
-				}
-			}
-		}
+	var c struct {
+		ResourceAccess struct {
+			TodoAPI struct {
+				Roles []string `mapstructure:"roles"`
+			} `mapstructure:"todo-api"`
+		} `mapstructure:"resource_access"`
 	}
-
-	return roles
+	mapstructure.Decode(token, &c)
+	return c.ResourceAccess.TodoAPI.Roles
 }
