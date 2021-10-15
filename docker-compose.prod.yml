@@ -39,6 +39,11 @@ services:
       restart_policy:
         condition: any
 
+  temporal:
+    deploy:
+      restart_policy:
+        condition: any
+
   db:
     deploy:
       restart_policy:

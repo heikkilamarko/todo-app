@@ -93,6 +93,21 @@ services:
         soft: 65535
         hard: 65535
 
+  temporal:
+    build: ./backend/temporal
+    image: todo-app/temporal
+    deploy:
+      restart_policy:
+        condition: on-failure
+    env_file:
+      - ./env/temporal.env
+    ports:
+      - 7233:7233
+    networks:
+      - todo-app
+    depends_on:
+      - db
+
   db:
     build: ./backend/db/postgres
     image: todo-app/db
