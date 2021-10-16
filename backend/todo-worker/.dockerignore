@@ -1,0 +1,12 @@
+LICENSE
+README.md
+Dockerfile*
+openapi.yaml
+asyncapi.yaml
+staticcheck.conf
+.git
+.gitignore
+.dockerignore
+.vscode
+.idea
+.DS_Store

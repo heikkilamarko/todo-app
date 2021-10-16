@@ -29,6 +29,11 @@ services:
       restart_policy:
         condition: any
 
+  todo-worker:
+    deploy:
+      restart_policy:
+        condition: any
+
   nats:
     deploy:
       restart_policy:

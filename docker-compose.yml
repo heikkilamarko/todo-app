@@ -49,6 +49,20 @@ services:
       - db
       - nats-configure
 
+  todo-worker:
+    build: ./backend/todo-worker
+    image: todo-app/todo-worker
+    deploy:
+      restart_policy:
+        condition: on-failure
+    env_file:
+      - ./env/todo-worker.env
+    networks:
+      - todo-app
+    depends_on:
+      - db
+      - temporal
+
   nats:
     build: ./backend/nats/docker
     image: todo-app/nats
