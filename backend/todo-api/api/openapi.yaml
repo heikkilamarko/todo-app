@@ -2,6 +2,7 @@ openapi: 3.0.3
 info:
   title: Todo API
   description: |
+    - Get Centrifugo tokens
     - Browse todos
     - Create todos
     - Complete todos
@@ -12,6 +13,21 @@ servers:
 tags:
   - name: Todo
 paths:
+  /todos/token:
+    get:
+      summary: Get a Centrifugo token
+      description: Get a Centrifugo token
+      tags:
+        - Todo
+      responses:
+        "200":
+          $ref: "#/components/responses/Token"
+        "400":
+          $ref: "#/components/responses/Error"
+        "401":
+          $ref: "#/components/responses/Error"
+        "500":
+          $ref: "#/components/responses/Error"
   /todos:
     get:
       summary: Browse todo items
@@ -95,6 +111,12 @@ components:
           schema:
             $ref: "#/components/schemas/NewTodo"
   responses:
+    Token:
+      description: Centrifugo token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Token"
     Todos:
       description: Todos
       content:
@@ -126,6 +148,15 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    Token:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+              example: JWT
     Todo:
       type: object
       description: Todo
