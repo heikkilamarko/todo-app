@@ -12,6 +12,8 @@ import (
 	"github.com/rs/zerolog"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
+	zerologadapter "logur.dev/adapter/zerolog"
+	"logur.dev/logur"
 
 	// PostgreSQL driver
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -105,6 +107,7 @@ func (s *Service) initDB(ctx context.Context) error {
 func (s *Service) initTemporal() error {
 	tc, err := client.NewClient(client.Options{
 		HostPort: s.config.TemporalHostPort,
+		Logger:   logur.LoggerToKV(zerologadapter.New(*s.logger)),
 	})
 
 	if err != nil {

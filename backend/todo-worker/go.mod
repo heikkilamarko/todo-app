@@ -6,6 +6,8 @@ require (
 	github.com/jackc/pgx/v4 v4.13.0
 	github.com/rs/zerolog v1.25.0
 	go.temporal.io/sdk v1.10.0
+	logur.dev/adapter/zerolog v0.6.0
+	logur.dev/logur v0.17.0
 )
 
 require (
