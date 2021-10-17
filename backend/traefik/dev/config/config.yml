@@ -10,6 +10,7 @@ http:
       rule: PathPrefix(`/todos`)
       service: todo-api
       middlewares:
+        - cors-middleware
         - env-middleware
 
     centrifugo:
@@ -42,6 +43,14 @@ http:
           - url: http://grafana:3000
 
   middlewares:
+    cors-middleware:
+      headers:
+        accessControlAllowMethods: "*"
+        accessControlAllowOriginList: "*"
+        accessControlAllowHeaders: "*"
+        accessControlMaxAge: 100
+        addVaryHeader: true
+
     env-middleware:
       plugin:
         envplugin:
