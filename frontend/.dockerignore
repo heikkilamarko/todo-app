@@ -1,5 +1,6 @@
 node_modules
 dist
+build
 LICENSE
 README.md
 Dockerfile*
@@ -11,3 +12,4 @@ npm-debug.log
 .idea
 .DS_Store
 .env*
+.svelte-kit

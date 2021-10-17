@@ -363,6 +363,8 @@ MigrationBackup/
 FodyWeavers.xsd
 
 dist
+build
+.svelte-kit
 
 env
 certs

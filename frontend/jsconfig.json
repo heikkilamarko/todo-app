@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "$lib": ["src/lib"],
+      "$lib/*": ["src/lib/*"]
+    },
+    "moduleResolution": "node",
+    "module": "esnext",
+    "checkJs": true
+  },
+  "include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.svelte"]
+}
