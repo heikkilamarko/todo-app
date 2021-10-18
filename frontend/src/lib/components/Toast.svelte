@@ -25,7 +25,7 @@
 
 <div
   class="a-toast bg-{toastType} text-white rounded w-75 mx-auto my-2 px-4 py-2"
-  in:fly={{
+  in:fly|local={{
     delay: 0,
     duration: 300,
     x: 0,
@@ -33,7 +33,7 @@
     opacity: 0.1,
     easing: backOut,
   }}
-  out:fade={{
+  out:fade|local={{
     duration: 500,
   }}
 >
