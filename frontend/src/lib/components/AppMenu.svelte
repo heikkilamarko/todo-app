@@ -1,4 +1,5 @@
 <script>
+  import InfoCircleIcon from "bootstrap-icons/icons/info-circle.svg";
   import GithubIcon from "bootstrap-icons/icons/github.svg";
   import GridIcon from "bootstrap-icons/icons/grid.svg";
   import PersonIcon from "bootstrap-icons/icons/person.svg";
@@ -19,6 +20,13 @@
     {userName()}
   </button>
   <ul class="dropdown-menu">
+    <li>
+      <a class="dropdown-item" href="/about">
+        <InfoCircleIcon />
+        About
+      </a>
+    </li>
+    <li><hr class="dropdown-divider" /></li>
     <li>
       <a
         class="dropdown-item"

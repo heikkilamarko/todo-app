@@ -32,7 +32,7 @@
 </script>
 
 <main class="container">
-  <Header />
+  <Header>Todo App</Header>
   <ConnectionStatus />
   <TodoForm />
   <Todos />

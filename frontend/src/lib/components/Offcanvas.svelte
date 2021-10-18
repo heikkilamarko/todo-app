@@ -52,8 +52,8 @@
   role="dialog"
   aria-labelledby="offcanvas-label"
   bind:this={offcanvasEl}
-  in:fly={{ x: 400, duration: 300 }}
-  out:fly={{ x: 400, duration: 300 }}
+  in:fly|local={{ x: 400, duration: 300 }}
+  out:fly|local={{ x: 400, duration: 300 }}
 >
   <div class="offcanvas-header">
     <h5 id="offcanvas-label">{title}</h5>

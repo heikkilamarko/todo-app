@@ -28,8 +28,8 @@
 
 <div
   class="px-4 py-4 my-4 bg-white shadow-sm rounded border"
-  in:fly={{ x: 100, duration: 600 }}
-  out:fly={{ x: 500, duration: 300 }}
+  in:fly|local={{ x: 100, duration: 600 }}
+  out:fly|local={{ x: 500, duration: 300 }}
 >
   <h1 class="display-6 text-primary">{todo.name}</h1>
   <p class="text-muted" title={createdAtIso}>{createdAtLoc}</p>

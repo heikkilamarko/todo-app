@@ -46,8 +46,8 @@ http:
     cors-middleware:
       headers:
         accessControlAllowMethods: "*"
-        accessControlAllowOriginList: "*"
-        accessControlAllowHeaders: "*"
+        accessControlAllowOriginList: "http://localhost:3000"
+        accessControlAllowHeaders: "Authorization"
         accessControlMaxAge: 100
         addVaryHeader: true
 
