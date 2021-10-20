@@ -3,83 +3,84 @@ package auth
 import "testing"
 
 func TestGetUserNameOK(t *testing.T) {
+	want := "username"
+
 	token := map[string]interface{}{
-		"name": "username",
+		"name": want,
 	}
 
-	userName := GetUserName(token)
+	got := GetUserName(token)
 
-	if userName != "username" {
-		t.Errorf("expected 'username', got '%s'", userName)
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
 	}
 }
 
 func TestGetUserNameEmptyToken(t *testing.T) {
+	want := ""
+
 	token := map[string]interface{}{}
 
-	userName := GetUserName(token)
+	got := GetUserName(token)
 
-	if userName != "" {
-		t.Errorf("expected '', got '%s'", userName)
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
 	}
 }
 
 func TestGetUserNameNilToken(t *testing.T) {
-	userName := GetUserName(nil)
+	want := ""
 
-	if userName != "" {
-		t.Errorf("expected '', got '%s'", userName)
+	got := GetUserName(nil)
+
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
 	}
 }
 
 func TestGetRolesOK(t *testing.T) {
+	want := []string{"role1", "role2"}
+
 	token := map[string]interface{}{
 		"resource_access": map[string]interface{}{
 			"todo-api": map[string]interface{}{
-				"roles": []interface{}{"role1", "role2"},
+				"roles": want,
 			},
 		},
 	}
 
-	roles := GetRoles(token)
+	got := GetRoles(token)
 
-	rolesCount := len(roles)
-
-	if rolesCount != 2 {
-		t.Errorf("expected 2 roles, got %d", rolesCount)
+	if len(got) != len(want) {
+		t.Errorf("got %d roles, want %d", len(got), len(want))
 		return
 	}
 
-	role1 := roles[0]
-	role2 := roles[1]
-
-	if role1 != "role1" {
-		t.Errorf("expected 'role1', got '%s'", role1)
-	}
-
-	if role2 != "role2" {
-		t.Errorf("expected 'role2', got '%s'", role2)
+	for i := range got {
+		if got[i] != want[i] {
+			t.Errorf("got %q, want %q", got[i], want[i])
+		}
 	}
 }
 
 func TestGetRolesEmptyToken(t *testing.T) {
+	want := 0
+
 	token := map[string]interface{}{}
 
-	roles := GetRoles(token)
+	got := GetRoles(token)
 
-	rolesCount := len(roles)
-
-	if rolesCount != 0 {
-		t.Errorf("expected 0 roles, got %d", rolesCount)
+	if len(got) != want {
+		t.Errorf("got %d roles, want %d", len(got), want)
 	}
 }
 
 func TestGetRolesNilToken(t *testing.T) {
-	roles := GetRoles(nil)
+	want := 0
 
-	rolesCount := len(roles)
+	got := GetRoles(nil)
 
-	if rolesCount != 0 {
-		t.Errorf("expected 0 roles, got %d", rolesCount)
+	if len(got) != want {
+		t.Errorf("got %d roles, want %d", len(got), want)
 	}
 }
