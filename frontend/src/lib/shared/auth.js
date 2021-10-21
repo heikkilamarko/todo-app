@@ -53,3 +53,19 @@ export function userName() {
   // @ts-ignore
   return keycloak.userInfo?.name ?? "<unknown user>";
 }
+
+export function isUserRole() {
+  return isInRole("todo-user");
+}
+
+export function isViewerRole() {
+  return isInRole("todo-viewer");
+}
+
+/**
+ * @param {string} role
+ * @returns {boolean}
+ */
+export function isInRole(role) {
+  return keycloak.hasResourceRole(role, "todo-api");
+}

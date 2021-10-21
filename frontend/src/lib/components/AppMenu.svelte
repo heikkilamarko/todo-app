@@ -6,7 +6,14 @@
   import PersonFillIcon from "bootstrap-icons/icons/person-fill.svg";
   import PowerIcon from "bootstrap-icons/icons/power.svg";
   import { config } from "../shared/config";
-  import { logout, userName } from "../shared/auth";
+  import { isViewerRole, logout, userName } from "../shared/auth";
+
+  let isViewer = isViewerRole();
+
+  let title = userName();
+  if (isViewer) {
+    title += " (VIEWER)";
+  }
 </script>
 
 <div class="btn-group position-fixed m-2 top-0 end-0">
@@ -17,7 +24,7 @@
     aria-expanded="false"
   >
     <PersonFillIcon />
-    {userName()}
+    {title}
   </button>
   <ul class="dropdown-menu">
     <li>
@@ -38,17 +45,19 @@
         Profile
       </a>
     </li>
-    <li>
-      <a
-        class="dropdown-item"
-        href={config.dashboardUrl}
-        target="_blank"
-        rel="noreferrer"
-      >
-        <GridIcon />
-        Dashboard
-      </a>
-    </li>
+    {#if !isViewer}
+      <li>
+        <a
+          class="dropdown-item"
+          href={config.dashboardUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <GridIcon />
+          Dashboard
+        </a>
+      </li>
+    {/if}
     <li>
       <a
         class="dropdown-item"

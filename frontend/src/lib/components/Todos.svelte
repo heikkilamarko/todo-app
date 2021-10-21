@@ -1,7 +1,10 @@
 <script>
+  import { isViewerRole } from "../shared/auth";
   import { stores } from "../stores";
   import Todo from "./Todo.svelte";
   import Empty from "./Empty.svelte";
+
+  const isReadOnly = isViewerRole();
 
   const {
     todoStore: { todos, loading },
@@ -9,7 +12,7 @@
 </script>
 
 {#each $todos as todo (todo.id)}
-  <Todo {todo} />
+  <Todo {todo} {isReadOnly} />
 {:else}
   {#if !$loading}
     <Empty />

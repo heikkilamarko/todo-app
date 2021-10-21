@@ -6,6 +6,8 @@
   /** @type {import("../../types").Todo} */
   export let todo;
 
+  export let isReadOnly = false;
+
   const {
     toasterStore: { showInfo, showError },
     todoStore: { loading, completeTodo },
@@ -34,15 +36,17 @@
   <h1 class="display-6 text-primary">{todo.name}</h1>
   <p class="text-muted" title={createdAtIso}>{createdAtLoc}</p>
   <p class="pre">{todo.description || "-"}</p>
-  <button
-    type="button"
-    class="btn btn-outline-primary rounded-pill px-3"
-    disabled={!canComplete}
-    on:click={handleComplete}
-  >
-    <CheckLgIcon />
-    Complete
-  </button>
+  {#if !isReadOnly}
+    <button
+      type="button"
+      class="btn btn-outline-primary rounded-pill px-3"
+      disabled={!canComplete}
+      on:click={handleComplete}
+    >
+      <CheckLgIcon />
+      Complete
+    </button>
+  {/if}
 </div>
 
 <style>
