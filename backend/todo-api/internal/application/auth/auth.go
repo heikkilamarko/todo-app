@@ -33,3 +33,12 @@ func GetRoles(token map[string]interface{}) []string {
 	mapstructure.Decode(token, &c)
 	return c.ResourceAccess.TodoAPI.Roles
 }
+
+func IsInRole(token map[string]interface{}, role string) bool {
+	for _, r := range GetRoles(token) {
+		if r == role {
+			return true
+		}
+	}
+	return false
+}

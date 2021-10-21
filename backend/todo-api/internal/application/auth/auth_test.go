@@ -84,3 +84,43 @@ func TestGetRolesNilToken(t *testing.T) {
 		t.Errorf("got %d roles, want %d", len(got), want)
 	}
 }
+
+func TestIsInRoleTrue(t *testing.T) {
+	role := "role1"
+
+	token := map[string]interface{}{
+		"resource_access": map[string]interface{}{
+			"todo-api": map[string]interface{}{
+				"roles": []string{role},
+			},
+		},
+	}
+
+	want := true
+	got := IsInRole(token, role)
+
+	if got != want {
+		t.Errorf("got %t, want %t", got, want)
+		return
+	}
+}
+
+func TestIsInRoleFalse(t *testing.T) {
+	role := "role1"
+
+	token := map[string]interface{}{
+		"resource_access": map[string]interface{}{
+			"todo-api": map[string]interface{}{
+				"roles": []string{role},
+			},
+		},
+	}
+
+	want := false
+	got := IsInRole(token, "x")
+
+	if got != want {
+		t.Errorf("got %t, want %t", got, want)
+		return
+	}
+}

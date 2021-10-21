@@ -78,8 +78,7 @@ func (h *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.app.Commands.CreateTodo.Handle(r.Context(), c); err != nil {
-		h.logError(err)
-		goutils.WriteInternalError(w, nil)
+		h.handleAppError(w, err)
 		return
 	}
 
@@ -96,8 +95,7 @@ func (h *TodoHTTPHandlers) CompleteTodo(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if err := h.app.Commands.CompleteTodo.Handle(r.Context(), c); err != nil {
-		h.logError(err)
-		goutils.WriteInternalError(w, nil)
+		h.handleAppError(w, err)
 		return
 	}
 
@@ -105,6 +103,15 @@ func (h *TodoHTTPHandlers) CompleteTodo(w http.ResponseWriter, r *http.Request) 
 }
 
 // Utils
+
+func (h *TodoHTTPHandlers) handleAppError(w http.ResponseWriter, err error) {
+	h.logError(err)
+	if err == domain.ErrUnauthorized {
+		goutils.WriteUnauthorized(w, nil)
+	} else {
+		goutils.WriteInternalError(w, nil)
+	}
+}
 
 func (h *TodoHTTPHandlers) logError(err error) {
 	h.logger.Error().Err(err).Send()

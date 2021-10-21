@@ -2,6 +2,8 @@ package command
 
 import (
 	"context"
+	"todo-api/internal/application/auth"
+	"todo-api/internal/domain"
 	"todo-api/internal/ports"
 )
 
@@ -18,5 +20,9 @@ func NewCompleteTodoHandler(mp ports.TodoMessagePublisher) *CompleteTodoHandler 
 }
 
 func (h *CompleteTodoHandler) Handle(ctx context.Context, c *CompleteTodo) error {
+	if !auth.IsInRole(auth.GetAccessToken(ctx), "todo-user") {
+		return domain.ErrUnauthorized
+	}
+
 	return h.mp.TodoComplete(ctx, c.ID)
 }
