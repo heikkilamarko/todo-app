@@ -49,10 +49,14 @@ Before running the below command, make sure you have the unencrypted secrets in 
 > docker compose up --build -d
 ```
 
-App: http://localhost
+Web UI: http://localhost
 
-- username: `demouser`
-- password: `S3c_r3t!`
+- Normal user
+  - username: `demouser`
+  - password: `S3c_r3t!`
+- Viewer (read-only) user
+  - username: `demoviewer`
+  - password: `S3c_r3t!`
 
 ## Tools
 
