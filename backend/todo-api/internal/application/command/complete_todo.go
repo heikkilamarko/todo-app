@@ -20,7 +20,7 @@ func NewCompleteTodoHandler(mp ports.TodoMessagePublisher) *CompleteTodoHandler 
 }
 
 func (h *CompleteTodoHandler) Handle(ctx context.Context, c *CompleteTodo) error {
-	if !auth.IsInRole(auth.GetAccessToken(ctx), "todo-user") {
+	if !auth.IsInUserRole(ctx) {
 		return domain.ErrUnauthorized
 	}
 

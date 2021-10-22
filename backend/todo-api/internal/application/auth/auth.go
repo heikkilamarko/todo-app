@@ -6,6 +6,11 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+const (
+	RoleUser   = "todo-user"
+	RoleViewer = "todo-viewer"
+)
+
 type contextKey string
 
 var ContextKeyAccessToken = contextKey("access_token")
@@ -41,4 +46,12 @@ func IsInRole(token map[string]interface{}, role string) bool {
 		}
 	}
 	return false
+}
+
+func IsInUserRole(ctx context.Context) bool {
+	return IsInRole(GetAccessToken(ctx), RoleUser)
+}
+
+func IsInViewerRole(ctx context.Context) bool {
+	return IsInRole(GetAccessToken(ctx), RoleViewer)
 }
