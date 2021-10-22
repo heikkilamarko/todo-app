@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"todo-api/internal/adapters/auth"
 	"todo-api/internal/application"
 	"todo-api/internal/application/command"
 	"todo-api/internal/application/query"
@@ -41,8 +42,6 @@ func NewTodoHTTPHandlers(app *application.Application, logger *zerolog.Logger) *
 	return &TodoHTTPHandlers{app, logger}
 }
 
-// Handlers
-
 func (h *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
 	q, err := parseGetTodosQuery(r)
 
@@ -69,6 +68,11 @@ func (h *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
+	if !auth.IsInRole(r.Context(), auth.RoleUser) {
+		goutils.WriteUnauthorized(w, nil)
+		return
+	}
+
 	c, err := parseCreateTodoCommand(r)
 
 	if err != nil {
@@ -78,7 +82,8 @@ func (h *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.app.Commands.CreateTodo.Handle(r.Context(), c); err != nil {
-		h.handleAppError(w, err)
+		h.logError(err)
+		goutils.WriteInternalError(w, nil)
 		return
 	}
 
@@ -86,6 +91,11 @@ func (h *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *TodoHTTPHandlers) CompleteTodo(w http.ResponseWriter, r *http.Request) {
+	if !auth.IsInRole(r.Context(), auth.RoleUser) {
+		goutils.WriteUnauthorized(w, nil)
+		return
+	}
+
 	c, err := parseCompleteTodoCommand(r)
 
 	if err != nil {
@@ -95,29 +105,17 @@ func (h *TodoHTTPHandlers) CompleteTodo(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if err := h.app.Commands.CompleteTodo.Handle(r.Context(), c); err != nil {
-		h.handleAppError(w, err)
+		h.logError(err)
+		goutils.WriteInternalError(w, nil)
 		return
 	}
 
 	goutils.WriteResponse(w, http.StatusAccepted, nil)
 }
 
-// Utils
-
-func (h *TodoHTTPHandlers) handleAppError(w http.ResponseWriter, err error) {
-	h.logError(err)
-	if err == domain.ErrUnauthorized {
-		goutils.WriteUnauthorized(w, nil)
-	} else {
-		goutils.WriteInternalError(w, nil)
-	}
-}
-
 func (h *TodoHTTPHandlers) logError(err error) {
 	h.logger.Error().Err(err).Send()
 }
-
-// Input parsers
 
 func parseGetTodosQuery(r *http.Request) (*query.GetTodos, error) {
 	errorMap := map[string]string{}

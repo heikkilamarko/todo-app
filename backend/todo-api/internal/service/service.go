@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 	"todo-api/internal/adapters"
+	"todo-api/internal/adapters/auth"
 	"todo-api/internal/application"
-	"todo-api/internal/application/auth"
 	"todo-api/internal/application/command"
 	"todo-api/internal/application/query"
 

@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"todo-api/internal/application/auth"
 	"todo-api/internal/domain"
 	"todo-api/internal/ports"
 )
@@ -20,9 +19,5 @@ func NewCreateTodoHandler(mp ports.TodoMessagePublisher) *CreateTodoHandler {
 }
 
 func (h *CreateTodoHandler) Handle(ctx context.Context, c *CreateTodo) error {
-	if !auth.IsInUserRole(ctx) {
-		return domain.ErrUnauthorized
-	}
-
 	return h.mp.TodoCreate(ctx, c.Todo)
 }

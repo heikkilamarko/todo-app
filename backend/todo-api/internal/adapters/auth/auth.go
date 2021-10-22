@@ -19,15 +19,15 @@ func GetAccessToken(ctx context.Context) map[string]interface{} {
 	return ctx.Value(ContextKeyAccessToken).(map[string]interface{})
 }
 
-func GetUserName(token map[string]interface{}) string {
+func GetUserName(ctx context.Context) string {
 	var c struct {
 		Name string `mapstructure:"name"`
 	}
-	mapstructure.Decode(token, &c)
+	mapstructure.Decode(GetAccessToken(ctx), &c)
 	return c.Name
 }
 
-func GetRoles(token map[string]interface{}) []string {
+func GetRoles(ctx context.Context) []string {
 	var c struct {
 		ResourceAccess struct {
 			TodoAPI struct {
@@ -35,23 +35,15 @@ func GetRoles(token map[string]interface{}) []string {
 			} `mapstructure:"todo-api"`
 		} `mapstructure:"resource_access"`
 	}
-	mapstructure.Decode(token, &c)
+	mapstructure.Decode(GetAccessToken(ctx), &c)
 	return c.ResourceAccess.TodoAPI.Roles
 }
 
-func IsInRole(token map[string]interface{}, role string) bool {
-	for _, r := range GetRoles(token) {
+func IsInRole(ctx context.Context, role string) bool {
+	for _, r := range GetRoles(ctx) {
 		if r == role {
 			return true
 		}
 	}
 	return false
-}
-
-func IsInUserRole(ctx context.Context) bool {
-	return IsInRole(GetAccessToken(ctx), RoleUser)
-}
-
-func IsInViewerRole(ctx context.Context) bool {
-	return IsInRole(GetAccessToken(ctx), RoleViewer)
 }
