@@ -43,8 +43,13 @@ func NewTodoHTTPHandlers(app *application.Application, logger *zerolog.Logger) *
 }
 
 func (h *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
-	q, err := parseGetTodosQuery(r)
+	if err := auth.AuthorizeRead(r); err != nil {
+		h.logError(err)
+		goutils.WriteUnauthorized(w, nil)
+		return
+	}
 
+	q, err := parseGetTodosQuery(r)
 	if err != nil {
 		h.logError(err)
 		goutils.WriteValidationError(w, err)
@@ -52,7 +57,6 @@ func (h *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
 	}
 
 	todos, err := h.app.Queries.GetTodos.Handle(r.Context(), q)
-
 	if err != nil {
 		h.logError(err)
 		goutils.WriteInternalError(w, nil)
@@ -68,13 +72,13 @@ func (h *TodoHTTPHandlers) GetTodos(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsInRole(r.Context(), auth.RoleUser) {
+	if err := auth.AuthorizeWrite(r); err != nil {
+		h.logError(err)
 		goutils.WriteUnauthorized(w, nil)
 		return
 	}
 
 	c, err := parseCreateTodoCommand(r)
-
 	if err != nil {
 		h.logError(err)
 		goutils.WriteValidationError(w, err)
@@ -91,13 +95,13 @@ func (h *TodoHTTPHandlers) CreateTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *TodoHTTPHandlers) CompleteTodo(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsInRole(r.Context(), auth.RoleUser) {
+	if err := auth.AuthorizeWrite(r); err != nil {
+		h.logError(err)
 		goutils.WriteUnauthorized(w, nil)
 		return
 	}
 
 	c, err := parseCompleteTodoCommand(r)
-
 	if err != nil {
 		h.logError(err)
 		goutils.WriteValidationError(w, err)

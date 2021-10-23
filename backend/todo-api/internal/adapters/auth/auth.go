@@ -6,11 +6,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-const (
-	RoleUser   = "todo-user"
-	RoleViewer = "todo-viewer"
-)
-
 type contextKey string
 
 var ContextKeyAccessToken = contextKey("access_token")
@@ -43,6 +38,17 @@ func IsInRole(ctx context.Context, role string) bool {
 	for _, r := range GetRoles(ctx) {
 		if r == role {
 			return true
+		}
+	}
+	return false
+}
+
+func IsInAnyRole(ctx context.Context, roles ...string) bool {
+	for _, r := range GetRoles(ctx) {
+		for _, role := range roles {
+			if r == role {
+				return true
+			}
 		}
 	}
 	return false
