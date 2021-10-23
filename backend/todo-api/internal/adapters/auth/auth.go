@@ -14,6 +14,14 @@ func GetAccessToken(ctx context.Context) map[string]interface{} {
 	return ctx.Value(ContextKeyAccessToken).(map[string]interface{})
 }
 
+func GetSubject(ctx context.Context) string {
+	var c struct {
+		Subject string `mapstructure:"sub"`
+	}
+	mapstructure.Decode(GetAccessToken(ctx), &c)
+	return c.Subject
+}
+
 func GetUserName(ctx context.Context) string {
 	var c struct {
 		Name string `mapstructure:"name"`

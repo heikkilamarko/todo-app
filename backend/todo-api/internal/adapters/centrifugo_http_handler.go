@@ -3,6 +3,7 @@ package adapters
 import (
 	"errors"
 	"net/http"
+	"todo-api/internal/adapters/auth"
 
 	"github.com/go-jose/go-jose/v3"
 	"github.com/go-jose/go-jose/v3/jwt"
@@ -11,7 +12,7 @@ import (
 )
 
 type tokenClaims struct {
-	Subject string `json:"sub,omitempty"`
+	Subject string `json:"sub"`
 }
 
 type tokenResponse struct {
@@ -28,40 +29,36 @@ func NewCentrifugoHTTPHandler(signingKey string, logger *zerolog.Logger) *Centri
 }
 
 func (h *CentrifugoHTTPHandler) GetToken(w http.ResponseWriter, r *http.Request) {
-	rt := goutils.TokenFromHeader(r)
-	if rt == "" {
-		h.logger.Error().Err(errors.New("token is empty")).Send()
+	if err := auth.AuthorizeRead(r); err != nil {
+		h.logError(err)
 		goutils.WriteUnauthorized(w, nil)
 		return
 	}
 
-	t, err := jwt.ParseSigned(rt)
+	sub := auth.GetSubject(r.Context())
+	if sub == "" {
+		h.logError(errors.New("sub claim is empty"))
+		goutils.WriteUnauthorized(w, nil)
+		return
+	}
+
+	sig, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: h.signingKey}, (&jose.SignerOptions{}).WithType("JWT"))
 	if err != nil {
-		h.logger.Error().Err(err).Send()
-		goutils.WriteUnauthorized(w, nil)
-		return
-	}
-
-	c := tokenClaims{}
-	if err := t.UnsafeClaimsWithoutVerification(&c); err != nil {
-		h.logger.Error().Err(err).Send()
-		goutils.WriteUnauthorized(w, nil)
-		return
-	}
-
-	s, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: h.signingKey}, (&jose.SignerOptions{}).WithType("JWT"))
-	if err != nil {
-		h.logger.Error().Err(err).Send()
+		h.logError(err)
 		goutils.WriteInternalError(w, nil)
 		return
 	}
 
-	token, err := jwt.Signed(s).Claims(c).CompactSerialize()
+	token, err := jwt.Signed(sig).Claims(tokenClaims{sub}).CompactSerialize()
 	if err != nil {
-		h.logger.Error().Err(err).Send()
+		h.logError(err)
 		goutils.WriteInternalError(w, nil)
 		return
 	}
 
 	goutils.WriteOK(w, &tokenResponse{token}, nil)
+}
+
+func (h *CentrifugoHTTPHandler) logError(err error) {
+	h.logger.Error().Err(err).Send()
 }
