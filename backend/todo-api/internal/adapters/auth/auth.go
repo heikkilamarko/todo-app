@@ -18,7 +18,7 @@ func GetSubject(ctx context.Context) string {
 	var c struct {
 		Subject string `mapstructure:"sub"`
 	}
-	mapstructure.Decode(GetAccessToken(ctx), &c)
+	_ = mapstructure.Decode(GetAccessToken(ctx), &c)
 	return c.Subject
 }
 
@@ -26,7 +26,7 @@ func GetUserName(ctx context.Context) string {
 	var c struct {
 		Name string `mapstructure:"name"`
 	}
-	mapstructure.Decode(GetAccessToken(ctx), &c)
+	_ = mapstructure.Decode(GetAccessToken(ctx), &c)
 	return c.Name
 }
 
@@ -38,7 +38,7 @@ func GetRoles(ctx context.Context) []string {
 			} `mapstructure:"todo-api"`
 		} `mapstructure:"resource_access"`
 	}
-	mapstructure.Decode(GetAccessToken(ctx), &c)
+	_ = mapstructure.Decode(GetAccessToken(ctx), &c)
 	return c.ResourceAccess.TodoAPI.Roles
 }
 
