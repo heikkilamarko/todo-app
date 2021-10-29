@@ -1,4 +1,4 @@
-asyncapi: 2.0.0
+asyncapi: 2.2.0
 info:
   title: Todo Service
   version: 1.0.0
@@ -24,11 +24,13 @@ components:
     TodoCreate:
       payload:
         type: object
-        required: [todo]
+        required:
+          - todo
         properties:
           todo:
             type: object
-            required: [name]
+            required:
+              - name
             properties:
               name:
                 type: string
@@ -47,7 +49,8 @@ components:
     TodoComplete:
       payload:
         type: object
-        required: [id]
+        required:
+          - id
         properties:
           id:
             type: integer
