@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/jackc/pgx/v4 v4.13.0
 	github.com/rs/zerolog v1.25.0
-	go.temporal.io/sdk v1.10.0
+	go.temporal.io/sdk v1.11.0
 	logur.dev/adapter/zerolog v0.6.0
 	logur.dev/logur v0.17.0
 )
@@ -34,7 +34,7 @@ require (
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/twmb/murmur3 v1.1.6 // indirect
-	github.com/uber-go/tally v3.4.2+incompatible // indirect
+	github.com/uber-go/tally/v4 v4.0.1 // indirect
 	go.temporal.io/api v1.5.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
