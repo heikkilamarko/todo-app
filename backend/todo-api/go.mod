@@ -5,11 +5,11 @@ go 1.17
 require (
 	github.com/go-jose/go-jose/v3 v3.0.0
 	github.com/gorilla/mux v1.8.0
-	github.com/heikkilamarko/goutils v1.0.24
+	github.com/heikkilamarko/goutils v1.0.25
 	github.com/jackc/pgx/v4 v4.13.0
 	github.com/mitchellh/mapstructure v1.4.2
 	github.com/nats-io/nats.go v1.13.0
-	github.com/rs/zerolog v1.25.0
+	github.com/rs/zerolog v1.26.0
 )
 
 require (
@@ -28,7 +28,7 @@ require (
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/rs/xid v1.3.0 // indirect
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
-	golang.org/x/net v0.0.0-20210510120150-4163338589ed // indirect
+	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d // indirect
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
 	golang.org/x/text v0.3.6 // indirect
 	google.golang.org/appengine v1.4.0 // indirect
