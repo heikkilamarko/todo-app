@@ -9,6 +9,8 @@ ingester:
       kvstore:
         store: memberlist
       replication_factor: 1
+  wal:
+    dir: /loki/wal
 
 schema_config:
   configs:
@@ -17,7 +19,7 @@ schema_config:
       object_store: aws
       schema: v11
       index:
-        prefix: loki_index_
+        prefix: index_
         period: 24h
 
 storage_config:
@@ -26,17 +28,17 @@ storage_config:
     bucketnames: ${MINIO_BUCKET_NAME}
     access_key_id: ${MINIO_ROOT_USER}
     secret_access_key: ${MINIO_ROOT_PASSWORD}
-    insecure: false
-    sse_encryption: false
     s3forcepathstyle: true
-    http_config:
-      insecure_skip_verify: true
 
   boltdb_shipper:
-    shared_store: aws
     active_index_directory: /loki/index
-    cache_location: /loki/boltdb-cache
-    resync_interval: 5s
+    cache_location: /loki/index-cache
+    shared_store: aws
+
+compactor:
+  working_directory: /loki/compactor
+  shared_store: s3
+  compaction_interval: 5m
 
 limits_config:
   enforce_metric_name: false
