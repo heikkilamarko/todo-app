@@ -17,6 +17,6 @@
     "bootstrap-icons": "1.7.0",
     "centrifuge": "2.8.3",
     "keycloak-js": "15.0.2",
-    "ky": "0.28.6"
+    "ky": "0.28.7"
   }
 }

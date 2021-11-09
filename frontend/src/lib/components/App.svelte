@@ -34,6 +34,8 @@
   onDestroy(() => disconnect?.());
 </script>
 
+<AppMenu />
+
 <main class="container">
   <Header>Todo App</Header>
   <ConnectionStatus />
@@ -42,7 +44,5 @@
   {/if}
   <Todos />
 </main>
-
-<AppMenu />
 
 <Toaster {toasts} />
