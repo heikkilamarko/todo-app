@@ -1,5 +1,4 @@
 import { Readable, Writable } from "svelte/store";
-import { ToasterStore } from "todo-app-common";
 
 interface Config {
   apiUrl: string;
