@@ -5,18 +5,14 @@
   import { init as initAuth } from "$lib/shared/auth";
   import AppError from "$lib/components/AppError.svelte";
 
-  let isReady = false;
+  let isAuthenticated = false;
   let error = null;
 
   onMount(async () => await import("bootstrap/js/dist/dropdown"));
-
   onMount(async () => {
     try {
       await loadConfig();
-      const isAuthenticated = await initAuth();
-      if (isAuthenticated) {
-        isReady = true;
-      }
+      isAuthenticated = await initAuth();
     } catch (err) {
       console.log(err);
       error = err;
@@ -24,8 +20,8 @@
   });
 </script>
 
-{#if isReady}
-  <slot />
-{:else if error}
+{#if error}
   <AppError {error} />
+{:else if isAuthenticated}
+  <slot />
 {/if}
