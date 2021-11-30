@@ -6,6 +6,6 @@ ENV GOOS=linux
 ENV GOARCH=amd64
 RUN go build -trimpath -a -ldflags="-w -s" ./cmd/todo-api
 
-FROM scratch
+FROM gcr.io/distroless/static
 COPY --from=build /go/todo-api /todo-api
 ENTRYPOINT ["/todo-api"]
