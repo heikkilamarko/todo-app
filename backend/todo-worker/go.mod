@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/jackc/pgx/v4 v4.14.1
 	github.com/rs/zerolog v1.26.0
-	go.temporal.io/sdk v1.11.1
+	go.temporal.io/sdk v1.12.0
 	logur.dev/adapter/zerolog v0.6.0
 	logur.dev/logur v0.17.0
 )
@@ -27,14 +27,11 @@ require (
 	github.com/jackc/pgproto3/v2 v2.2.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/pgtype v1.9.1 // indirect
-	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
-	github.com/twmb/murmur3 v1.1.6 // indirect
-	github.com/uber-go/tally/v4 v4.0.1 // indirect
 	go.temporal.io/api v1.5.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
