@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/jackc/pgx/v4 v4.14.1
-	github.com/rs/zerolog v1.26.0
+	github.com/rs/zerolog v1.26.1
 	go.temporal.io/sdk v1.12.0
 	logur.dev/adapter/zerolog v0.6.0
 	logur.dev/logur v0.17.0
@@ -34,7 +34,7 @@ require (
 	github.com/stretchr/testify v1.7.0 // indirect
 	go.temporal.io/api v1.5.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
+	golang.org/x/crypto v0.0.0-20211215165025-cf75a172585e // indirect
 	golang.org/x/net v0.0.0-20210913180222-943fd674d43e // indirect
 	golang.org/x/sys v0.0.0-20210910150752-751e447fb3d0 // indirect
 	golang.org/x/text v0.3.7 // indirect
