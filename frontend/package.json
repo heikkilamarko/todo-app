@@ -9,8 +9,8 @@
   "devDependencies": {
     "@sveltejs/adapter-static": "next",
     "@sveltejs/kit": "next",
-    "sass": "1.46.0",
-    "svelte": "3.45.0"
+    "sass": "1.47.0",
+    "svelte": "3.46.0"
   },
   "dependencies": {
     "bootstrap": "5.1.3",

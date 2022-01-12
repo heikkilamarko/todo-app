@@ -5,7 +5,6 @@ const config = {
   extensions: [".svelte", ".svg"],
   kit: {
     target: "#svelte",
-    ssr: false,
     files: {
       template: "src/index.html",
     },
