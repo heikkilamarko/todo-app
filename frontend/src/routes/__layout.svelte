@@ -1,5 +1,6 @@
 <script>
   import "../app.scss";
+  import "bootstrap/js/dist/dropdown";
   import { onMount } from "svelte";
   import { load as loadConfig } from "$lib/shared/config";
   import { init as initAuth } from "$lib/shared/auth";
@@ -8,7 +9,6 @@
   let isAuthenticated = false;
   let error = null;
 
-  onMount(async () => await import("bootstrap/js/dist/dropdown"));
   onMount(async () => {
     try {
       await loadConfig();

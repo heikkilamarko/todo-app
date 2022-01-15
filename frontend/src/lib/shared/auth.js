@@ -1,3 +1,4 @@
+import Keycloak from "keycloak-js";
 import { config } from "./config";
 
 /** @type {Keycloak.KeycloakInstance} */
@@ -8,8 +9,6 @@ let keycloak;
  */
 export async function init() {
   try {
-    const { default: Keycloak } = await import("keycloak-js");
-
     keycloak = Keycloak(config.auth);
     const isAuthenticated = await keycloak.init({
       pkceMethod: "S256",
