@@ -5,6 +5,7 @@
   import PersonIcon from "bootstrap-icons/icons/person.svg";
   import PersonFillIcon from "bootstrap-icons/icons/person-fill.svg";
   import PowerIcon from "bootstrap-icons/icons/power.svg";
+  import SvgIcon from "./SvgIcon.svelte";
   import { config } from "../shared/config";
   import { isViewerRole, logout, userName } from "../shared/auth";
 
@@ -29,7 +30,7 @@
   <ul class="dropdown-menu">
     <li>
       <a class="dropdown-item" href="/about">
-        <InfoCircleIcon />
+        <SvgIcon icon={InfoCircleIcon} class="text-primary pe-2" />
         About
       </a>
     </li>
@@ -41,7 +42,7 @@
         target="_blank"
         rel="noreferrer"
       >
-        <PersonIcon />
+        <SvgIcon icon={PersonIcon} class="text-primary pe-2" />
         Profile
       </a>
     </li>
@@ -53,7 +54,7 @@
           target="_blank"
           rel="noreferrer"
         >
-          <GridIcon />
+          <SvgIcon icon={GridIcon} class="text-primary pe-2" />
           Dashboard
         </a>
       </li>
@@ -65,14 +66,14 @@
         target="_blank"
         rel="noreferrer"
       >
-        <GithubIcon />
+        <SvgIcon icon={GithubIcon} class="text-primary pe-2" />
         GitHub
       </a>
     </li>
     <li><hr class="dropdown-divider" /></li>
     <li>
       <a class="dropdown-item" href="/" on:click|preventDefault={logout}>
-        <PowerIcon />
+        <SvgIcon icon={PowerIcon} class="text-primary pe-2" />
         Logout
       </a>
     </li>
@@ -82,9 +83,5 @@
 <style>
   .dropdown-toggle::after {
     content: none;
-  }
-
-  .dropdown-item :global(svg) {
-    color: var(--bs-primary);
   }
 </style>
