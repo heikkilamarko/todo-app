@@ -10,7 +10,7 @@
     "@sveltejs/adapter-static": "next",
     "@sveltejs/kit": "next",
     "sass": "1.49.0",
-    "svelte": "3.46.2"
+    "svelte": "3.46.3"
   },
   "dependencies": {
     "bootstrap": "5.1.3",
