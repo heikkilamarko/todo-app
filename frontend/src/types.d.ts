@@ -1,4 +1,5 @@
 import { Readable, Writable } from "svelte/store";
+import Keycloak from "keycloak-js";
 
 interface Config {
   apiUrl: string;
