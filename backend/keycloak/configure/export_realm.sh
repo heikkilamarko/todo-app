@@ -10,24 +10,23 @@ fi
 # ask keycloak parameters from user
 
 echo "Please type your Keycloak info below"
+read -p  "  realm: "    KEYCLOAK_REALM
 read -p  "  url: "      KEYCLOAK_URL
 read -p  "  username: " KEYCLOAK_USER
 read -sp "  password: " KEYCLOAK_PASSWORD
 
-echo -e "\n\nImporting realm...\n\n"
+echo -e "\n\nExporting realm...\n\n"
 
 # get access token
 
 TOKEN=$(curl \
   -d "grant_type=password&client_id=admin-cli&username=$KEYCLOAK_USER&password=$KEYCLOAK_PASSWORD" \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -X POST $KEYCLOAK_URL/auth/realms/master/protocol/openid-connect/token \
+  -X POST "$KEYCLOAK_URL/realms/master/protocol/openid-connect/token" \
   | jq -r '.access_token')
 
-# import realm
+# export realm
 
-curl \
-  -d "@$1" \
+curl -o $1 \
   -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -X POST $KEYCLOAK_URL/auth/admin/realms
+  -X POST "$KEYCLOAK_URL/admin/realms/$KEYCLOAK_REALM/partial-export?exportClients=true&exportGroupsAndRoles=true"

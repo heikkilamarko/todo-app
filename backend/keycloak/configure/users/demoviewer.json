@@ -1,0 +1,14 @@
+{
+  "username": "demoviewer",
+  "firstName": "Demo",
+  "lastName": "Viewer",
+  "credentials": [
+    {
+      "temporary": false,
+      "type": "password",
+      "value": "S3c_r3t!"
+    }
+  ],
+  "groups": ["/todo-viewers"],
+  "enabled": true
+}

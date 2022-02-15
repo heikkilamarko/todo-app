@@ -41,11 +41,13 @@ See [secrets](secrets/) for details.
 
 ## Running the App
 
-Before running the below command, make sure you have the unencrypted secrets in the `env` directory. See [secrets](secrets/) for details.
+**Before** running the below command, make sure you have the unencrypted secrets in the `env` directory. See [Secrets Management](secrets/) for details.
 
 ```bash
 > docker compose up --build -d
 ```
+
+**After** running the above command, you need to configure the Keycloak realm. See [Configuring Keycloak](backend/keycloak/configure/) for details.
 
 Web UI: http://localhost
 
