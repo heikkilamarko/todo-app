@@ -5,18 +5,11 @@
 ## Export realm
 
 ```bash
-> ./export_realm.sh todo-app.json
+> ./export_realm.sh
 ```
 
 ## Import realm
 
 ```bash
-> ./import_realm.sh realms/todo-app.json
-```
-
-## Import users
-
-```bash
-> ./import_user.sh users/demouser.json
-> ./import_user.sh users/demoviewer.json
+> ./import_realm.sh
 ```

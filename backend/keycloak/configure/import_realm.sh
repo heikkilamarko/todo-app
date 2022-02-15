@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# check input arguments
-
-if [[ -z "$1" ]]; then
-  echo "error: You must pass a realm json file as the only argument."
-  exit 0
-fi
-
 # ask keycloak parameters from user
 
 echo "Please type your Keycloak info below"
@@ -14,7 +7,7 @@ read -p  "  url: "      KEYCLOAK_URL
 read -p  "  username: " KEYCLOAK_USER
 read -sp "  password: " KEYCLOAK_PASSWORD
 
-echo -e "\n\nImporting realm...\n\n"
+echo -e "\n\nImporting realm and users...\n\n"
 
 # get access token
 
@@ -27,7 +20,21 @@ TOKEN=$(curl \
 # import realm
 
 curl \
-  -d "@$1" \
+  -d "@realms/todo-app.json" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -X POST "$KEYCLOAK_URL/admin/realms"
+
+# import users
+
+curl \
+  -d "@users/demouser.json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -X POST "$KEYCLOAK_URL/admin/realms/todo-app/users"
+
+curl \
+  -d "@users/demoviewer.json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -X POST "$KEYCLOAK_URL/admin/realms/todo-app/users"
