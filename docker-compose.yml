@@ -250,7 +250,9 @@ services:
       - grafana
 
   keycloak:
-    build: ./backend/keycloak/docker
+    build:
+      context: ./backend/keycloak/docker
+      dockerfile: Dockerfile
     image: todo-app/keycloak
     deploy:
       restart_policy:

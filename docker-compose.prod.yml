@@ -87,6 +87,9 @@ services:
         condition: any
 
   keycloak:
+    build:
+      context: ./backend/keycloak/docker
+      dockerfile: Dockerfile.prod
     deploy:
       restart_policy:
         condition: any
