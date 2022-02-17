@@ -1,0 +1,6 @@
+localhost
+
+reverse_proxy http://todo-app
+reverse_proxy /todos* http://todo-api
+reverse_proxy /connection* http://centrifugo:8000
+reverse_proxy /grafana* http://grafana:3000

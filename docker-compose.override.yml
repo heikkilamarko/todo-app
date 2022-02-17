@@ -5,6 +5,11 @@ services:
     ports:
       - 80:80
 
+  # caddy:
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+
   minio-console:
     ports:
       - 9090:9090

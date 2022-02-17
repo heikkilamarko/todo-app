@@ -10,6 +10,18 @@ services:
     networks:
       - todo-app
 
+  # caddy:
+  #   build: ./backend/caddy/dev
+  #   image: todo-app/caddy
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #   volumes:
+  #     - caddy_data:/data
+  #     - caddy_config:/config
+  #   networks:
+  #     - todo-app
+
   todo-app:
     build: ./frontend
     image: todo-app/todo-app
@@ -273,3 +285,5 @@ volumes:
   minio:
   grafana:
   promtail:
+  # caddy_data:
+  # caddy_config:
