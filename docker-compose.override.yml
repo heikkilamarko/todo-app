@@ -10,14 +10,6 @@ services:
   #     - 80:80
   #     - 443:443
 
-  minio-console:
-    ports:
-      - 9090:9090
-
-  keycloak:
-    ports:
-      - 8080:8080
-
   temporal-web:
     image: temporalio/web
     deploy:
@@ -25,8 +17,6 @@ services:
         condition: on-failure
     env_file:
       - ./env/temporal-web.env
-    ports:
-      - 8088:8088
     networks:
       - todo-app
     depends_on:

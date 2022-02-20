@@ -1,7 +1,7 @@
 http:
   routers:
     dashboard:
-      rule: "PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+      rule: "Host(`todo-app.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       service: api@internal
       middlewares:
         - dashboard-auth

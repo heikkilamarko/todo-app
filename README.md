@@ -12,51 +12,75 @@ This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://
 
 See [secrets](secrets/) for details.
 
-## Application Proxy / Edge Router
+## Reverse Proxy
 
 - [Traefik](https://traefik.io/traefik/)
-  - URL: http://localhost/dashboard/
+  - URL: http://todo-app.com/dashboard/
   - username: `admin`
   - password: `S3c_r3t!`
 
-## Identity and Access Management
+## Real-Time Messaging
 
-- [Keycloak](https://www.keycloak.org/)
-  - URL: http://localhost:8080
-  - username: `admin`
+- [Centrifugo](https://centrifugal.dev/)
+  - URL: http://centrifugo.todo-app.com
   - password: `S3c_r3t!`
+
+## Workflow Engine
+
+- [Temporal](https://temporal.io/)
+  - URL: http://temporal.todo-app.com
 
 ## Monitoring Stack
 
 - [Grafana](https://grafana.com/oss/grafana/)
-  - URL: http://localhost/grafana
+  - URL: http://grafana.todo-app.com
   - username: `admin`
   - password: `S3c_r3t!`
 - [Loki](https://grafana.com/oss/loki/)
 - [Promtail](https://grafana.com/docs/loki/latest/clients/promtail/)
 - [MinIO](https://min.io/)
-  - URL: http://localhost:9090
+  - URL: http://minio.todo-app.com
   - username: `console`
+  - password: `S3c_r3t!`
+
+## Identity and Access Management
+
+- [Keycloak](https://www.keycloak.org/)
+  - URL: http://auth.todo-app.com
+  - username: `admin`
   - password: `S3c_r3t!`
 
 ## Running the App
 
-**Before** running the below command, make sure you have the unencrypted secrets in the `env` directory. See [Secrets Management](secrets/) for details.
+1. Add the following entries to your `/etc/hosts` file:
+
+```
+127.0.0.1    todo-app.com
+127.0.0.1    api.todo-app.com
+127.0.0.1    auth.todo-app.com
+127.0.0.1    centrifugo.todo-app.com
+127.0.0.1    temporal.todo-app.com
+127.0.0.1    grafana.todo-app.com
+127.0.0.1    minio.todo-app.com
+```
+
+2. Make sure you have the unencrypted secrets in the `env` directory. See [Secrets Management](secrets/) for details.
+
+3. Run Docker Compose
 
 ```bash
 > docker compose up --build -d
 ```
 
-**After** running the above command, you need to configure the Keycloak realm. See [Configuring Keycloak](backend/keycloak/configure/) for details.
+4. Import the Keycloak realm. See [Configuring Keycloak](backend/keycloak/configure/) for details.
 
-Web UI: http://localhost
-
-- Normal user
-  - username: `demouser`
-  - password: `S3c_r3t!`
-- Viewer (read-only) user
-  - username: `demoviewer`
-  - password: `S3c_r3t!`
+5. Open the App in browser: http://todo-app.com
+   - Normal user:
+     - username: `demouser`
+     - password: `S3c_r3t!`
+   - Viewer (read-only) user:
+     - username: `demoviewer`
+     - password: `S3c_r3t!`
 
 ## Tools
 

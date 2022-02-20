@@ -735,12 +735,12 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
         "https://todo-app.westeurope.cloudapp.azure.com/*",
-        "http://localhost:3000/*",
-        "http://localhost/*"
+        "http://todo-app.com/*",
+        "http://localhost:3000/*"
       ],
       "webOrigins": [
         "https://todo-app.westeurope.cloudapp.azure.com",
-        "http://localhost",
+        "http://todo-app.com",
         "http://localhost:3000"
       ],
       "notBefore": 0,
