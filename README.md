@@ -50,7 +50,7 @@ See [secrets](secrets/) for details.
   - username: `admin`
   - password: `S3c_r3t!`
 
-## Running the App
+## Running the App Locally
 
 1. Add the following entries to your `/etc/hosts` file:
 

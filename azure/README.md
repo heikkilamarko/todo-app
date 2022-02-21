@@ -17,7 +17,7 @@
 # ~/.ssh/config
 
 Host todo-app
-  HostName <domain_name_label>.westeurope.cloudapp.azure.com
+  HostName <azure_vm_hostname>
   Port 22
   User azureuser
   IdentityFile <keyfile>
@@ -54,8 +54,10 @@ Host todo-app
 ```bash
 # In 'azure' directory
 
-> ./generate_certs.sh "*.hobbydemos.com" <email_for_account_notifications>
+> ./generate_certs.sh <domain> <email_for_account_notifications>
 ```
+
+[Certbot docs](https://certbot.eff.org/docs/install.html)
 
 ## Decrypt Secrets
 
