@@ -1,11 +1,11 @@
 {
-  "apiUrl": "${VITE_PUBLIC_API_URL}",
-  "notificationsUrl": "${VITE_PUBLIC_NOTIFICATIONS_URL}",
+  "apiUrl": "${VITE_API_URL}",
+  "notificationsUrl": "${VITE_NOTIFICATIONS_URL}",
   "auth": {
-    "url": "${VITE_PUBLIC_AUTH_URL}",
-    "realm": "${VITE_PUBLIC_AUTH_REALM}",
-    "clientId": "${VITE_PUBLIC_AUTH_CLIENT_ID}"
+    "url": "${VITE_AUTH_URL}",
+    "realm": "${VITE_AUTH_REALM}",
+    "clientId": "${VITE_AUTH_CLIENT_ID}"
   },
-  "profileUrl": "${VITE_PUBLIC_PROFILE_URL}",
-  "dashboardUrl": "${VITE_PUBLIC_DASHBOARD_URL}"
+  "profileUrl": "${VITE_PROFILE_URL}",
+  "dashboardUrl": "${VITE_DASHBOARD_URL}"
 }
