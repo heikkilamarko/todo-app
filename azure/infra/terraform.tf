@@ -74,17 +74,17 @@ resource "azurerm_network_security_group" "app" {
     destination_address_prefix = "*"
   }
 
-  security_rule {
-    name                       = "HTTP"
-    priority                   = 310
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
+  # security_rule {
+  #   name                       = "HTTP"
+  #   priority                   = 310
+  #   direction                  = "Inbound"
+  #   access                     = "Allow"
+  #   protocol                   = "Tcp"
+  #   source_port_range          = "*"
+  #   destination_port_range     = "80"
+  #   source_address_prefix      = "*"
+  #   destination_address_prefix = "*"
+  # }
 
   security_rule {
     name                       = "HTTPS"
@@ -94,30 +94,6 @@ resource "azurerm_network_security_group" "app" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "443"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "Keycloak"
-    priority                   = 330
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "8443"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "MinIO"
-    priority                   = 340
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "9443"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }

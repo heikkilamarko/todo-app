@@ -54,7 +54,7 @@ Host todo-app
 ```bash
 # In 'azure' directory
 
-> ./generate_certs.sh <domain_name_label>.westeurope.cloudapp.azure.com <email_for_account_notifications>
+> ./generate_certs.sh "*.hobbydemos.com" <email_for_account_notifications>
 ```
 
 ## Decrypt Secrets
@@ -74,3 +74,7 @@ Host todo-app
 > docker compose -f docker-compose.yml -f docker-compose.prod.yml build
 > docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml todo-app
 ```
+
+## Configure Keycloak
+
+Import the Keycloak realm. See [Configuring Keycloak](../backend/keycloak/configure/) for details.

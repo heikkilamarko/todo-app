@@ -7,7 +7,8 @@ docker run -it --rm --name certbot \
   -v "/var/lib/letsencrypt:/var/lib/letsencrypt" \
   -p 80:80 \
   certbot/certbot certonly \
-  --standalone \
+  --manual \
+  --preferred-challenges=dns \
   --agree-tos \
   --no-eff-email \
   --cert-name todo-app \

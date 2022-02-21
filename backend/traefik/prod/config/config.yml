@@ -6,22 +6,29 @@ tls:
 http:
   routers:
     todo-app:
-      rule: PathPrefix(`/`)
+      rule: Host(`www.hobbydemos.com`)
       service: todo-app
       tls: {}
 
     todo-api:
-      rule: PathPrefix(`/todos`)
+      rule: Host(`api.hobbydemos.com`)
       service: todo-api
       tls: {}
+      middlewares:
+        - cors-middleware
 
     centrifugo:
-      rule: PathPrefix(`/connection`)
+      rule: Host(`centrifugo.hobbydemos.com`)
       service: centrifugo
       tls: {}
 
+    keycloak:
+      rule: Host(`auth.hobbydemos.com`)
+      service: keycloak
+      tls: {}
+
     grafana:
-      rule: PathPrefix(`/grafana`)
+      rule: Host(`grafana.hobbydemos.com`)
       service: grafana
       tls: {}
 
@@ -41,7 +48,27 @@ http:
         servers:
           - url: http://centrifugo:8000
 
+    keycloak:
+      loadBalancer:
+        servers:
+          - url: http://keycloak:8080
+
     grafana:
       loadBalancer:
         servers:
           - url: http://grafana:3000
+
+  middlewares:
+    cors-middleware:
+      headers:
+        accessControlAllowMethods:
+          - OPTIONS
+          - GET
+          - POST
+        accessControlAllowOriginList:
+          - https://www.hobbydemos.com
+        accessControlAllowHeaders:
+          - Authorization
+          - Content-Type
+        accessControlMaxAge: 100
+        addVaryHeader: true

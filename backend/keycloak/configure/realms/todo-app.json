@@ -734,12 +734,12 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "https://todo-app.westeurope.cloudapp.azure.com/*",
+        "https://www.hobbydemos.com/*",
         "http://todo-app.com/*",
         "http://localhost:3000/*"
       ],
       "webOrigins": [
-        "https://todo-app.westeurope.cloudapp.azure.com",
+        "https://www.hobbydemos.com",
         "http://todo-app.com",
         "http://localhost:3000"
       ],
