@@ -1,6 +1,50 @@
-localhost
+:80
 
-reverse_proxy http://todo-app
-reverse_proxy /todos* http://todo-api
-reverse_proxy /connection* http://centrifugo:8000
-reverse_proxy /grafana* http://grafana:3000
+@options {
+    host api.todo-app.com
+    method OPTIONS
+}
+
+handle @options {
+  header Access-Control-Allow-Origin "http://todo-app.com"
+  header Access-Control-Allow-Methods "GET, POST, OPTIONS"
+  header Access-Control-Allow-Headers "Authorization, Content-Type"
+  respond @options 204
+}
+
+@app {
+    host todo-app.com
+}
+reverse_proxy @app http://todo-app
+
+@api {
+    host api.todo-app.com
+}
+reverse_proxy @api http://todo-api {
+    header_down Access-Control-Allow-Origin "http://todo-app.com"
+}
+
+@centrifugo {
+    host centrifugo.todo-app.com
+}
+reverse_proxy @centrifugo http://centrifugo:8000
+
+@auth {
+    host auth.todo-app.com
+}
+reverse_proxy @auth http://keycloak:8080
+
+@grafana {
+    host grafana.todo-app.com
+}
+reverse_proxy @grafana http://grafana:3000
+
+@temporal {
+    host temporal.todo-app.com
+}
+reverse_proxy @temporal http://temporal-web:8088
+
+@minio {
+    host minio.todo-app.com
+}
+reverse_proxy @minio http://minio-console:9090
