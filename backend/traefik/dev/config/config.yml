@@ -78,6 +78,7 @@ http:
           - POST
         accessControlAllowOriginList:
           - http://todo-app.com
+          - http://localhost:3000
         accessControlAllowHeaders:
           - Authorization
           - Content-Type
