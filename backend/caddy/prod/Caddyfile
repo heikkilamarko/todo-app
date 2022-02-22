@@ -1,6 +1,6 @@
 :443
 
-tls /etc/traefik/certs/public.crt /etc/traefik/certs/private.key
+tls /etc/caddy/certs/public.crt /etc/caddy/certs/private.key
 
 @options {
     host api.hobbydemos.com
