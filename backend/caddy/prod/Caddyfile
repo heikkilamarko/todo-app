@@ -1,6 +1,42 @@
-todo-app.westeurope.cloudapp.azure.com
+:443
 
-reverse_proxy http://todo-app
-reverse_proxy /todos* http://todo-api
-reverse_proxy /connection* http://centrifugo:8000
-reverse_proxy /grafana* http://grafana:3000
+tls /etc/traefik/certs/public.crt /etc/traefik/certs/private.key
+
+@options {
+    host api.hobbydemos.com
+    method OPTIONS
+}
+
+handle @options {
+  header Access-Control-Allow-Origin "https://www.hobbydemos.com"
+  header Access-Control-Allow-Methods "GET, POST, OPTIONS"
+  header Access-Control-Allow-Headers "Authorization, Content-Type"
+  respond @options 204
+}
+
+@app {
+    host www.hobbydemos.com
+}
+reverse_proxy @app http://todo-app
+
+@api {
+    host api.hobbydemos.com
+}
+reverse_proxy @api http://todo-api {
+    header_down Access-Control-Allow-Origin "https://www.hobbydemos.com"
+}
+
+@centrifugo {
+    host centrifugo.hobbydemos.com
+}
+reverse_proxy @centrifugo http://centrifugo:8000
+
+@auth {
+    host auth.hobbydemos.com
+}
+reverse_proxy @auth http://keycloak:8080
+
+@grafana {
+    host grafana.hobbydemos.com
+}
+reverse_proxy @grafana http://grafana:3000

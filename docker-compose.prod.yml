@@ -20,8 +20,12 @@ services:
   #     restart_policy:
   #       condition: any
   #   ports:
-  #     - 80:80
   #     - 443:443
+  #   secrets:
+  #     - source: private.key
+  #       target: /etc/traefik/certs/private.key
+  #     - source: public.crt
+  #       target: /etc/traefik/certs/public.crt
 
   todo-app:
     deploy:
