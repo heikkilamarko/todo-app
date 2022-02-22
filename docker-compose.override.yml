@@ -8,7 +8,6 @@ services:
   # caddy:
   #   ports:
   #     - 80:80
-  #     - 443:443
 
   temporal-web:
     image: temporalio/web
