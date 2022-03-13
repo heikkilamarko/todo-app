@@ -1,6 +1,6 @@
 # Secrets Management
 
-This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://github.com/mozilla/sops#encrypting-using-age) for managing secrets.
+This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://github.com/mozilla/sops#22encrypting-using-age) for managing secrets.
 
 [age docs](https://age-encryption.org/)
 
@@ -60,7 +60,7 @@ export EDITOR="code --wait"
 > sudo chmod +x /usr/local/bin/sops
 ```
 
-Substitute `VERSION` with the version of SOPS you want to use. For example: `v3.7.1`
+Substitute `VERSION` with the version of SOPS you want to use. For example: `v3.7.2`
 
 #### Configuring age
 

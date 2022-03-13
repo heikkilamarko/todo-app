@@ -8,7 +8,7 @@ Todo App is a **hobby project** that is primarily focused around being a playgro
 
 ## Secrets Management
 
-This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://github.com/mozilla/sops#encrypting-using-age) for managing secrets.
+This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://github.com/mozilla/sops#22encrypting-using-age) for managing secrets.
 
 See [secrets](secrets/) for details.
 
