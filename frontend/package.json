@@ -12,10 +12,10 @@
 	"devDependencies": {
 		"@sveltejs/adapter-static": "next",
 		"@sveltejs/kit": "next",
-		"prettier": "2.6.0",
+		"prettier": "2.6.1",
 		"prettier-plugin-svelte": "2.6.0",
-		"sass": "1.49.9",
-		"svelte": "3.46.4"
+		"sass": "1.49.10",
+		"svelte": "3.46.6"
 	},
 	"dependencies": {
 		"bootstrap": "5.1.3",

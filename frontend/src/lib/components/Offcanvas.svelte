@@ -54,7 +54,7 @@
 	out:fly|local={{ x: 400, duration: 300 }}
 >
 	<div class="offcanvas-header">
-		<h5 id="offcanvas-label">{title}</h5>
+		<h5 id="offcanvas-label" class="offcanvas-title">{title}</h5>
 		<button type="button" class="btn-close text-reset" aria-label="Close" on:click={close} />
 	</div>
 	<div class="offcanvas-body">
