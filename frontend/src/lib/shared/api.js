@@ -15,7 +15,7 @@ export async function getToken() {
  * @returns {Promise<import("../../types").GetTodosResponse>}
  */
 export async function getTodos(req) {
-	return await client().get(`todos?offset=${req.offset}&limit=${req.limit}`).json();
+	return await client().get('todos', { searchParams: req }).json();
 }
 
 /**

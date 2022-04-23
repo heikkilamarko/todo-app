@@ -4,11 +4,9 @@ import adapter from '@sveltejs/adapter-static';
 const config = {
 	extensions: ['.svelte', '.svg'],
 	kit: {
-		files: {
-			template: 'src/index.html'
-		},
 		adapter: adapter({
-			fallback: 'index.html'
+			fallback: 'app.html'
+			// precompress: true
 		})
 	}
 };
