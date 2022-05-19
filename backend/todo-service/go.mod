@@ -4,16 +4,16 @@ go 1.18
 
 require (
 	github.com/centrifugal/gocent/v3 v3.2.0
-	github.com/heikkilamarko/goutils v1.0.25
-	github.com/jackc/pgx/v4 v4.16.0
-	github.com/nats-io/nats.go v1.14.0
+	github.com/heikkilamarko/goutils v1.0.26
+	github.com/jackc/pgx/v4 v4.16.1
+	github.com/nats-io/nats.go v1.15.0
 	github.com/rs/zerolog v1.26.1
 	github.com/xeipuuv/gojsonschema v1.2.0
 )
 
 require (
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
-	github.com/jackc/pgconn v1.12.0 // indirect
+	github.com/jackc/pgconn v1.12.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgproto3/v2 v2.3.0 // indirect
