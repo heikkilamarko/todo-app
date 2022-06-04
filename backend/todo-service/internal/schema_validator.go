@@ -1,11 +1,10 @@
-package utils
+package internal
 
 import (
 	"embed"
 	"errors"
 	"fmt"
 
-	"github.com/heikkilamarko/goutils"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -35,11 +34,11 @@ func (v *SchemaValidator) Validate(schemaName string, doc []byte) error {
 	}
 
 	if !r.Valid() {
-		m := map[string]string{}
+		m := make(map[string][]string)
 		for _, e := range r.Errors() {
-			m[e.Field()] = e.Description()
+			m[e.Field()] = []string{e.Description()}
 		}
-		return goutils.NewValidationError(m)
+		return ValidationError{m}
 	}
 
 	return nil

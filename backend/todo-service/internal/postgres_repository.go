@@ -1,10 +1,9 @@
-package adapters
+package internal
 
 import (
 	"context"
 	"database/sql"
 	_ "embed"
-	"todo-service/internal/domain"
 )
 
 var (
@@ -14,15 +13,11 @@ var (
 	completeTodoSQL string
 )
 
-type TodoPostgresRepository struct {
+type PostgresRepository struct {
 	db *sql.DB
 }
 
-func NewTodoPostgresRepository(db *sql.DB) *TodoPostgresRepository {
-	return &TodoPostgresRepository{db}
-}
-
-func (r *TodoPostgresRepository) CreateTodo(ctx context.Context, todo *domain.Todo) error {
+func (r *PostgresRepository) CreateTodo(ctx context.Context, todo *Todo) error {
 	return r.db.QueryRowContext(ctx, createTodoSQL,
 		todo.Name,
 		todo.Description,
@@ -31,7 +26,7 @@ func (r *TodoPostgresRepository) CreateTodo(ctx context.Context, todo *domain.To
 		Scan(&todo.ID)
 }
 
-func (r *TodoPostgresRepository) CompleteTodo(ctx context.Context, id int) error {
+func (r *PostgresRepository) CompleteTodo(ctx context.Context, id int) error {
 	_, err := r.db.ExecContext(ctx, completeTodoSQL, id)
 	return err
 }
