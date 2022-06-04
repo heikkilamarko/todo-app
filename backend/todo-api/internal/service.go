@@ -1,4 +1,4 @@
-package service
+package internal
 
 import (
 	"context"
@@ -8,11 +8,6 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-	"todo-api/internal/adapters"
-	"todo-api/internal/adapters/auth"
-	"todo-api/internal/application"
-	"todo-api/internal/application/command"
-	"todo-api/internal/application/query"
 
 	"github.com/gorilla/mux"
 	"github.com/heikkilamarko/goutils"
@@ -24,26 +19,12 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
-type config struct {
-	App                          string
-	Address                      string
-	DBConnectionString           string
-	NATSURL                      string
-	NATSToken                    string
-	CentrifugoTokenHMACSecretKey string
-	LogLevel                     string
-	AuthIssuer                   string
-	AuthClaimIss                 string
-	AuthClaimAud                 string
-}
-
 type Service struct {
-	config *config
+	config *Config
 	logger *zerolog.Logger
 	db     *sql.DB
 	nc     *nats.Conn
 	js     nats.JetStreamContext
-	app    *application.Application
 	server *http.Server
 }
 
@@ -51,42 +32,40 @@ func (s *Service) Run() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	s.loadConfig()
+	if err := s.loadConfig(); err != nil {
+		s.logger.Fatal().Err(err).Send()
+	}
+
 	s.initLogger()
 
-	s.logInfo("application is starting up...")
+	s.logger.Info().Msgf("application is starting up...")
 
 	if err := s.initDB(ctx); err != nil {
-		s.logFatal(err)
+		s.logger.Fatal().Err(err).Send()
 	}
 
 	if err := s.initNATS(); err != nil {
-		s.logFatal(err)
+		s.logger.Fatal().Err(err).Send()
 	}
 
-	s.initApplication()
 	s.initHTTPServer(ctx)
 
 	if err := s.serve(ctx); err != nil {
-		s.logFatal(err)
+		s.logger.Fatal().Err(err).Send()
 	}
 
-	s.logInfo("application is shut down")
+	s.logger.Info().Msgf("application is shut down")
 }
 
-func (s *Service) loadConfig() {
-	s.config = &config{
-		App:                          env("APP_NAME", ""),
-		Address:                      env("APP_ADDRESS", ":8080"),
-		DBConnectionString:           env("APP_DB_CONNECTION_STRING", ""),
-		NATSURL:                      env("APP_NATS_URL", ""),
-		NATSToken:                    env("APP_NATS_TOKEN", ""),
-		CentrifugoTokenHMACSecretKey: env("APP_CENTRIFUGO_TOKEN_HMAC_SECRET_KEY", ""),
-		LogLevel:                     env("APP_LOG_LEVEL", "warn"),
-		AuthIssuer:                   env("APP_AUTH_ISSUER", ""),
-		AuthClaimIss:                 env("APP_AUTH_CLAIM_ISS", ""),
-		AuthClaimAud:                 env("APP_AUTH_CLAIM_AUD", ""),
+func (s *Service) loadConfig() error {
+	c := &Config{}
+	if err := c.Load(); err != nil {
+		return err
 	}
+
+	s.config = c
+
+	return nil
 }
 
 func (s *Service) initLogger() {
@@ -133,11 +112,11 @@ func (s *Service) initNATS() error {
 		nats.NoReconnect(),
 		nats.DisconnectErrHandler(
 			func(_ *nats.Conn, err error) {
-				s.logFatal(err)
+				s.logger.Fatal().Err(err).Send()
 			}),
 		nats.ErrorHandler(
 			func(_ *nats.Conn, _ *nats.Subscription, err error) {
-				s.logFatal(err)
+				s.logger.Fatal().Err(err).Send()
 			}),
 	)
 
@@ -157,21 +136,6 @@ func (s *Service) initNATS() error {
 	return nil
 }
 
-func (s *Service) initApplication() {
-	todoRepository := adapters.NewTodoPostgresRepository(s.db)
-	todoMessagePublisher := adapters.NewTodoNATSMessagePublisher(s.js)
-
-	s.app = &application.Application{
-		Commands: application.Commands{
-			CreateTodo:   command.NewCreateTodoHandler(todoMessagePublisher),
-			CompleteTodo: command.NewCompleteTodoHandler(todoMessagePublisher),
-		},
-		Queries: application.Queries{
-			GetTodos: query.NewGetTodosHandler(todoRepository),
-		},
-	}
-}
-
 func (s *Service) initHTTPServer(ctx context.Context) {
 	router := mux.NewRouter()
 
@@ -179,7 +143,7 @@ func (s *Service) initHTTPServer(ctx context.Context) {
 		Issuer:   s.config.AuthIssuer,
 		Iss:      s.config.AuthClaimIss,
 		Aud:      []string{s.config.AuthClaimAud},
-		TokenKey: auth.ContextKeyAccessToken,
+		TokenKey: ContextKeyAccessToken,
 	}
 
 	router.Use(
@@ -189,17 +153,15 @@ func (s *Service) initHTTPServer(ctx context.Context) {
 		middleware.JWT(ctx, jwtConfig),
 	)
 
+	repo := NewPostgresTodoRepository(s.db)
+	pub := NewNATSTodoMessagePublisher(s.js)
+
+	router.Handle("/todos/token", &GetCentrifugoTokenHandler{s.config, s.logger}).Methods(http.MethodGet)
+	router.Handle("/todos", &GetTodosHandler{repo, s.logger}).Methods(http.MethodGet)
+	router.Handle("/todos", &CreateTodoHandler{pub, s.logger}).Methods(http.MethodPost)
+	router.Handle("/todos/{id:[0-9]+}/complete", &CompleteTodoHandler{pub, s.logger}).Methods(http.MethodPost)
+
 	router.NotFoundHandler = goutils.NotFoundHandler()
-
-	centrifugoHandler := adapters.NewCentrifugoHTTPHandler(s.config.CentrifugoTokenHMACSecretKey, s.logger)
-
-	router.HandleFunc("/todos/token", centrifugoHandler.GetToken).Methods(http.MethodGet)
-
-	todoHandlers := adapters.NewTodoHTTPHandlers(s.app, s.logger)
-
-	router.HandleFunc("/todos", todoHandlers.GetTodos).Methods(http.MethodGet)
-	router.HandleFunc("/todos", todoHandlers.CreateTodo).Methods(http.MethodPost)
-	router.HandleFunc("/todos/{id:[0-9]+}/complete", todoHandlers.CompleteTodo).Methods(http.MethodPost)
 
 	s.server = &http.Server{
 		ReadTimeout:  5 * time.Second,
@@ -216,7 +178,7 @@ func (s *Service) serve(ctx context.Context) error {
 	go func() {
 		<-ctx.Done()
 
-		s.logInfo("application is shutting down...")
+		s.logger.Info().Msgf("application is shutting down...")
 
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
@@ -228,7 +190,7 @@ func (s *Service) serve(ctx context.Context) error {
 		errChan <- nil
 	}()
 
-	s.logInfo("application is running at %s", s.server.Addr)
+	s.logger.Info().Msgf("application is running at %s", s.server.Addr)
 
 	if err := s.server.ListenAndServe(); err != http.ErrServerClosed {
 		return err

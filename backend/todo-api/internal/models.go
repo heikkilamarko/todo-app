@@ -1,4 +1,4 @@
-package domain
+package internal
 
 import "time"
 
@@ -8,4 +8,9 @@ type Todo struct {
 	Description *string   `json:"description,omitempty"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at,omitempty"`
+}
+
+type PaginationMeta struct {
+	Offset int `json:"offset"`
+	Limit  int `json:"limit"`
 }

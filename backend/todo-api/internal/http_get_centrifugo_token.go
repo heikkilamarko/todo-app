@@ -1,0 +1,58 @@
+package internal
+
+import (
+	"errors"
+	"net/http"
+
+	"github.com/go-jose/go-jose/v3"
+	"github.com/go-jose/go-jose/v3/jwt"
+	"github.com/rs/zerolog"
+)
+
+type tokenClaims struct {
+	Subject string `json:"sub"`
+}
+
+type tokenResponse struct {
+	Token string `json:"token"`
+}
+
+type GetCentrifugoTokenHandler struct {
+	config *Config
+	logger *zerolog.Logger
+}
+
+func (h *GetCentrifugoTokenHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if err := AuthorizeRead(r); err != nil {
+		h.logger.Error().Err(err).Send()
+		WriteResponse(w, http.StatusUnauthorized, nil)
+		return
+	}
+
+	sub := GetSubject(r.Context())
+	if sub == "" {
+		h.logger.Error().Err(errors.New("sub claim is empty")).Send()
+		WriteResponse(w, http.StatusUnauthorized, nil)
+		return
+	}
+
+	sig, err := jose.NewSigner(jose.SigningKey{
+		Algorithm: jose.HS256,
+		Key:       h.config.CentrifugoTokenHMACSecretKey,
+	}, (&jose.SignerOptions{}).WithType("JWT"))
+
+	if err != nil {
+		h.logger.Error().Err(err).Send()
+		WriteResponse(w, http.StatusInternalServerError, nil)
+		return
+	}
+
+	token, err := jwt.Signed(sig).Claims(tokenClaims{sub}).CompactSerialize()
+	if err != nil {
+		h.logger.Error().Err(err).Send()
+		WriteResponse(w, http.StatusInternalServerError, nil)
+		return
+	}
+
+	WriteResponse(w, http.StatusOK, NewDataResponse(&tokenResponse{token}, nil))
+}

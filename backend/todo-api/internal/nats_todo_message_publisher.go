@@ -1,9 +1,8 @@
-package adapters
+package internal
 
 import (
 	"context"
 	"encoding/json"
-	"todo-api/internal/domain"
 
 	"github.com/nats-io/nats.go"
 )
@@ -14,30 +13,30 @@ const (
 )
 
 type todoCreateMessage struct {
-	Todo *domain.Todo `json:"todo"`
+	Todo *Todo `json:"todo"`
 }
 
 type todoCompleteMessage struct {
 	ID int `json:"id"`
 }
 
-type TodoNATSMessagePublisher struct {
+type NATSTodoMessagePublisher struct {
 	js nats.JetStreamContext
 }
 
-func NewTodoNATSMessagePublisher(js nats.JetStreamContext) *TodoNATSMessagePublisher {
-	return &TodoNATSMessagePublisher{js}
+func NewNATSTodoMessagePublisher(js nats.JetStreamContext) *NATSTodoMessagePublisher {
+	return &NATSTodoMessagePublisher{js}
 }
 
-func (mp *TodoNATSMessagePublisher) TodoCreate(_ context.Context, todo *domain.Todo) error {
+func (mp *NATSTodoMessagePublisher) TodoCreate(_ context.Context, todo *Todo) error {
 	return mp.publish(subjectTodoCreate, &todoCreateMessage{todo})
 }
 
-func (mp *TodoNATSMessagePublisher) TodoComplete(_ context.Context, id int) error {
+func (mp *NATSTodoMessagePublisher) TodoComplete(_ context.Context, id int) error {
 	return mp.publish(subjectTodoComplete, &todoCompleteMessage{id})
 }
 
-func (mp *TodoNATSMessagePublisher) publish(subject string, message interface{}) error {
+func (mp *NATSTodoMessagePublisher) publish(subject string, message any) error {
 	data, err := json.Marshal(message)
 	if err != nil {
 		return err

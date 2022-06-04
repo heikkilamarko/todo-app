@@ -1,7 +1,7 @@
 package main
 
-import "todo-api/internal/service"
+import "todo-api/internal"
 
 func main() {
-	(&service.Service{}).Run()
+	(&internal.Service{}).Run()
 }

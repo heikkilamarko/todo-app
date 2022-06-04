@@ -1,4 +1,4 @@
-package auth
+package internal
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 func TestGetUserNameOK(t *testing.T) {
 	want := "username"
 
-	token := map[string]interface{}{
+	token := map[string]any{
 		"name": want,
 	}
 
@@ -24,7 +24,7 @@ func TestGetUserNameOK(t *testing.T) {
 func TestGetUserNameEmptyToken(t *testing.T) {
 	want := ""
 
-	token := map[string]interface{}{}
+	token := map[string]any{}
 
 	ctx := contextWithToken(token)
 
@@ -50,9 +50,9 @@ func TestGetUserNameNilToken(t *testing.T) {
 func TestGetRolesOK(t *testing.T) {
 	want := []string{"role1", "role2"}
 
-	token := map[string]interface{}{
-		"resource_access": map[string]interface{}{
-			"todo-api": map[string]interface{}{
+	token := map[string]any{
+		"resource_access": map[string]any{
+			"todo-api": map[string]any{
 				"roles": want,
 			},
 		},
@@ -77,7 +77,7 @@ func TestGetRolesOK(t *testing.T) {
 func TestGetRolesEmptyToken(t *testing.T) {
 	want := 0
 
-	token := map[string]interface{}{}
+	token := map[string]any{}
 
 	ctx := contextWithToken(token)
 
@@ -103,9 +103,9 @@ func TestGetRolesNilToken(t *testing.T) {
 func TestIsInRoleTrue(t *testing.T) {
 	role := "role1"
 
-	token := map[string]interface{}{
-		"resource_access": map[string]interface{}{
-			"todo-api": map[string]interface{}{
+	token := map[string]any{
+		"resource_access": map[string]any{
+			"todo-api": map[string]any{
 				"roles": []string{role},
 			},
 		},
@@ -125,9 +125,9 @@ func TestIsInRoleTrue(t *testing.T) {
 func TestIsInRoleFalse(t *testing.T) {
 	role := "role1"
 
-	token := map[string]interface{}{
-		"resource_access": map[string]interface{}{
-			"todo-api": map[string]interface{}{
+	token := map[string]any{
+		"resource_access": map[string]any{
+			"todo-api": map[string]any{
 				"roles": []string{role},
 			},
 		},
@@ -144,6 +144,6 @@ func TestIsInRoleFalse(t *testing.T) {
 	}
 }
 
-func contextWithToken(token map[string]interface{}) context.Context {
+func contextWithToken(token map[string]any) context.Context {
 	return context.WithValue(context.Background(), ContextKeyAccessToken, token)
 }

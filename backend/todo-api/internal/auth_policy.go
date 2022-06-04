@@ -1,16 +1,11 @@
-package auth
+package internal
 
-import (
-	"errors"
-	"net/http"
-)
+import "net/http"
 
 const (
 	roleUser   = "todo-user"
 	roleViewer = "todo-viewer"
 )
-
-var ErrUnauthorized = errors.New("unauthorized")
 
 func AuthorizeWrite(r *http.Request) error {
 	if IsInRole(r.Context(), roleUser) {

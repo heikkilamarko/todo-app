@@ -1,4 +1,4 @@
-package auth
+package internal
 
 import (
 	"context"
@@ -10,8 +10,8 @@ type contextKey string
 
 var ContextKeyAccessToken = contextKey("access_token")
 
-func GetAccessToken(ctx context.Context) map[string]interface{} {
-	return ctx.Value(ContextKeyAccessToken).(map[string]interface{})
+func GetAccessToken(ctx context.Context) map[string]any {
+	return ctx.Value(ContextKeyAccessToken).(map[string]any)
 }
 
 func GetSubject(ctx context.Context) string {
