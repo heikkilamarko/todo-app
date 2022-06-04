@@ -27,7 +27,7 @@ func (req *CompleteTodoRequest) Bind(r *http.Request) error {
 }
 
 type CompleteTodoHandler struct {
-	pub    TodoMessagePublisher
+	pub    MessagePublisher
 	logger *zerolog.Logger
 }
 

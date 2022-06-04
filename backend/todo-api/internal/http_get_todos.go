@@ -43,7 +43,7 @@ func (req *GetTodosRequest) Bind(r *http.Request) error {
 }
 
 type GetTodosHandler struct {
-	repo   TodoRepository
+	repo   Repository
 	logger *zerolog.Logger
 }
 

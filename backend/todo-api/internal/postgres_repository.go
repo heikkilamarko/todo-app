@@ -9,15 +9,11 @@ import (
 //go:embed sql/get_todos.sql
 var getTodosSQL string
 
-type PostgresTodoRepository struct {
+type PostgresRepository struct {
 	db *sql.DB
 }
 
-func NewPostgresTodoRepository(db *sql.DB) *PostgresTodoRepository {
-	return &PostgresTodoRepository{db}
-}
-
-func (r *PostgresTodoRepository) GetTodos(ctx context.Context, q *GetTodosQuery) (*GetTodosResult, error) {
+func (r *PostgresRepository) GetTodos(ctx context.Context, q *GetTodosQuery) (*GetTodosResult, error) {
 	rows, err := r.db.QueryContext(
 		ctx,
 		getTodosSQL,

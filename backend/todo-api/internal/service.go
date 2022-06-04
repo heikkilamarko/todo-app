@@ -24,7 +24,6 @@ type Service struct {
 	logger *zerolog.Logger
 	db     *sql.DB
 	nc     *nats.Conn
-	js     nats.JetStreamContext
 	server *http.Server
 }
 
@@ -124,14 +123,7 @@ func (s *Service) initNATS() error {
 		return err
 	}
 
-	js, err := nc.JetStream()
-
-	if err != nil {
-		return err
-	}
-
 	s.nc = nc
-	s.js = js
 
 	return nil
 }
@@ -153,8 +145,8 @@ func (s *Service) initHTTPServer(ctx context.Context) {
 		middleware.JWT(ctx, jwtConfig),
 	)
 
-	repo := NewPostgresTodoRepository(s.db)
-	pub := NewNATSTodoMessagePublisher(s.js)
+	repo := &PostgresRepository{s.db}
+	pub := &NATSMessagePublisher{s.nc}
 
 	router.Handle("/todos/token", &GetCentrifugoTokenHandler{s.config, s.logger}).Methods(http.MethodGet)
 	router.Handle("/todos", &GetTodosHandler{repo, s.logger}).Methods(http.MethodGet)

@@ -11,6 +11,6 @@ type GetTodosResult struct {
 	Todos []Todo
 }
 
-type TodoRepository interface {
+type Repository interface {
 	GetTodos(ctx context.Context, q *GetTodosQuery) (*GetTodosResult, error)
 }
