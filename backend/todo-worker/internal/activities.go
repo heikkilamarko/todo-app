@@ -1,4 +1,4 @@
-package workflow
+package internal
 
 import (
 	"context"
@@ -7,10 +7,6 @@ import (
 
 type Activities struct {
 	db *sql.DB
-}
-
-func NewActivities(db *sql.DB) *Activities {
-	return &Activities{db}
 }
 
 func (a *Activities) RemoveTodos(ctx context.Context) error {

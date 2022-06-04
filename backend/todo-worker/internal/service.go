@@ -1,4 +1,4 @@
-package service
+package internal
 
 import (
 	"context"
@@ -7,7 +7,6 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-	"todo-worker/internal/workflow"
 
 	"github.com/rs/zerolog"
 	"go.temporal.io/sdk/client"
@@ -19,15 +18,8 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
-type config struct {
-	App                string
-	DBConnectionString string
-	TemporalHostPort   string
-	LogLevel           string
-}
-
 type Service struct {
-	config *config
+	config *Config
 	logger *zerolog.Logger
 	db     *sql.DB
 	tc     client.Client
@@ -38,33 +30,38 @@ func (s *Service) Run() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	s.loadConfig()
+	if err := s.loadConfig(); err != nil {
+		s.logger.Fatal().Err(err).Send()
+	}
+
 	s.initLogger()
 
-	s.logInfo("application is starting up...")
+	s.logger.Info().Msgf("application is starting up...")
 
 	if err := s.initDB(ctx); err != nil {
-		s.logFatal(err)
+		s.logger.Fatal().Err(err).Send()
 	}
 
 	if err := s.initTemporal(); err != nil {
-		s.logFatal(err)
+		s.logger.Fatal().Err(err).Send()
 	}
 
 	if err := s.serve(ctx); err != nil {
-		s.logFatal(err)
+		s.logger.Fatal().Err(err).Send()
 	}
 
-	s.logInfo("application is shut down")
+	s.logger.Info().Msgf("application is shut down")
 }
 
-func (s *Service) loadConfig() {
-	s.config = &config{
-		App:                env("APP_NAME", ""),
-		DBConnectionString: env("APP_DB_CONNECTION_STRING", ""),
-		TemporalHostPort:   env("APP_TEMPORAL_HOSTPORT", ""),
-		LogLevel:           env("APP_LOG_LEVEL", "warn"),
+func (s *Service) loadConfig() error {
+	c := &Config{}
+	if err := c.Load(); err != nil {
+		return err
 	}
+
+	s.config = c
+
+	return nil
 }
 
 func (s *Service) initLogger() {
@@ -114,10 +111,10 @@ func (s *Service) initTemporal() error {
 		return err
 	}
 
-	a := workflow.NewActivities(s.db)
+	a := Activities{s.db}
 
-	tw := worker.New(tc, workflow.TaskQueueWorker, worker.Options{})
-	tw.RegisterWorkflow(workflow.RemoveTodosWorkflow)
+	tw := worker.New(tc, TaskQueueWorker, worker.Options{})
+	tw.RegisterWorkflow(RemoveTodosWorkflow)
 	tw.RegisterActivity(a.RemoveTodos)
 
 	s.tc = tc
@@ -132,7 +129,7 @@ func (s *Service) serve(ctx context.Context) error {
 	go func() {
 		<-ctx.Done()
 
-		s.logInfo("application is shutting down...")
+		s.logger.Info().Msgf("application is shutting down...")
 
 		_ = s.db.Close()
 		s.tc.Close()
@@ -140,7 +137,7 @@ func (s *Service) serve(ctx context.Context) error {
 		errChan <- nil
 	}()
 
-	s.logInfo("application is running")
+	s.logger.Info().Msgf("application is running")
 
 	if err := s.tw.Run(worker.InterruptCh()); err != nil {
 		return err

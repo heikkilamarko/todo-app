@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"log"
-	"todo-worker/internal/workflow"
+	"todo-worker/internal"
 
 	"go.temporal.io/sdk/client"
 )
@@ -16,12 +16,12 @@ func main() {
 	defer c.Close()
 
 	options := client.StartWorkflowOptions{
-		ID:           workflow.WorkflowID,
-		TaskQueue:    workflow.TaskQueueWorker,
+		ID:           internal.WorkflowID,
+		TaskQueue:    internal.TaskQueueWorker,
 		CronSchedule: "*/1 * * * *",
 	}
 
-	_, err = c.ExecuteWorkflow(context.Background(), options, workflow.RemoveTodosWorkflow)
+	_, err = c.ExecuteWorkflow(context.Background(), options, internal.RemoveTodosWorkflow)
 	if err != nil {
 		log.Fatalln("unable to start cron workflow", err)
 	}

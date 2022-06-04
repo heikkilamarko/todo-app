@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"log"
-	"todo-worker/internal/workflow"
+	"todo-worker/internal"
 
 	"go.temporal.io/sdk/client"
 )
@@ -15,10 +15,10 @@ func main() {
 	}
 	defer c.Close()
 
-	err = c.CancelWorkflow(context.Background(), workflow.WorkflowID, "")
+	err = c.CancelWorkflow(context.Background(), internal.WorkflowID, "")
 	if err != nil {
 		log.Fatalln("unable to cancel workflow execution", err)
 	}
 
-	log.Printf("workflow execution cancelled (ID: '%s')", workflow.WorkflowID)
+	log.Printf("workflow execution cancelled (ID: '%s')", internal.WorkflowID)
 }

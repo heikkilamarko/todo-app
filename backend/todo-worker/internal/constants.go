@@ -1,4 +1,4 @@
-package workflow
+package internal
 
 const (
 	TaskQueueWorker = "TASK_QUEUE_WORKER"
