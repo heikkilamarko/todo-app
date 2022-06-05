@@ -43,13 +43,13 @@ func (req *GetTodosRequest) Bind(r *http.Request) error {
 }
 
 type GetTodosHandler struct {
-	repo   Repository
-	logger *zerolog.Logger
+	Repo   Repository
+	Logger *zerolog.Logger
 }
 
 func (h *GetTodosHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err := AuthorizeRead(r); err != nil {
-		h.logger.Error().Err(err).Send()
+		h.Logger.Error().Err(err).Send()
 		WriteResponse(w, http.StatusUnauthorized, nil)
 		return
 	}
@@ -57,18 +57,18 @@ func (h *GetTodosHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	req := &GetTodosRequest{}
 
 	if err := req.Bind(r); err != nil {
-		h.logger.Error().Err(err).Send()
+		h.Logger.Error().Err(err).Send()
 		WriteErrorResponse(w, ErrCodeInvalidRequest, err)
 		return
 	}
 
-	res, err := h.repo.GetTodos(r.Context(), req.Query)
+	data, err := h.Repo.GetTodos(r.Context(), req.Query)
 
 	if err != nil {
-		h.logger.Error().Err(err).Send()
+		h.Logger.Error().Err(err).Send()
 		WriteResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 
-	WriteResponse(w, http.StatusOK, NewDataResponse(res.Todos, nil))
+	WriteResponse(w, http.StatusOK, NewDataResponse(data, req.Query))
 }

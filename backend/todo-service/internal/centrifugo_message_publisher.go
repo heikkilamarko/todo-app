@@ -8,13 +8,11 @@ import (
 )
 
 type CentrifugoMessagePublisher struct {
-	config *Config
-	client *gocent.Client
+	Client *gocent.Client
 }
 
 func NewCentrifugoMessagePublisher(c *Config) *CentrifugoMessagePublisher {
 	return &CentrifugoMessagePublisher{
-		c,
 		gocent.New(gocent.Config{Addr: c.CentrifugoURL, Key: c.CentrifugoKey}),
 	}
 }
@@ -53,6 +51,6 @@ func (p *CentrifugoMessagePublisher) Publish(ctx context.Context, t string, d an
 		return err
 	}
 
-	_, err = p.client.Publish(ctx, "notifications", data)
+	_, err = p.Client.Publish(ctx, "notifications", data)
 	return err
 }

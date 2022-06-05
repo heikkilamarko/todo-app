@@ -20,11 +20,11 @@ import (
 var schemaFS embed.FS
 
 type Service struct {
-	config *Config
-	logger *zerolog.Logger
-	db     *sql.DB
-	nc     *nats.Conn
-	sub    *NATSMessageSubscriber
+	Config   *Config
+	Logger   *zerolog.Logger
+	DB       *sql.DB
+	NATSConn *nats.Conn
+	Sub      *NATSMessageSubscriber
 }
 
 func (s *Service) Run() {
@@ -32,28 +32,28 @@ func (s *Service) Run() {
 	defer stop()
 
 	if err := s.loadConfig(); err != nil {
-		s.logger.Fatal().Err(err).Send()
+		s.Logger.Fatal().Err(err).Send()
 	}
 
 	s.initLogger()
 
-	s.logger.Info().Msgf("application is starting up...")
+	s.Logger.Info().Msgf("application is starting up...")
 
 	if err := s.initDB(ctx); err != nil {
-		s.logger.Fatal().Err(err).Send()
+		s.Logger.Fatal().Err(err).Send()
 	}
 
 	if err := s.initNATS(); err != nil {
-		s.logger.Fatal().Err(err).Send()
+		s.Logger.Fatal().Err(err).Send()
 	}
 
 	s.initMessageSubscriber()
 
 	if err := s.serve(ctx); err != nil {
-		s.logger.Fatal().Err(err).Send()
+		s.Logger.Fatal().Err(err).Send()
 	}
 
-	s.logger.Info().Msgf("application is shut down")
+	s.Logger.Info().Msgf("application is shut down")
 }
 
 func (s *Service) loadConfig() error {
@@ -62,13 +62,13 @@ func (s *Service) loadConfig() error {
 		return err
 	}
 
-	s.config = c
+	s.Config = c
 
 	return nil
 }
 
 func (s *Service) initLogger() {
-	level, err := zerolog.ParseLevel(s.config.LogLevel)
+	level, err := zerolog.ParseLevel(s.Config.LogLevel)
 	if err != nil {
 		level = zerolog.WarnLevel
 	}
@@ -78,14 +78,14 @@ func (s *Service) initLogger() {
 	logger := zerolog.New(os.Stderr).
 		With().
 		Timestamp().
-		Str("app", s.config.App).
+		Str("app", s.Config.App).
 		Logger()
 
-	s.logger = &logger
+	s.Logger = &logger
 }
 
 func (s *Service) initDB(ctx context.Context) error {
-	db, err := sql.Open("pgx", s.config.DBConnectionString)
+	db, err := sql.Open("pgx", s.Config.DBConnectionString)
 	if err != nil {
 		return err
 	}
@@ -99,23 +99,23 @@ func (s *Service) initDB(ctx context.Context) error {
 		return err
 	}
 
-	s.db = db
+	s.DB = db
 
 	return nil
 }
 
 func (s *Service) initNATS() error {
-	nc, err := nats.Connect(
-		s.config.NATSURL,
-		nats.Token(s.config.NATSToken),
+	conn, err := nats.Connect(
+		s.Config.NATSURL,
+		nats.Token(s.Config.NATSToken),
 		nats.NoReconnect(),
 		nats.DisconnectErrHandler(
 			func(_ *nats.Conn, err error) {
-				s.logger.Fatal().Err(err).Send()
+				s.Logger.Fatal().Err(err).Send()
 			}),
 		nats.ErrorHandler(
 			func(_ *nats.Conn, _ *nats.Subscription, err error) {
-				s.logger.Fatal().Err(err).Send()
+				s.Logger.Fatal().Err(err).Send()
 			}),
 	)
 
@@ -123,27 +123,27 @@ func (s *Service) initNATS() error {
 		return err
 	}
 
-	s.nc = nc
+	s.NATSConn = conn
 
 	return nil
 }
 
 func (s *Service) initMessageSubscriber() {
 	parser := &NATSMessageParser{NewSchemaValidator(schemaFS)}
-	repo := &PostgresRepository{s.db}
-	pub := NewCentrifugoMessagePublisher(s.config)
+	repo := &PostgresRepository{s.DB}
+	pub := NewCentrifugoMessagePublisher(s.Config)
 
 	options := &NATSMessageSubscriberOptions{
 		Subject:   "todo.*",
 		Durable:   "todo",
 		BatchSize: 1,
 		Handlers: map[string]NATSMessageHandler{
-			"todo.create":   &TodoCreateHandler{parser, repo, pub, s.logger},
-			"todo.complete": &TodoCompleteHandler{parser, repo, pub, s.logger},
+			"todo.create":   &TodoCreateHandler{parser, repo, pub, s.Logger},
+			"todo.complete": &TodoCompleteHandler{parser, repo, pub, s.Logger},
 		},
 	}
 
-	s.sub = &NATSMessageSubscriber{options, s.nc, s.logger}
+	s.Sub = &NATSMessageSubscriber{options, s.NATSConn, s.Logger}
 }
 
 func (s *Service) serve(ctx context.Context) error {
@@ -152,19 +152,19 @@ func (s *Service) serve(ctx context.Context) error {
 	go func() {
 		<-ctx.Done()
 
-		s.logger.Info().Msgf("application is shutting down...")
+		s.Logger.Info().Msgf("application is shutting down...")
 
-		_ = s.nc.Drain()
-		_ = s.db.Close()
+		_ = s.NATSConn.Drain()
+		_ = s.DB.Close()
 
 		errChan <- nil
 	}()
 
-	if err := s.sub.Subscribe(ctx); err != nil {
+	if err := s.Sub.Subscribe(ctx); err != nil {
 		return err
 	}
 
-	s.logger.Info().Msgf("application is running")
+	s.Logger.Info().Msgf("application is running")
 
 	return <-errChan
 }

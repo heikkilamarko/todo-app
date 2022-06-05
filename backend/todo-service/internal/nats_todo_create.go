@@ -8,10 +8,10 @@ import (
 )
 
 type TodoCreateHandler struct {
-	parser *NATSMessageParser
-	repo   Repository
-	pub    MessagePublisher
-	logger *zerolog.Logger
+	Parser *NATSMessageParser
+	Repo   Repository
+	Pub    MessagePublisher
+	Logger *zerolog.Logger
 }
 
 func (h *TodoCreateHandler) Handle(ctx context.Context, m *nats.Msg) error {
@@ -19,17 +19,17 @@ func (h *TodoCreateHandler) Handle(ctx context.Context, m *nats.Msg) error {
 
 	message := &TodoCreateMessage{}
 
-	if err := h.parser.Parse(m, message); err != nil {
-		h.logger.Error().Err(err).Send()
+	if err := h.Parser.Parse(m, message); err != nil {
+		h.Logger.Error().Err(err).Send()
 		return err
 	}
 
 	message.Todo.SetCreateTimestamps()
 
-	if err := h.repo.CreateTodo(ctx, message.Todo); err != nil {
-		_ = h.pub.TodoCreateError(ctx, "")
+	if err := h.Repo.CreateTodo(ctx, message.Todo); err != nil {
+		_ = h.Pub.TodoCreateError(ctx, "")
 		return err
 	}
 
-	return h.pub.TodoCreateOk(ctx, message.Todo)
+	return h.Pub.TodoCreateOk(ctx, message.Todo)
 }

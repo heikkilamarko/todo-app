@@ -8,7 +8,7 @@ import (
 )
 
 type NATSMessagePublisher struct {
-	nc *nats.Conn
+	Conn *nats.Conn
 }
 
 func (p *NATSMessagePublisher) TodoCreate(_ context.Context, todo *Todo) error {
@@ -25,7 +25,7 @@ func (p *NATSMessagePublisher) publish(subject string, message any) error {
 		return err
 	}
 
-	js, err := p.nc.JetStream()
+	js, err := p.Conn.JetStream()
 	if err != nil {
 		return err
 	}

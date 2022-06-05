@@ -18,38 +18,38 @@ type tokenResponse struct {
 }
 
 type GetCentrifugoTokenHandler struct {
-	config *Config
-	logger *zerolog.Logger
+	Config *Config
+	Logger *zerolog.Logger
 }
 
 func (h *GetCentrifugoTokenHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err := AuthorizeRead(r); err != nil {
-		h.logger.Error().Err(err).Send()
+		h.Logger.Error().Err(err).Send()
 		WriteResponse(w, http.StatusUnauthorized, nil)
 		return
 	}
 
 	sub := GetSubject(r.Context())
 	if sub == "" {
-		h.logger.Error().Err(errors.New("sub claim is empty")).Send()
+		h.Logger.Error().Err(errors.New("sub claim is empty")).Send()
 		WriteResponse(w, http.StatusUnauthorized, nil)
 		return
 	}
 
 	sig, err := jose.NewSigner(jose.SigningKey{
 		Algorithm: jose.HS256,
-		Key:       h.config.CentrifugoTokenHMACSecretKey,
+		Key:       h.Config.CentrifugoTokenHMACSecretKey,
 	}, (&jose.SignerOptions{}).WithType("JWT"))
 
 	if err != nil {
-		h.logger.Error().Err(err).Send()
+		h.Logger.Error().Err(err).Send()
 		WriteResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 
 	token, err := jwt.Signed(sig).Claims(tokenClaims{sub}).CompactSerialize()
 	if err != nil {
-		h.logger.Error().Err(err).Send()
+		h.Logger.Error().Err(err).Send()
 		WriteResponse(w, http.StatusInternalServerError, nil)
 		return
 	}

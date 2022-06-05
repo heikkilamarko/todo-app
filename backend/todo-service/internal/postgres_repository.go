@@ -14,11 +14,11 @@ var (
 )
 
 type PostgresRepository struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 func (r *PostgresRepository) CreateTodo(ctx context.Context, todo *Todo) error {
-	return r.db.QueryRowContext(ctx, createTodoSQL,
+	return r.DB.QueryRowContext(ctx, createTodoSQL,
 		todo.Name,
 		todo.Description,
 		todo.CreatedAt,
@@ -27,6 +27,6 @@ func (r *PostgresRepository) CreateTodo(ctx context.Context, todo *Todo) error {
 }
 
 func (r *PostgresRepository) CompleteTodo(ctx context.Context, id int) error {
-	_, err := r.db.ExecContext(ctx, completeTodoSQL, id)
+	_, err := r.DB.ExecContext(ctx, completeTodoSQL, id)
 	return err
 }

@@ -6,10 +6,10 @@ import (
 )
 
 type Activities struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 func (a *Activities) RemoveTodos(ctx context.Context) error {
-	_, err := a.db.ExecContext(ctx, "DELETE FROM todos")
+	_, err := a.DB.ExecContext(ctx, "DELETE FROM todos")
 	return err
 }

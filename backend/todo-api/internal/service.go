@@ -20,11 +20,11 @@ import (
 )
 
 type Service struct {
-	config *Config
-	logger *zerolog.Logger
-	db     *sql.DB
-	nc     *nats.Conn
-	server *http.Server
+	Config   *Config
+	Logger   *zerolog.Logger
+	DB       *sql.DB
+	NATSConn *nats.Conn
+	Server   *http.Server
 }
 
 func (s *Service) Run() {
@@ -32,28 +32,28 @@ func (s *Service) Run() {
 	defer stop()
 
 	if err := s.loadConfig(); err != nil {
-		s.logger.Fatal().Err(err).Send()
+		s.Logger.Fatal().Err(err).Send()
 	}
 
 	s.initLogger()
 
-	s.logger.Info().Msgf("application is starting up...")
+	s.Logger.Info().Msgf("application is starting up...")
 
 	if err := s.initDB(ctx); err != nil {
-		s.logger.Fatal().Err(err).Send()
+		s.Logger.Fatal().Err(err).Send()
 	}
 
 	if err := s.initNATS(); err != nil {
-		s.logger.Fatal().Err(err).Send()
+		s.Logger.Fatal().Err(err).Send()
 	}
 
 	s.initHTTPServer(ctx)
 
 	if err := s.serve(ctx); err != nil {
-		s.logger.Fatal().Err(err).Send()
+		s.Logger.Fatal().Err(err).Send()
 	}
 
-	s.logger.Info().Msgf("application is shut down")
+	s.Logger.Info().Msgf("application is shut down")
 }
 
 func (s *Service) loadConfig() error {
@@ -62,13 +62,13 @@ func (s *Service) loadConfig() error {
 		return err
 	}
 
-	s.config = c
+	s.Config = c
 
 	return nil
 }
 
 func (s *Service) initLogger() {
-	level, err := zerolog.ParseLevel(s.config.LogLevel)
+	level, err := zerolog.ParseLevel(s.Config.LogLevel)
 	if err != nil {
 		level = zerolog.WarnLevel
 	}
@@ -78,14 +78,14 @@ func (s *Service) initLogger() {
 	logger := zerolog.New(os.Stderr).
 		With().
 		Timestamp().
-		Str("app", s.config.App).
+		Str("app", s.Config.App).
 		Logger()
 
-	s.logger = &logger
+	s.Logger = &logger
 }
 
 func (s *Service) initDB(ctx context.Context) error {
-	db, err := sql.Open("pgx", s.config.DBConnectionString)
+	db, err := sql.Open("pgx", s.Config.DBConnectionString)
 	if err != nil {
 		return err
 	}
@@ -99,23 +99,23 @@ func (s *Service) initDB(ctx context.Context) error {
 		return err
 	}
 
-	s.db = db
+	s.DB = db
 
 	return nil
 }
 
 func (s *Service) initNATS() error {
-	nc, err := nats.Connect(
-		s.config.NATSURL,
-		nats.Token(s.config.NATSToken),
+	conn, err := nats.Connect(
+		s.Config.NATSURL,
+		nats.Token(s.Config.NATSToken),
 		nats.NoReconnect(),
 		nats.DisconnectErrHandler(
 			func(_ *nats.Conn, err error) {
-				s.logger.Fatal().Err(err).Send()
+				s.Logger.Fatal().Err(err).Send()
 			}),
 		nats.ErrorHandler(
 			func(_ *nats.Conn, _ *nats.Subscription, err error) {
-				s.logger.Fatal().Err(err).Send()
+				s.Logger.Fatal().Err(err).Send()
 			}),
 	)
 
@@ -123,7 +123,7 @@ func (s *Service) initNATS() error {
 		return err
 	}
 
-	s.nc = nc
+	s.NATSConn = conn
 
 	return nil
 }
@@ -132,34 +132,34 @@ func (s *Service) initHTTPServer(ctx context.Context) {
 	router := mux.NewRouter()
 
 	jwtConfig := &middleware.JWTConfig{
-		Issuer:   s.config.AuthIssuer,
-		Iss:      s.config.AuthClaimIss,
-		Aud:      []string{s.config.AuthClaimAud},
+		Issuer:   s.Config.AuthIssuer,
+		Iss:      s.Config.AuthClaimIss,
+		Aud:      []string{s.Config.AuthClaimAud},
 		TokenKey: ContextKeyAccessToken,
 	}
 
 	router.Use(
-		middleware.Logger(s.logger),
+		middleware.Logger(s.Logger),
 		middleware.RequestLogger(),
 		middleware.ErrorRecovery(),
 		middleware.JWT(ctx, jwtConfig),
 	)
 
-	repo := &PostgresRepository{s.db}
-	pub := &NATSMessagePublisher{s.nc}
+	repo := &PostgresRepository{s.DB}
+	pub := &NATSMessagePublisher{s.NATSConn}
 
-	router.Handle("/todos/token", &GetCentrifugoTokenHandler{s.config, s.logger}).Methods(http.MethodGet)
-	router.Handle("/todos", &GetTodosHandler{repo, s.logger}).Methods(http.MethodGet)
-	router.Handle("/todos", &CreateTodoHandler{pub, s.logger}).Methods(http.MethodPost)
-	router.Handle("/todos/{id:[0-9]+}/complete", &CompleteTodoHandler{pub, s.logger}).Methods(http.MethodPost)
+	router.Handle("/todos/token", &GetCentrifugoTokenHandler{s.Config, s.Logger}).Methods(http.MethodGet)
+	router.Handle("/todos", &GetTodosHandler{repo, s.Logger}).Methods(http.MethodGet)
+	router.Handle("/todos", &CreateTodoHandler{pub, s.Logger}).Methods(http.MethodPost)
+	router.Handle("/todos/{id:[0-9]+}/complete", &CompleteTodoHandler{pub, s.Logger}).Methods(http.MethodPost)
 
 	router.NotFoundHandler = goutils.NotFoundHandler()
 
-	s.server = &http.Server{
+	s.Server = &http.Server{
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
-		Addr:         s.config.Address,
+		Addr:         s.Config.Address,
 		Handler:      router,
 	}
 }
@@ -170,21 +170,21 @@ func (s *Service) serve(ctx context.Context) error {
 	go func() {
 		<-ctx.Done()
 
-		s.logger.Info().Msgf("application is shutting down...")
+		s.Logger.Info().Msgf("application is shutting down...")
 
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 
-		_ = s.server.Shutdown(ctx)
-		_ = s.nc.Drain()
-		_ = s.db.Close()
+		_ = s.Server.Shutdown(ctx)
+		_ = s.NATSConn.Drain()
+		_ = s.DB.Close()
 
 		errChan <- nil
 	}()
 
-	s.logger.Info().Msgf("application is running at %s", s.server.Addr)
+	s.Logger.Info().Msgf("application is running at %s", s.Server.Addr)
 
-	if err := s.server.ListenAndServe(); err != http.ErrServerClosed {
+	if err := s.Server.ListenAndServe(); err != http.ErrServerClosed {
 		return err
 	}
 

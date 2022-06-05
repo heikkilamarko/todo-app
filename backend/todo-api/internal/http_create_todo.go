@@ -27,13 +27,13 @@ func (req *CreateTodoRequest) Bind(r *http.Request) error {
 }
 
 type CreateTodoHandler struct {
-	pub    MessagePublisher
-	logger *zerolog.Logger
+	Pub    MessagePublisher
+	Logger *zerolog.Logger
 }
 
 func (h *CreateTodoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err := AuthorizeWrite(r); err != nil {
-		h.logger.Error().Err(err).Send()
+		h.Logger.Error().Err(err).Send()
 		WriteResponse(w, http.StatusUnauthorized, nil)
 		return
 	}
@@ -41,13 +41,13 @@ func (h *CreateTodoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	req := &CreateTodoRequest{}
 
 	if err := req.Bind(r); err != nil {
-		h.logger.Error().Err(err).Send()
+		h.Logger.Error().Err(err).Send()
 		WriteErrorResponse(w, ErrCodeInvalidRequest, err)
 		return
 	}
 
-	if err := h.pub.TodoCreate(r.Context(), req.Todo); err != nil {
-		h.logger.Error().Err(err).Send()
+	if err := h.Pub.TodoCreate(r.Context(), req.Todo); err != nil {
+		h.Logger.Error().Err(err).Send()
 		WriteResponse(w, http.StatusInternalServerError, nil)
 		return
 	}

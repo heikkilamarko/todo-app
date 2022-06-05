@@ -10,11 +10,11 @@ import (
 var getTodosSQL string
 
 type PostgresRepository struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
-func (r *PostgresRepository) GetTodos(ctx context.Context, q *GetTodosQuery) (*GetTodosResult, error) {
-	rows, err := r.db.QueryContext(
+func (r *PostgresRepository) GetTodos(ctx context.Context, q *GetTodosQuery) ([]*Todo, error) {
+	rows, err := r.DB.QueryContext(
 		ctx,
 		getTodosSQL,
 		q.Limit, q.Offset)
@@ -25,10 +25,10 @@ func (r *PostgresRepository) GetTodos(ctx context.Context, q *GetTodosQuery) (*G
 
 	defer rows.Close()
 
-	todos := []Todo{}
+	data := []*Todo{}
 
 	for rows.Next() {
-		var d Todo
+		d := &Todo{}
 
 		err := rows.Scan(
 			&d.ID,
@@ -42,8 +42,8 @@ func (r *PostgresRepository) GetTodos(ctx context.Context, q *GetTodosQuery) (*G
 			return nil, err
 		}
 
-		todos = append(todos, d)
+		data = append(data, d)
 	}
 
-	return &GetTodosResult{todos}, nil
+	return data, nil
 }

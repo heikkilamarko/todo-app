@@ -10,7 +10,7 @@ type Todo struct {
 	UpdatedAt   time.Time `json:"updated_at,omitempty"`
 }
 
-type PaginationMeta struct {
+type GetTodosQuery struct {
 	Offset int `json:"offset"`
 	Limit  int `json:"limit"`
 }

@@ -7,11 +7,11 @@ import (
 )
 
 type NATSMessageParser struct {
-	v *SchemaValidator
+	Validator *SchemaValidator
 }
 
 func (p *NATSMessageParser) Parse(m *nats.Msg, model any) error {
-	if err := p.v.Validate(m.Subject, m.Data); err != nil {
+	if err := p.Validator.Validate(m.Subject, m.Data); err != nil {
 		return err
 	}
 
