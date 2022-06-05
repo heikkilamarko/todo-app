@@ -65,7 +65,7 @@ Host todo-app
 # In repository root directory
 
 > mkdir env
-> secrets/decrypt_secrets.sh secrets/prod env
+> config/decrypt_secrets.sh config/prod env
 ```
 
 ## Deploy

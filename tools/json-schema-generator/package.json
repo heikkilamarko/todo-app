@@ -3,6 +3,6 @@
   "dependencies": {
     "@asyncapi/parser": "1.15.1",
     "chalk": "5.0.1",
-    "yaml": "2.1.0"
+    "yaml": "2.1.1"
   }
 }

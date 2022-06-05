@@ -10,7 +10,7 @@ Todo App is a **hobby project** that is primarily focused around being a playgro
 
 This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://github.com/mozilla/sops#22encrypting-using-age) for managing secrets.
 
-See [secrets](secrets/) for details.
+See [Configuration and Secrets Management](config/) for details.
 
 ## Reverse Proxy
 
@@ -64,7 +64,7 @@ See [secrets](secrets/) for details.
 127.0.0.1    minio.todo-app.com
 ```
 
-2. Make sure you have the unencrypted secrets in the `env` directory. See [Secrets Management](secrets/) for details.
+2. Make sure you have the unencrypted secrets in the `env` directory. See [Configuration and Secrets Management](config/) for details.
 
 3. Run Docker Compose
 

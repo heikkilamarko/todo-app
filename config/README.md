@@ -1,4 +1,4 @@
-# Secrets Management
+# Configuration and Secrets Management
 
 This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://github.com/mozilla/sops#22encrypting-using-age) for managing secrets.
 

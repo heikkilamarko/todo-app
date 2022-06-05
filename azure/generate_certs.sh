@@ -16,12 +16,12 @@ docker run -it --rm --name certbot \
 
 ssh todo-app 'sudo cp -Lr /etc/letsencrypt/live/todo-app/ ~/certs && sudo chown -R azureuser ~/certs'
 
-scp todo-app:~/certs/privkey.pem ../secrets/prod/private.key
-scp todo-app:~/certs/fullchain.pem ../secrets/prod/public.crt
+scp todo-app:~/certs/privkey.pem ../config/prod/private.key
+scp todo-app:~/certs/fullchain.pem ../config/prod/public.crt
 
 ssh todo-app 'sudo rm -rf ~/certs'
 
-pushd ../secrets > /dev/null
+pushd ../config > /dev/null
 
 sops -e -i prod/private.key
 sops -e -i prod/public.crt
