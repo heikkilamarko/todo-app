@@ -4,6 +4,7 @@ services:
   traefik:
     build: ./backend/traefik/dev
     image: todo-app/traefik
+    container_name: todo-app-traefik
     deploy:
       restart_policy:
         condition: on-failure
@@ -13,6 +14,7 @@ services:
   # caddy:
   #   build: ./backend/caddy/dev
   #   image: todo-app/caddy
+  #   container_name: todo-app-caddy
   #   deploy:
   #     restart_policy:
   #       condition: on-failure
@@ -25,6 +27,7 @@ services:
   todo-app:
     build: ./frontend
     image: todo-app/todo-app
+    container_name: todo-app
     deploy:
       restart_policy:
         condition: on-failure
@@ -36,6 +39,7 @@ services:
   todo-api:
     build: ./backend/todo-api
     image: todo-app/todo-api
+    container_name: todo-app-todo-api
     deploy:
       restart_policy:
         condition: on-failure
@@ -50,6 +54,7 @@ services:
   todo-service:
     build: ./backend/todo-service
     image: todo-app/todo-service
+    container_name: todo-app-todo-service
     deploy:
       restart_policy:
         condition: on-failure
@@ -64,6 +69,7 @@ services:
   todo-worker:
     build: ./backend/todo-worker
     image: todo-app/todo-worker
+    container_name: todo-app-todo-worker
     deploy:
       restart_policy:
         condition: on-failure
@@ -78,6 +84,7 @@ services:
   nats:
     build: ./backend/nats/docker
     image: todo-app/nats
+    container_name: todo-app-nats
     deploy:
       restart_policy:
         condition: on-failure
@@ -93,6 +100,7 @@ services:
   nats-configure:
     build: ./backend/nats/configure
     image: todo-app/nats-configure
+    container_name: todo-app-nats-configure
     deploy:
       restart_policy:
         condition: on-failure
@@ -105,6 +113,7 @@ services:
 
   centrifugo:
     image: centrifugo/centrifugo
+    container_name: todo-app-centrifugo
     deploy:
       restart_policy:
         condition: on-failure
@@ -122,6 +131,7 @@ services:
   temporal:
     build: ./backend/temporal
     image: todo-app/temporal
+    container_name: todo-app-temporal
     deploy:
       restart_policy:
         condition: on-failure
@@ -137,6 +147,7 @@ services:
   db:
     build: ./backend/db/postgres
     image: todo-app/db
+    container_name: todo-app-db
     deploy:
       restart_policy:
         condition: on-failure
@@ -152,6 +163,7 @@ services:
   db-migrate:
     build: ./backend/db/migrate
     image: todo-app/db-migrate
+    container_name: todo-app-db-migrate
     deploy:
       restart_policy:
         condition: on-failure
@@ -164,6 +176,7 @@ services:
 
   minio:
     image: minio/minio
+    container_name: todo-app-minio
     deploy:
       restart_policy:
         condition: on-failure
@@ -177,6 +190,7 @@ services:
 
   minio-console:
     image: minio/console
+    container_name: todo-app-minio-console
     deploy:
       restart_policy:
         condition: on-failure
@@ -191,6 +205,7 @@ services:
   minio-migrate:
     build: ./monitor/minio/migrate
     image: todo-app/minio-migrate
+    container_name: todo-app-minio-migrate
     deploy:
       restart_policy:
         condition: on-failure
@@ -205,6 +220,7 @@ services:
   loki:
     build: ./monitor/loki
     image: todo-app/loki
+    container_name: todo-app-loki
     deploy:
       restart_policy:
         condition: on-failure
@@ -219,6 +235,7 @@ services:
   promtail:
     build: ./monitor/promtail
     image: todo-app/promtail
+    container_name: todo-app-promtail
     deploy:
       restart_policy:
         condition: on-failure
@@ -235,6 +252,7 @@ services:
   grafana:
     build: ./monitor/grafana/docker
     image: todo-app/grafana
+    container_name: todo-app-grafana
     deploy:
       restart_policy:
         condition: on-failure
@@ -251,6 +269,7 @@ services:
   grafana-configure:
     build: ./monitor/grafana/configure
     image: todo-app/grafana-configure
+    container_name: todo-app-grafana-configure
     deploy:
       restart_policy:
         condition: on-failure
@@ -266,6 +285,7 @@ services:
       context: ./backend/keycloak/docker
       dockerfile: Dockerfile
     image: todo-app/keycloak
+    container_name: todo-app-keycloak
     deploy:
       restart_policy:
         condition: on-failure
@@ -278,6 +298,7 @@ services:
 
 networks:
   todo-app:
+    name: todo-app
 
 volumes:
   db:

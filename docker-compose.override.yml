@@ -11,6 +11,7 @@ services:
 
   temporal-web:
     image: temporalio/web
+    container_name: todo-app-temporal-web
     deploy:
       restart_policy:
         condition: on-failure
@@ -23,7 +24,7 @@ services:
 
   temporal-admin-tools:
     image: temporalio/admin-tools
-    container_name: temporal-admin-tools
+    container_name: todo-app-temporal-admin-tools
     deploy:
       restart_policy:
         condition: on-failure
