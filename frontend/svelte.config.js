@@ -5,8 +5,8 @@ const config = {
 	extensions: ['.svelte', '.svg'],
 	kit: {
 		adapter: adapter({
-			fallback: 'app.html'
-			// precompress: true
+			fallback: 'app.html',
+			precompress: true
 		})
 	}
 };
