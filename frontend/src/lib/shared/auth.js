@@ -1,18 +1,14 @@
 import Keycloak from 'keycloak-js';
-import { config } from './config';
+import { stores } from './stores.js';
 
-/** @type {Keycloak.KeycloakInstance} */
 let keycloak;
 
-/**
- * @returns {Promise<boolean>}
- */
 export async function init() {
 	try {
-		keycloak = Keycloak(config.auth);
+		keycloak = new Keycloak(stores.config.auth);
 		const isAuthenticated = await keycloak.init({
 			pkceMethod: 'S256'
-			// enableLogging: true,
+			// enableLogging: true
 		});
 		if (isAuthenticated) {
 			await keycloak.loadUserInfo();
@@ -20,15 +16,12 @@ export async function init() {
 			await keycloak.login();
 		}
 		return isAuthenticated;
-	} catch (error) {
-		console.log(error);
+	} catch (err) {
+		console.log(err);
 		throw new Error('auth init failed');
 	}
 }
 
-/**
- * @returns {Promise<string>} Access Token
- */
 export async function accessToken() {
 	try {
 		await keycloak.updateToken(null);
@@ -38,18 +31,11 @@ export async function accessToken() {
 	}
 }
 
-/**
- * @returns {Promise}
- */
 export async function logout() {
 	await keycloak.logout();
 }
 
-/**
- * @returns {string}
- */
 export function userName() {
-	// @ts-ignore
 	return keycloak.userInfo?.name ?? '<unknown user>';
 }
 
@@ -61,10 +47,6 @@ export function isViewerRole() {
 	return isInRole('todo-viewer');
 }
 
-/**
- * @param {string} role
- * @returns {boolean}
- */
 export function isInRole(role) {
 	return keycloak.hasResourceRole(role, 'todo-api');
 }

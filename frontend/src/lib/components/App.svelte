@@ -1,20 +1,17 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import { isViewerRole } from '../shared/auth';
-	import { stores, createStores } from '../stores';
+	import { isViewerRole } from '$lib/shared/auth.js';
+	import { stores } from '$lib/shared/stores.js';
+	import AppMenu from './AppMenu.svelte';
 	import Header from './Header.svelte';
 	import ConnectionStatus from './ConnectionStatus.svelte';
 	import TodoForm from './TodoForm.svelte';
 	import Todos from './Todos.svelte';
-	import AppMenu from './AppMenu.svelte';
-	import Toaster from './Toaster.svelte';
-
-	createStores();
 
 	const isViewer = isViewerRole();
 
 	const {
-		toasterStore: { toasts, showError },
+		toasterStore: { showError },
 		todoStore: { getTodos },
 		notificationStore: { connect }
 	} = stores;
@@ -44,5 +41,3 @@
 	{/if}
 	<Todos />
 </main>
-
-<Toaster {toasts} />

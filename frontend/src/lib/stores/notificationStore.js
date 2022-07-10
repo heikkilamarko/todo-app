@@ -1,23 +1,17 @@
 import { writable } from 'svelte/store';
 import Centrifuge from 'centrifuge';
-import { config } from '../shared/config';
-import * as api from '../shared/api';
+import * as api from '$lib/shared/api.js';
+import { stores } from '$lib/shared/stores.js';
 
-/**
- * @param {import("../../types").Stores} stores
- * @returns {import("../../types").NotificationStore}
- */
-export function createNotificationStore(stores) {
+export default function createStore() {
 	const {
+		config,
 		toasterStore: { showError },
 		todoStore: { getTodos }
 	} = stores;
 
 	const connected = writable(null);
 
-	/**
-	 * @returns {Promise<() => void>}
-	 */
 	async function connect() {
 		let token;
 
@@ -35,7 +29,6 @@ export function createNotificationStore(stores) {
 		centrifuge.on('disconnect', () => connected.set(false));
 
 		centrifuge.subscribe('notifications', async (ctx) => {
-			/** @type {{type: import("../../types").NotificationType, data: any}} */
 			const { type, data } = ctx.data ?? {};
 			switch (type) {
 				case 'todo.create.ok':
@@ -62,8 +55,5 @@ export function createNotificationStore(stores) {
 		}
 	}
 
-	return {
-		connected,
-		connect
-	};
+	return { connected, connect };
 }

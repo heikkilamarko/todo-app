@@ -9,9 +9,6 @@
 
 	let offcanvasEl;
 
-	/**
-	 * @param {KeyboardEvent} e
-	 */
 	function handleKeydown(e) {
 		if (e.key === 'Escape') {
 			close();
@@ -37,7 +34,6 @@
 
 	if (previouslyFocused) {
 		onDestroy(() => {
-			//@ts-ignore
 			previouslyFocused.focus();
 		});
 	}

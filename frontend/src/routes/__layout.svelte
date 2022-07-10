@@ -1,27 +1,39 @@
+<script context="module">
+	import { startup } from '$lib/startup.js';
+
+	export async function load() {
+		try {
+			await startup();
+			return { status: 200 };
+		} catch (error) {
+			return { status: 500, error };
+		}
+	}
+</script>
+
 <script>
-	import '../app.scss';
-	import 'bootstrap/js/dist/dropdown';
 	import { onMount } from 'svelte';
-	import { load as loadConfig } from '$lib/shared/config';
-	import { init as initAuth } from '$lib/shared/auth';
-	import AppError from '$lib/components/AppError.svelte';
+	import { init } from '$lib/shared/auth.js';
+	import { stores } from '$lib/shared/stores.js';
+	import Toaster from '$lib/components/Toaster.svelte';
+
+	const {
+		toasterStore: { showError }
+	} = stores;
 
 	let isAuthenticated = false;
-	let error = null;
 
 	onMount(async () => {
 		try {
-			await loadConfig();
-			isAuthenticated = await initAuth();
+			isAuthenticated = await init();
 		} catch (err) {
-			console.log(err);
-			error = err;
+			showError(err);
 		}
 	});
 </script>
 
-{#if error}
-	<AppError {error} />
-{:else if isAuthenticated}
+{#if isAuthenticated}
 	<slot />
 {/if}
+
+<Toaster />

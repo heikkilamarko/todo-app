@@ -18,10 +18,10 @@
 		"prettier": "2.7.1",
 		"prettier-plugin-svelte": "2.7.0",
 		"sass": "1.53.0",
-		"svelte": "3.48.0",
+		"svelte": "3.49.0",
 		"svelte-check": "2.8.0",
 		"typescript": "4.7.4",
-		"vite": "2.9.13"
+		"vite": "2.9.14"
 	},
 	"dependencies": {
 		"bootstrap": "5.1.3",

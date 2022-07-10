@@ -1,6 +1,6 @@
 <script>
-	import { isViewerRole } from '../shared/auth';
-	import { stores } from '../stores';
+	import { isViewerRole } from '$lib/shared/auth.js';
+	import { stores } from '$lib/shared/stores.js';
 	import Todo from './Todo.svelte';
 	import Empty from './Empty.svelte';
 

@@ -1,6 +1,6 @@
 <script>
 	import { fade } from 'svelte/transition';
-	import { stores } from '../stores';
+	import { stores } from '$lib/shared/stores.js';
 
 	const {
 		notificationStore: { connected }

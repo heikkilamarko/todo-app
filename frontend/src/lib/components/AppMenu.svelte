@@ -5,9 +5,11 @@
 	import PersonIcon from 'bootstrap-icons/icons/person.svg';
 	import PersonFillIcon from 'bootstrap-icons/icons/person-fill.svg';
 	import PowerIcon from 'bootstrap-icons/icons/power.svg';
+	import { isViewerRole, logout, userName } from '$lib/shared/auth';
+	import { stores } from '$lib/shared/stores.js';
 	import SvgIcon from './SvgIcon.svelte';
-	import { config } from '../shared/config';
-	import { isViewerRole, logout, userName } from '../shared/auth';
+
+	const { config } = stores;
 
 	let isViewer = isViewerRole();
 

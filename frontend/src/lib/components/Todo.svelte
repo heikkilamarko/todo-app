@@ -1,9 +1,8 @@
 <script>
 	import { fly } from 'svelte/transition';
 	import CheckLgIcon from 'bootstrap-icons/icons/check-lg.svg';
-	import { stores } from '../stores';
+	import { stores } from '$lib/shared/stores.js';
 
-	/** @type {import("../../types").Todo} */
 	export let todo;
 
 	export let isReadOnly = false;

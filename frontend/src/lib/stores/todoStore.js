@@ -1,20 +1,12 @@
 import { writable } from 'svelte/store';
-import { toTodo } from '../shared/utils';
-import * as api from '../shared/api';
+import { toTodo } from '$lib/shared/utils.js';
+import * as api from '$lib/shared/api.js';
 
-/**
- * @returns {import("../../types").TodoStore}
- */
-export function createTodoStore() {
-	/** @type {import("../../types").TodosStore} */
+export default function createStore() {
 	const todos = writable([]);
 
 	const loading = writable(false);
 
-	/**
-	 * @param {number} offset
-	 * @param {number} limit
-	 */
 	async function getTodos(offset = 0, limit = 10) {
 		try {
 			loading.set(true);
@@ -25,9 +17,6 @@ export function createTodoStore() {
 		}
 	}
 
-	/**
-	 * @param {import("../../types").NewTodo} todo
-	 */
 	async function createTodo(todo) {
 		try {
 			loading.set(true);
@@ -37,9 +26,6 @@ export function createTodoStore() {
 		}
 	}
 
-	/**
-	 * @param {number} id
-	 */
 	async function completeTodo(id) {
 		try {
 			loading.set(true);
@@ -49,11 +35,5 @@ export function createTodoStore() {
 		}
 	}
 
-	return {
-		todos,
-		loading,
-		getTodos,
-		createTodo,
-		completeTodo
-	};
+	return { todos, loading, getTodos, createTodo, completeTodo };
 }

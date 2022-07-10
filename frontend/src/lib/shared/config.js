@@ -1,29 +1,11 @@
 import ky from 'ky';
 
-/** @type {import("../../types").Config} */
-export const config = {
-	apiUrl: null,
-	notificationsUrl: null,
-	auth: null,
-	profileUrl: null,
-	dashboardUrl: null
-};
-
-export async function load() {
-	try {
-		import.meta.env.DEV ? loadDev() : await loadProd();
-	} catch (error) {
-		console.log(error);
-		throw new Error('config loading failed');
-	}
+export async function config() {
+	return import.meta.env.DEV ? dev() : await prod();
 }
 
-async function loadProd() {
-	Object.assign(config, await ky.get('/config.json').json());
-}
-
-function loadDev() {
-	Object.assign(config, {
+function dev() {
+	return {
 		apiUrl: import.meta.env.VITE_API_URL,
 		notificationsUrl: import.meta.env.VITE_NOTIFICATIONS_URL,
 		auth: {
@@ -33,5 +15,9 @@ function loadDev() {
 		},
 		profileUrl: import.meta.env.VITE_PROFILE_URL,
 		dashboardUrl: import.meta.env.VITE_DASHBOARD_URL
-	});
+	};
+}
+
+function prod() {
+	return ky.get('/config').json();
 }

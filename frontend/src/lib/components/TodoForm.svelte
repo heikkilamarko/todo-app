@@ -1,7 +1,7 @@
 <script>
 	import PlusLgIcon from 'bootstrap-icons/icons/plus-lg.svg';
 	import Offcanvas from './Offcanvas.svelte';
-	import { stores } from '../stores';
+	import { stores } from '$lib/shared/stores.js';
 
 	const {
 		toasterStore: { showInfo, showError },

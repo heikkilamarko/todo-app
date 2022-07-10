@@ -2,13 +2,8 @@
 	import { fade, fly } from 'svelte/transition';
 	import { backOut } from 'svelte/easing';
 
-	/** @type {import("../../types").Toast} */
 	export let toast;
 
-	/**
-	 * @param {import("../../types").ToastType} type
-	 * @returns {"primary" | "danger"}
-	 */
 	function getToastType(type) {
 		switch (type) {
 			case 'info':
