@@ -1,29 +1,34 @@
-{$CADDY_SITE_ADDRESS}
-
-handle /config {
-	header Content-Type "application/json"
-
-	respond 200 {
-		body ` {
-			"apiUrl": "{$VITE_API_URL}",
-			"notificationsUrl": "{$VITE_NOTIFICATIONS_URL}",
-			"auth": {
-				"url": "{$VITE_AUTH_URL}",
-				"realm": "{$VITE_AUTH_REALM}",
-				"clientId": "{$VITE_AUTH_CLIENT_ID}"
-			}			,
-			"profileUrl": "{$VITE_PROFILE_URL}",
-			"dashboardUrl": "{$VITE_DASHBOARD_URL}"
-		}		`
-	}
+{
+	admin off
+	auto_https off
 }
 
-handle {
-	root * {$CADDY_ROOT_DIR}
+{$CADDY_SITE_ADDRESS} {
+	handle /config {
+		header Content-Type "application/json"
 
-	try_files {path} /index.html
+		respond 200 {
+			body ` {
+				"apiUrl": "{$VITE_API_URL}",
+				"notificationsUrl": "{$VITE_NOTIFICATIONS_URL}",
+				"auth": {
+					"url": "{$VITE_AUTH_URL}",
+					"realm": "{$VITE_AUTH_REALM}",
+					"clientId": "{$VITE_AUTH_CLIENT_ID}"
+				}				,
+				"profileUrl": "{$VITE_PROFILE_URL}",
+				"dashboardUrl": "{$VITE_DASHBOARD_URL}"
+			}			`
+		}
+	}
 
-	file_server {
-		precompressed br gzip
+	handle {
+		root * {$CADDY_ROOT_DIR}
+
+		try_files {path} /index.html
+
+		file_server {
+			precompressed br gzip
+		}
 	}
 }
