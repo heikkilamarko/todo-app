@@ -44,6 +44,7 @@ export default function createStore() {
 			}
 		});
 		sub.on('subscribed', () => connected.set(true));
+		sub.on('subscribing', () => connected.set(false));
 		sub.on('unsubscribed', () => connected.set(false));
 		sub.on('error', () => connected.set(false));
 
