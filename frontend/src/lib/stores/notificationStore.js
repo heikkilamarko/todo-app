@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import Centrifuge from 'centrifuge';
+import { Centrifuge } from 'centrifuge';
 import * as api from '$lib/shared/api.js';
 import { stores } from '$lib/shared/stores.js';
 
@@ -22,13 +22,11 @@ export default function createStore() {
 			return;
 		}
 
-		const centrifuge = new Centrifuge(config.notificationsUrl);
-		centrifuge.setToken(token);
+		const centrifuge = new Centrifuge(config.notificationsUrl, { token });
 
-		centrifuge.on('connect', () => connected.set(true));
-		centrifuge.on('disconnect', () => connected.set(false));
+		const sub = centrifuge.newSubscription('notifications');
 
-		centrifuge.subscribe('notifications', async (ctx) => {
+		sub.on('publication', async (ctx) => {
 			const { type, data } = ctx.data ?? {};
 			switch (type) {
 				case 'todo.create.ok':
@@ -45,8 +43,12 @@ export default function createStore() {
 					break;
 			}
 		});
+		sub.on('subscribed', () => connected.set(true));
+		sub.on('unsubscribed', () => connected.set(false));
+		sub.on('error', () => connected.set(false));
 
 		try {
+			sub.subscribe();
 			centrifuge.connect();
 			return () => centrifuge.disconnect();
 		} catch (error) {

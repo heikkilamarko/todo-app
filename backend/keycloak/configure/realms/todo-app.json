@@ -736,12 +736,14 @@
       "redirectUris": [
         "https://www.hobbydemos.com/*",
         "http://todo-app.com/*",
-        "http://localhost:3000/*"
+        "http://localhost:5173/*",
+        "http://127.0.0.1:5173/*"
       ],
       "webOrigins": [
         "https://www.hobbydemos.com",
         "http://todo-app.com",
-        "http://localhost:3000"
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
       ],
       "notBefore": 0,
       "bearerOnly": false,
