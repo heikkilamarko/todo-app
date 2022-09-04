@@ -72,7 +72,7 @@ See [Configuration and Secrets Management](config/) for details.
 > docker compose up --build -d
 ```
 
-4. Import the Keycloak realm. See [Configuring Keycloak](backend/keycloak/configure/) for details.
+4. Import the Keycloak realm. See [Configuring Keycloak](backend/keycloak/) for details.
 
 5. Open the App in browser: http://todo-app.com
    - Normal user:

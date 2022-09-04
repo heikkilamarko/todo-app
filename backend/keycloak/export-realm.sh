@@ -4,10 +4,11 @@
 
 echo "Please type your Keycloak info below"
 read -p  "  url: "      KEYCLOAK_URL
+read -p  "  realm: "    KEYCLOAK_REALM
 read -p  "  username: " KEYCLOAK_USER
 read -sp "  password: " KEYCLOAK_PASSWORD
 
-echo -e "\n\nImporting realm and users...\n\n"
+echo -e "\n\nExporting realm...\n\n"
 
 # get access token
 
@@ -17,24 +18,8 @@ TOKEN=$(curl \
   -X POST "$KEYCLOAK_URL/realms/master/protocol/openid-connect/token" \
   | jq -r '.access_token')
 
-# import realm
+# export realm
 
-curl \
-  -d "@realms/todo-app.json" \
+curl -o $KEYCLOAK_REALM.json \
   -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -X POST "$KEYCLOAK_URL/admin/realms"
-
-# import users
-
-curl \
-  -d "@users/demouser.json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -X POST "$KEYCLOAK_URL/admin/realms/todo-app/users"
-
-curl \
-  -d "@users/demoviewer.json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -X POST "$KEYCLOAK_URL/admin/realms/todo-app/users"
+  -X POST "$KEYCLOAK_URL/admin/realms/$KEYCLOAK_REALM/partial-export?exportClients=true&exportGroupsAndRoles=true"

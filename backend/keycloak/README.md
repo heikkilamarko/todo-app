@@ -2,14 +2,14 @@
 
 [Keycloak Admin REST API](https://www.keycloak.org/docs-api/17.0/rest-api)
 
-## Export realm
+## Configure Realm
+
+```bash
+> ./configure-realm.sh
+```
+
+## Export Realm
 
 ```bash
 > ./export_realm.sh
-```
-
-## Import realm
-
-```bash
-> ./import_realm.sh
 ```
