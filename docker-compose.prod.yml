@@ -105,3 +105,8 @@ secrets:
     file: ./env/private.key
   public.crt:
     file: ./env/public.crt
+
+networks:
+  todo-app:
+    driver: overlay
+    attachable: true

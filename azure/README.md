@@ -79,4 +79,4 @@ Host todo-app
 
 ## Configure Keycloak
 
-Import the Keycloak realm. See [Configuring Keycloak](../backend/keycloak/configure/) for details.
+Import the Keycloak realm. See [Configuring Keycloak](../backend/keycloak/) for details.
