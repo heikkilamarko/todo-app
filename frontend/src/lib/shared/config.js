@@ -6,15 +6,15 @@ export async function config() {
 
 function dev() {
 	return {
-		apiUrl: import.meta.env.VITE_API_URL,
-		notificationsUrl: import.meta.env.VITE_NOTIFICATIONS_URL,
+		apiUrl: import.meta.env.PUBLIC_API_URL,
+		notificationsUrl: import.meta.env.PUBLIC_NOTIFICATIONS_URL,
 		auth: {
-			url: import.meta.env.VITE_AUTH_URL,
-			realm: import.meta.env.VITE_AUTH_REALM,
-			clientId: import.meta.env.VITE_AUTH_CLIENT_ID
+			url: import.meta.env.PUBLIC_AUTH_URL,
+			realm: import.meta.env.PUBLIC_AUTH_REALM,
+			clientId: import.meta.env.PUBLIC_AUTH_CLIENT_ID
 		},
-		profileUrl: import.meta.env.VITE_PROFILE_URL,
-		dashboardUrl: import.meta.env.VITE_DASHBOARD_URL
+		profileUrl: import.meta.env.PUBLIC_PROFILE_URL,
+		dashboardUrl: import.meta.env.PUBLIC_DASHBOARD_URL
 	};
 }
 

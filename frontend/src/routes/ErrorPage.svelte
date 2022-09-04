@@ -1,14 +1,6 @@
-<script context="module">
-	export function load({ error, status }) {
-		return { props: { status, error } };
-	}
-</script>
-
 <script>
-	export let status;
-	export let error;
-
-	$: message = error?.message || 'An error occurred';
+	export let status = 500;
+	export let message = 'An error occurred while running the application';
 </script>
 
 <main class="container py-3">
@@ -17,7 +9,7 @@
 	>
 		<h1 class="display-2 fw-lighter">Oops!</h1>
 		<p class="display-1">
-			{status || 500}
+			{status}
 		</p>
 		<p class="fs-4 fw-light">
 			{message}

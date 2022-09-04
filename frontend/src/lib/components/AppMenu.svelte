@@ -5,15 +5,15 @@
 	import PersonIcon from 'bootstrap-icons/icons/person.svg';
 	import PersonFillIcon from 'bootstrap-icons/icons/person-fill.svg';
 	import PowerIcon from 'bootstrap-icons/icons/power.svg';
-	import { isViewerRole, logout, userName } from '$lib/shared/auth';
+	import { isInRole, Roles, signOut, getUserName } from '$lib/shared/auth';
 	import { stores } from '$lib/shared/stores.js';
 	import SvgIcon from './SvgIcon.svelte';
 
 	const { config } = stores;
 
-	let isViewer = isViewerRole();
+	let isViewer = isInRole(Roles.Viewer);
 
-	let title = userName();
+	let title = getUserName();
 	if (isViewer) {
 		title += ' (VIEWER)';
 	}
@@ -64,9 +64,9 @@
 		</li>
 		<li><hr class="dropdown-divider" /></li>
 		<li>
-			<a class="dropdown-item" href="/" on:click|preventDefault={logout}>
+			<a class="dropdown-item" href="/" on:click|preventDefault={signOut}>
 				<SvgIcon icon={PowerIcon} class="text-primary pe-2" />
-				Logout
+				Sign out
 			</a>
 		</li>
 	</ul>

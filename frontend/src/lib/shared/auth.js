@@ -1,52 +1,72 @@
 import Keycloak from 'keycloak-js';
 import { stores } from './stores.js';
 
+/** @type {Keycloak} */
 let keycloak;
 
-export async function init() {
+export const Roles = {
+	User: 'todo-user',
+	Viewer: 'todo-viewer'
+};
+
+export async function initAuth() {
 	try {
 		keycloak = new Keycloak(stores.config.auth);
-		const isAuthenticated = await keycloak.init({
-			pkceMethod: 'S256'
-			// enableLogging: true
+
+		await keycloak.init({
+			pkceMethod: 'S256',
+			onLoad: 'login-required'
 		});
-		if (isAuthenticated) {
+
+		if (keycloak.authenticated) {
 			await keycloak.loadUserInfo();
-		} else {
-			await keycloak.login();
 		}
-		return isAuthenticated;
 	} catch (err) {
-		console.log(err);
-		throw new Error('auth init failed');
+		console.error(err);
+		throw new Error('error initializing auth');
 	}
 }
 
-export async function accessToken() {
+export function isSignedIn() {
+	return keycloak.authenticated;
+}
+
+export async function signIn() {
+	try {
+		if (!isSignedIn()) {
+			await keycloak.login();
+		}
+	} catch (err) {
+		console.error(err);
+		throw new Error('error signing in');
+	}
+}
+
+export async function signOut() {
+	try {
+		if (isSignedIn()) {
+			await keycloak.logout();
+		}
+	} catch (err) {
+		console.error(err);
+		throw new Error('error signing out');
+	}
+}
+
+export async function getAccessToken() {
 	try {
 		await keycloak.updateToken(null);
 		return keycloak.token;
-	} catch (error) {
-		await keycloak.login();
+	} catch (err) {
+		console.error(err);
+		throw new Error('error getting access token');
 	}
 }
 
-export async function logout() {
-	await keycloak.logout();
+export function getUserName() {
+	return keycloak.userInfo?.name;
 }
 
-export function userName() {
-	return keycloak.userInfo?.name ?? '<unknown user>';
-}
-
-export function isUserRole() {
-	return isInRole('todo-user');
-}
-
-export function isViewerRole() {
-	return isInRole('todo-viewer');
-}
-
-export function isInRole(role) {
-	return keycloak.hasResourceRole(role, 'todo-api');
+export function isInRole(role, resource = 'todo-api') {
+	return keycloak.hasResourceRole(role, resource);
 }

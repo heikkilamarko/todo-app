@@ -1,6 +1,7 @@
 {
 	admin off
 	auto_https off
+	skip_install_trust
 }
 
 {$CADDY_SITE_ADDRESS} {
@@ -9,15 +10,15 @@
 
 		respond 200 {
 			body ` {
-				"apiUrl": "{$VITE_API_URL}",
-				"notificationsUrl": "{$VITE_NOTIFICATIONS_URL}",
+				"apiUrl": "{$PUBLIC_API_URL}",
+				"notificationsUrl": "{$PUBLIC_NOTIFICATIONS_URL}",
 				"auth": {
-					"url": "{$VITE_AUTH_URL}",
-					"realm": "{$VITE_AUTH_REALM}",
-					"clientId": "{$VITE_AUTH_CLIENT_ID}"
+					"url": "{$PUBLIC_AUTH_URL}",
+					"realm": "{$PUBLIC_AUTH_REALM}",
+					"clientId": "{$PUBLIC_AUTH_CLIENT_ID}"
 				}				,
-				"profileUrl": "{$VITE_PROFILE_URL}",
-				"dashboardUrl": "{$VITE_DASHBOARD_URL}"
+				"profileUrl": "{$PUBLIC_PROFILE_URL}",
+				"dashboardUrl": "{$PUBLIC_DASHBOARD_URL}"
 			}			`
 		}
 	}
@@ -25,7 +26,7 @@
 	handle {
 		root * {$CADDY_ROOT_DIR}
 
-		try_files {path} /index.html
+		try_files {path} /app.html
 
 		file_server {
 			precompressed br gzip

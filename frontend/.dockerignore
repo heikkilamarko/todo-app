@@ -1,5 +1,4 @@
 node_modules
-dist
 build
 LICENSE
 README.md
@@ -7,6 +6,7 @@ Dockerfile*
 npm-debug.log
 .git
 .gitignore
+.gitattributes
 .dockerignore
 .vscode
 .idea

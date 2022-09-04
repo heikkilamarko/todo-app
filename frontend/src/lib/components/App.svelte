@@ -1,6 +1,6 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import { isViewerRole } from '$lib/shared/auth.js';
+	import { isInRole, Roles } from '$lib/shared/auth.js';
 	import { stores } from '$lib/shared/stores.js';
 	import AppMenu from './AppMenu.svelte';
 	import Header from './Header.svelte';
@@ -8,7 +8,7 @@
 	import TodoForm from './TodoForm.svelte';
 	import Todos from './Todos.svelte';
 
-	const isViewer = isViewerRole();
+	const isViewer = isInRole(Roles.Viewer);
 
 	const {
 		toasterStore: { showError },
