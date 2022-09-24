@@ -1,15 +1,15 @@
-# Configuring Keycloak
+# Identity and Access Management
 
-[Keycloak Admin REST API](https://www.keycloak.org/docs-api/17.0/rest-api)
+Todo App uses [Keycloak](https://www.keycloak.org/) as an Identity and Access Management (IAM) solution.
 
-## Configure Realm
+## Import Keycloak Realm
 
 ```bash
-> ./configure-realm.sh
+./iam.sh import
 ```
 
-## Export Realm
+## Export Keycloak Realm
 
 ```bash
-> ./export_realm.sh
+./iam.sh export
 ```

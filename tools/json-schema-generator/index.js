@@ -1,56 +1,66 @@
-import { readFile, writeFile } from "fs/promises";
-import parser from "@asyncapi/parser";
-import chalk from "chalk";
-import YAML from "yaml";
+import { readFile, writeFile } from 'fs/promises';
+import { Command } from 'commander';
+import parser from '@asyncapi/parser';
+import chalk from 'chalk';
+import YAML from 'yaml';
 
-const configFile = process.argv.slice(2)[0];
+try {
+	const { config } = parseFlags();
 
-if (!configFile) {
-  console.log(
-    chalk.red("error: You must pass a config file (yaml) as the only argument.")
-  );
-  process.exit(1);
+	const { services } = YAML.parse(await readFile(config, 'utf8'));
+
+	for (const service of services) {
+		logDivider();
+		await generate(service);
+	}
+	logDivider();
+} catch (err) {
+	logFatal('Error generating json schemas.', err);
 }
 
-let config = await readFile(configFile, "utf8");
-
-config = YAML.parse(config);
-
-for (const service of config.services) {
-  logDivider();
-  await generate(service);
+function parseFlags() {
+	const program = new Command();
+	program.requiredOption('-c, --config <file>', 'config file');
+	program.parse();
+	return program.opts();
 }
-
-logDivider();
 
 async function generate({ name, apiFile, outputDir }) {
-  console.log(chalk.yellow("service"));
-  console.log(chalk.cyan(`    ${name}`));
-  console.log(chalk.yellow("input"));
-  console.log(chalk.cyan(`    ${apiFile}`));
-  console.log(chalk.yellow("output"));
+	console.log(chalk.yellowBright('service'));
+	console.log(chalk.cyanBright(`    ${name}`));
+	console.log(chalk.yellowBright('input'));
+	console.log(chalk.cyanBright(`    ${apiFile}`));
+	console.log(chalk.yellowBright('output'));
 
-  const apiContent = await readFile(apiFile, "utf8");
+	const apiContent = await readFile(apiFile, 'utf8');
 
-  let {
-    _json: { channels },
-  } = await parser.parse(apiContent);
+	let {
+		_json: { channels }
+	} = await parser.parse(apiContent);
 
-  const messages = Object.entries(channels)
-    .filter(([_, c]) => c.publish)
-    .map(([name, c]) => ({
-      file: `${outputDir}/${name}.json`,
-      schema: JSON.stringify(c.publish.message.payload, null, 2),
-    }));
+	const messages = Object.entries(channels)
+		.filter(([_, c]) => c.publish)
+		.map(([name, c]) => ({
+			file: `${outputDir}/${name}.json`,
+			schema: JSON.stringify(c.publish.message.payload, null, 2)
+		}));
 
-  for (const m of messages) {
-    await writeFile(m.file, m.schema);
-    console.log(chalk.green(`    ${m.file}`));
-  }
+	for (const m of messages) {
+		await writeFile(m.file, m.schema);
+		console.log(chalk.green(`    ${m.file}`));
+	}
 }
 
 function logDivider() {
-  console.log();
-  console.log(chalk.yellow(`----------------------------------------`));
-  console.log();
+	console.log();
+	console.log(chalk.yellowBright(`----------------------------------------`));
+	console.log();
+}
+
+function logFatal(message, err) {
+	console.log(chalk.redBright(message));
+	if (err) {
+		console.log(chalk.red(err));
+	}
+	process.exit(1);
 }

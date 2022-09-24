@@ -1,3 +1,4 @@
 #!/bin/bash
 
-npm i && node index.js config.yaml
+npm i -silent
+node index.js -c config.yaml
