@@ -1,72 +1,81 @@
 import Keycloak from 'keycloak-js';
 import { stores } from './stores.js';
 
-/** @type {Keycloak} */
-let keycloak;
+// About the 'keycloak-js' eval warning during build, see:
+// https://github.com/keycloak/keycloak/issues/10710
 
-export const Roles = {
-	User: 'todo-user',
-	Viewer: 'todo-viewer'
-};
+export default async function auth() {
+	/** @type {Keycloak} */
+	let keycloak;
 
-export async function initAuth() {
-	try {
-		keycloak = new Keycloak(stores.config.auth);
+	function isSignedIn() {
+		return keycloak.authenticated;
+	}
 
-		await keycloak.init({
-			pkceMethod: 'S256',
-			onLoad: 'login-required'
-		});
-
-		if (keycloak.authenticated) {
-			await keycloak.loadUserInfo();
+	async function signIn() {
+		try {
+			if (!isSignedIn()) {
+				await keycloak.login();
+			}
+		} catch (err) {
+			console.error(err);
+			throw new Error('error signing in');
 		}
-	} catch (err) {
-		console.error(err);
-		throw new Error('error initializing auth');
 	}
-}
 
-export function isSignedIn() {
-	return keycloak.authenticated;
-}
-
-export async function signIn() {
-	try {
-		if (!isSignedIn()) {
-			await keycloak.login();
+	async function signOut() {
+		try {
+			if (isSignedIn()) {
+				await keycloak.logout({
+					redirectUri: location.origin
+				});
+			}
+		} catch (err) {
+			console.error(err);
+			throw new Error('error signing out');
 		}
-	} catch (err) {
-		console.error(err);
-		throw new Error('error signing in');
 	}
-}
 
-export async function signOut() {
-	try {
-		if (isSignedIn()) {
-			await keycloak.logout();
+	function getUserName() {
+		return keycloak.userInfo?.name;
+	}
+
+	async function getAccessToken() {
+		try {
+			await keycloak.updateToken(null);
+			return keycloak.token;
+		} catch (err) {
+			console.error(err);
+			throw new Error('error getting access token');
 		}
-	} catch (err) {
-		console.error(err);
-		throw new Error('error signing out');
 	}
-}
 
-export async function getAccessToken() {
-	try {
-		await keycloak.updateToken(null);
-		return keycloak.token;
-	} catch (err) {
-		console.error(err);
-		throw new Error('error getting access token');
+	async function init() {
+		try {
+			keycloak = new Keycloak(stores.config.auth);
+
+			await keycloak.init({
+				pkceMethod: 'S256',
+				onLoad: 'login-required',
+				checkLoginIframe: false
+			});
+
+			if (keycloak.authenticated) {
+				await keycloak.loadUserInfo();
+			}
+		} catch (err) {
+			console.error(err);
+			throw new Error('error initializing auth');
+		}
 	}
-}
 
-export function getUserName() {
-	return keycloak.userInfo?.name;
-}
+	await init();
 
-export function isInRole(role, resource = 'todo-api') {
-	return keycloak.hasResourceRole(role, resource);
+	return {
+		isSignedIn,
+		signIn,
+		signOut,
+		getUserName,
+		getAccessToken
+	};
 }

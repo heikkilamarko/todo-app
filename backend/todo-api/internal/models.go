@@ -2,6 +2,10 @@ package internal
 
 import "time"
 
+type Userinfo struct {
+	Permissions []string `json:"permissions"`
+}
+
 type Todo struct {
 	ID          int       `json:"id"`
 	Name        string    `json:"name"`

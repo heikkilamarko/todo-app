@@ -1,14 +1,14 @@
 <script>
-	import { isInRole, Roles } from '$lib/shared/auth.js';
 	import { stores } from '$lib/shared/stores.js';
 	import Todo from './Todo.svelte';
 	import Empty from './Empty.svelte';
 
-	const isReadOnly = isInRole(Roles.Viewer);
-
 	const {
+		user,
 		todoStore: { todos, loading }
 	} = stores;
+
+	const isReadOnly = !user.hasPermission('todos.write');
 </script>
 
 {#each $todos as todo (todo.id)}

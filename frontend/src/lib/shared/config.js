@@ -1,23 +1,25 @@
+import { dev } from '$app/environment';
+import * as env from '$env/static/public';
 import ky from 'ky';
 
-export async function config() {
-	return import.meta.env.DEV ? dev() : await prod();
+export default async function config() {
+	return dev ? devConfig() : await prodConfig();
 }
 
-function dev() {
+function devConfig() {
 	return {
-		apiUrl: import.meta.env.PUBLIC_API_URL,
-		notificationsUrl: import.meta.env.PUBLIC_NOTIFICATIONS_URL,
+		apiUrl: env.PUBLIC_API_URL,
+		notificationsUrl: env.PUBLIC_NOTIFICATIONS_URL,
 		auth: {
-			url: import.meta.env.PUBLIC_AUTH_URL,
-			realm: import.meta.env.PUBLIC_AUTH_REALM,
-			clientId: import.meta.env.PUBLIC_AUTH_CLIENT_ID
+			url: env.PUBLIC_AUTH_URL,
+			realm: env.PUBLIC_AUTH_REALM,
+			clientId: env.PUBLIC_AUTH_CLIENT_ID
 		},
-		profileUrl: import.meta.env.PUBLIC_PROFILE_URL,
-		dashboardUrl: import.meta.env.PUBLIC_DASHBOARD_URL
+		profileUrl: env.PUBLIC_PROFILE_URL,
+		dashboardUrl: env.PUBLIC_DASHBOARD_URL
 	};
 }
 
-function prod() {
+function prodConfig() {
 	return ky.get('/config').json();
 }

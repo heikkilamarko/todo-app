@@ -82,7 +82,7 @@ services:
       - temporal
 
   nats:
-    build: ./backend/nats/docker
+    build: ./backend/nats
     image: todo-app/nats
     container_name: todo-app-nats
     deploy:
@@ -98,14 +98,14 @@ services:
       - todo-app
 
   nats-configure:
-    build: ./backend/nats/configure
+    build: ./backend/nats-configure
     image: todo-app/nats-configure
     container_name: todo-app-nats-configure
     deploy:
       restart_policy:
         condition: on-failure
     env_file:
-      - ./env/nats.env
+      - ./env/nats-configure.env
     networks:
       - todo-app
     depends_on:

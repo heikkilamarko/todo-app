@@ -8,8 +8,9 @@ require (
 	github.com/heikkilamarko/goutils v1.0.26
 	github.com/jackc/pgx/v4 v4.17.2
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/nats-io/nats.go v1.17.0
+	github.com/nats-io/nats.go v1.20.0
 	github.com/rs/zerolog v1.28.0
+	github.com/samber/lo v1.36.0
 )
 
 require (
@@ -30,6 +31,7 @@ require (
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/rs/xid v1.4.0 // indirect
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
+	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect

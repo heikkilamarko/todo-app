@@ -148,6 +148,7 @@ func (s *Service) initHTTPServer(ctx context.Context) {
 	repo := &PostgresRepository{s.DB}
 	pub := &NATSMessagePublisher{s.NATSConn}
 
+	router.Handle("/todos/userinfo", &GetUserinfoHandler{repo, s.Logger}).Methods(http.MethodGet)
 	router.Handle("/todos/token", &GetCentrifugoTokenHandler{s.Config, s.Logger}).Methods(http.MethodGet)
 	router.Handle("/todos", &GetTodosHandler{repo, s.Logger}).Methods(http.MethodGet)
 	router.Handle("/todos", &CreateTodoHandler{pub, s.Logger}).Methods(http.MethodPost)

@@ -1,11 +1,21 @@
-import { readFile, writeFile } from 'fs/promises';
-import { Command } from 'commander';
+import { parseArgs } from 'node:util';
+import { readFile, writeFile } from 'node:fs/promises';
 import parser from '@asyncapi/parser';
 import chalk from 'chalk';
 import YAML from 'yaml';
 
 try {
-	const { config } = parseFlags();
+	const {
+		values: { config }
+	} = parseArgs({
+		options: {
+			config: {
+				type: 'string',
+				short: 'c',
+				default: 'config.yaml'
+			}
+		}
+	});
 
 	const { services } = YAML.parse(await readFile(config, 'utf8'));
 
@@ -16,13 +26,6 @@ try {
 	logDivider();
 } catch (err) {
 	logFatal('Error generating json schemas.', err);
-}
-
-function parseFlags() {
-	const program = new Command();
-	program.requiredOption('-c, --config <file>', 'config file');
-	program.parse();
-	return program.opts();
 }
 
 async function generate({ name, apiFile, outputDir }) {

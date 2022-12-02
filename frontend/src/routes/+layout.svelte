@@ -1,5 +1,6 @@
 <script>
 	import '../app.scss';
+	import 'bootstrap/js/dist/dropdown';
 	import { onMount } from 'svelte';
 	import { startup } from '$lib/startup.js';
 	import Toaster from '$lib/components/Toaster.svelte';

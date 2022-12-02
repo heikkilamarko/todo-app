@@ -1,6 +1,9 @@
 import ky from 'ky';
-import { getAccessToken, isSignedIn } from './auth.js';
 import { stores } from './stores.js';
+
+export function getUserinfo() {
+	return todoApi().get('todos/userinfo').json();
+}
 
 export async function getToken() {
 	const { data } = await todoApi().get('todos/token').json();
@@ -22,6 +25,9 @@ export async function completeTodo(id) {
 function todoApi() {
 	return ky.create({
 		prefixUrl: stores.config.apiUrl,
+		retry: {
+			limit: 0
+		},
 		hooks: {
 			beforeRequest: [setBearerToken]
 		}
@@ -29,7 +35,7 @@ function todoApi() {
 }
 
 async function setBearerToken(req) {
-	if (!isSignedIn()) return;
-	const token = await getAccessToken();
+	if (!stores.auth.isSignedIn()) return;
+	const token = await stores.auth.getAccessToken();
 	req.headers.set('Authorization', `Bearer ${token}`);
 }

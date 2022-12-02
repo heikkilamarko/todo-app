@@ -1,6 +1,5 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import { isInRole, Roles } from '$lib/shared/auth.js';
 	import { stores } from '$lib/shared/stores.js';
 	import AppMenu from './AppMenu.svelte';
 	import Header from './Header.svelte';
@@ -8,15 +7,16 @@
 	import TodoForm from './TodoForm.svelte';
 	import Todos from './Todos.svelte';
 
-	const isViewer = isInRole(Roles.Viewer);
-
 	const {
+		user,
 		toasterStore: { showError },
 		todoStore: { getTodos },
 		notificationStore: { connect }
 	} = stores;
 
 	let disconnect = null;
+
+	const allowWrite = user.hasPermission('todos.write');
 
 	onMount(async () => {
 		try {
@@ -36,7 +36,7 @@
 <main class="container">
 	<Header>Todo App</Header>
 	<ConnectionStatus />
-	{#if !isViewer}
+	{#if allowWrite}
 		<TodoForm />
 	{/if}
 	<Todos />

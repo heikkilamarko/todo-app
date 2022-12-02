@@ -7,7 +7,10 @@ const config = {
 		adapter: adapter({
 			fallback: 'app.html',
 			precompress: true
-		})
+		}),
+		prerender: {
+			entries: []
+		}
 	}
 };
 

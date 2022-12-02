@@ -5,18 +5,14 @@
 	import PersonIcon from 'bootstrap-icons/icons/person.svg';
 	import PersonFillIcon from 'bootstrap-icons/icons/person-fill.svg';
 	import PowerIcon from 'bootstrap-icons/icons/power.svg';
-	import { isInRole, Roles, signOut, getUserName } from '$lib/shared/auth';
 	import { stores } from '$lib/shared/stores.js';
 	import SvgIcon from './SvgIcon.svelte';
 
-	const { config } = stores;
+	const { auth, config, user } = stores;
 
-	let isViewer = isInRole(Roles.Viewer);
+	let allowWrite = user.hasPermission('todos.write');
 
-	let title = getUserName();
-	if (isViewer) {
-		title += ' (VIEWER)';
-	}
+	let title = user.username();
 </script>
 
 <div class="btn-group position-fixed m-2 top-0 end-0">
@@ -43,7 +39,7 @@
 				Profile
 			</a>
 		</li>
-		{#if !isViewer}
+		{#if allowWrite}
 			<li>
 				<a class="dropdown-item" href={config.dashboardUrl} target="_blank" rel="noreferrer">
 					<SvgIcon icon={GridIcon} class="text-primary pe-2" />
@@ -64,7 +60,7 @@
 		</li>
 		<li><hr class="dropdown-divider" /></li>
 		<li>
-			<a class="dropdown-item" href="/" on:click|preventDefault={signOut}>
+			<a class="dropdown-item" href="/" on:click|preventDefault={() => auth.signOut()}>
 				<SvgIcon icon={PowerIcon} class="text-primary pe-2" />
 				Sign out
 			</a>
