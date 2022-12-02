@@ -9,14 +9,14 @@ services:
   #   ports:
   #     - 80:80
 
-  temporal-web:
-    image: temporalio/web
-    container_name: todo-app-temporal-web
+  temporal-ui:
+    image: temporalio/ui
+    container_name: todo-app-temporal-ui
     deploy:
       restart_policy:
         condition: on-failure
     env_file:
-      - ./env/temporal-web.env
+      - ./env/temporal-ui.env
     networks:
       - todo-app
     depends_on:

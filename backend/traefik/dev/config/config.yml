@@ -62,7 +62,7 @@ http:
     temporal:
       loadBalancer:
         servers:
-          - url: http://temporal-web:8088
+          - url: http://temporal-ui:8080
 
     minio:
       loadBalancer:
