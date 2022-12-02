@@ -28,6 +28,8 @@ http:
     temporal:
       rule: Host(`temporal.todo-app.com`)
       service: temporal
+      middlewares:
+        - temporal-headers
 
     minio:
       rule: Host(`minio.todo-app.com`)
@@ -70,6 +72,11 @@ http:
           - url: http://minio-console:9090
 
   middlewares:
+    temporal-headers:
+      headers:
+        customRequestHeaders:
+          Authorization: "x"
+
     cors-middleware:
       headers:
         accessControlAllowMethods:
