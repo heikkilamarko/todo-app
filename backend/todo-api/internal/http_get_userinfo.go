@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/rs/zerolog"
-	"github.com/samber/lo"
 )
 
 type GetUserinfoHandler struct {
@@ -15,16 +14,12 @@ type GetUserinfoHandler struct {
 func (h *GetUserinfoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	roles := GetRoles(r.Context())
 
-	// TODO: Read role-permission mappings from database
+	permissions, err := h.Repo.GetPermissions(r.Context(), roles)
 
-	var permissions []string
-
-	if lo.Contains(roles, "todo-viewer") {
-		permissions = []string{"todos.read"}
-	}
-
-	if lo.Contains(roles, "todo-user") {
-		permissions = []string{"todos.read", "todos.write"}
+	if err != nil {
+		h.Logger.Error().Err(err).Send()
+		WriteResponse(w, http.StatusInternalServerError, nil)
+		return
 	}
 
 	data := Userinfo{permissions}

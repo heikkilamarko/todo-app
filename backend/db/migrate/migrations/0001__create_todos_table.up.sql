@@ -1,8 +1,7 @@
 CREATE TABLE todos (
-    id serial,
-    name text NOT NULL,
-    description text,
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
     created_at timestamptz NOT NULL,
-    updated_at timestamptz NOT NULL,
-    CONSTRAINT todos_pkey PRIMARY KEY (id)
+    updated_at timestamptz NOT NULL
 );
