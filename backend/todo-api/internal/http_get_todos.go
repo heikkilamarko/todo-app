@@ -22,7 +22,7 @@ func (req *GetTodosRequest) Bind(r *http.Request) error {
 	if value := r.FormValue("offset"); value != "" {
 		offset, err = strconv.Atoi(value)
 		if err != nil || offset < 0 {
-			m["offsett"] = []string{"invalid offset"}
+			m["offset"] = []string{"invalid offset"}
 		}
 	}
 
