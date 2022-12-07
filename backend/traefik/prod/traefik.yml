@@ -1,7 +1,0 @@
-entryPoints:
-  web:
-    address: :443
-
-providers:
-  file:
-    directory: /etc/traefik/config

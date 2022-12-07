@@ -14,10 +14,7 @@ See [Configuration and Secrets Management](config/) for details.
 
 ## Reverse Proxy
 
-- [Traefik](https://traefik.io/traefik/)
-  - URL: http://todo-app.com/dashboard/
-  - username: `admin`
-  - password: `S3c_r3t!`
+- [Caddy](https://caddyserver.com/)
 
 ## Real-Time Messaging
 
@@ -56,7 +53,6 @@ See [Configuration and Secrets Management](config/) for details.
 
 ```
 127.0.0.1    todo-app.com
-127.0.0.1    api.todo-app.com
 127.0.0.1    auth.todo-app.com
 127.0.0.1    centrifugo.todo-app.com
 127.0.0.1    temporal.todo-app.com

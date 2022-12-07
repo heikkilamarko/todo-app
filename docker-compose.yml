@@ -1,28 +1,18 @@
 version: "3.9"
 
 services:
-  traefik:
-    build: ./backend/traefik/dev
-    image: todo-app/traefik
-    container_name: todo-app-traefik
+  caddy:
+    build: ./backend/caddy/dev
+    image: todo-app/caddy
+    container_name: todo-app-caddy
     deploy:
       restart_policy:
         condition: on-failure
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
     networks:
       - todo-app
-
-  # caddy:
-  #   build: ./backend/caddy/dev
-  #   image: todo-app/caddy
-  #   container_name: todo-app-caddy
-  #   deploy:
-  #     restart_policy:
-  #       condition: on-failure
-  #   volumes:
-  #     - caddy_data:/data
-  #     - caddy_config:/config
-  #   networks:
-  #     - todo-app
 
   todo-app:
     build: ./frontend
@@ -306,5 +296,5 @@ volumes:
   minio:
   grafana:
   promtail:
-  # caddy_data:
-  # caddy_config:
+  caddy_data:
+  caddy_config:

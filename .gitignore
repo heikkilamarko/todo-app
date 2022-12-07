@@ -376,3 +376,6 @@ certs
 
 .terraform*
 *.tfstate*
+
+**.drawio.bkp
+**.drawio.dtmp

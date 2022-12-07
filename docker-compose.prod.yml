@@ -1,8 +1,8 @@
 version: "3.9"
 
 services:
-  traefik:
-    build: ./backend/traefik/prod
+  caddy:
+    build: ./backend/caddy/prod
     deploy:
       restart_policy:
         condition: any
@@ -10,22 +10,9 @@ services:
       - 443:443
     secrets:
       - source: private.key
-        target: /etc/traefik/certs/private.key
+        target: /etc/caddy/certs/private.key
       - source: public.crt
-        target: /etc/traefik/certs/public.crt
-
-  # caddy:
-  #   build: ./backend/caddy/prod
-  #   deploy:
-  #     restart_policy:
-  #       condition: any
-  #   ports:
-  #     - 443:443
-  #   secrets:
-  #     - source: private.key
-  #       target: /etc/caddy/certs/private.key
-  #     - source: public.crt
-  #       target: /etc/caddy/certs/public.crt
+        target: /etc/caddy/certs/public.crt
 
   todo-app:
     deploy:

@@ -1,13 +1,9 @@
 version: "3.9"
 
 services:
-  traefik:
+  caddy:
     ports:
       - 80:80
-
-  # caddy:
-  #   ports:
-  #     - 80:80
 
   temporal-ui:
     image: temporalio/ui

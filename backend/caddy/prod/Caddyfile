@@ -1,42 +1,46 @@
-:443
-
-tls /etc/caddy/certs/public.crt /etc/caddy/certs/private.key
-
-@options {
-    host api.hobbydemos.com
-    method OPTIONS
+{
+	admin off
+	auto_https off
+	skip_install_trust
 }
 
-handle @options {
-  header Access-Control-Allow-Origin "https://www.hobbydemos.com"
-  header Access-Control-Allow-Methods "GET, POST, OPTIONS"
-  header Access-Control-Allow-Headers "Authorization, Content-Type"
-  respond @options 204
-}
+:443 {
+	tls /etc/caddy/certs/public.crt /etc/caddy/certs/private.key
 
-@app {
-    host www.hobbydemos.com
-}
-reverse_proxy @app http://todo-app
+	@api {
+		host www.hobbydemos.com
+		path /api/*
+	}
+	handle @api {
+		uri strip_prefix /api
+		reverse_proxy http://todo-api
+	}
 
-@api {
-    host api.hobbydemos.com
-}
-reverse_proxy @api http://todo-api {
-    header_down Access-Control-Allow-Origin "https://www.hobbydemos.com"
-}
+	@app {
+		host www.hobbydemos.com
+	}
+	handle @app {
+		reverse_proxy http://todo-app
+	}
 
-@centrifugo {
-    host centrifugo.hobbydemos.com
-}
-reverse_proxy @centrifugo http://centrifugo:8000
+	@centrifugo {
+		host centrifugo.hobbydemos.com
+	}
+	handle @centrifugo {
+		reverse_proxy http://centrifugo:8000
+	}
 
-@auth {
-    host auth.hobbydemos.com
-}
-reverse_proxy @auth http://keycloak:8080
+	@auth {
+		host auth.hobbydemos.com
+	}
+	handle @auth {
+		reverse_proxy http://keycloak:8080
+	}
 
-@grafana {
-    host grafana.hobbydemos.com
+	@grafana {
+		host grafana.hobbydemos.com
+	}
+	handle @grafana {
+		reverse_proxy http://grafana:3000
+	}
 }
-reverse_proxy @grafana http://grafana:3000
