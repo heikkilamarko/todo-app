@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/jackc/pgx/v4 v4.17.2
 	github.com/rs/zerolog v1.28.0
-	go.temporal.io/sdk v1.18.1
+	go.temporal.io/sdk v1.19.0
 	logur.dev/adapter/zerolog v0.6.0
 	logur.dev/logur v0.17.0
 )
