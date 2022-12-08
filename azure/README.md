@@ -49,16 +49,6 @@ Host todo-app
 > ssh todo-app
 ```
 
-## Generate Certificates
-
-```bash
-# In 'azure' directory
-
-> ./generate_certs.sh <domain> <email_for_account_notifications>
-```
-
-[Certbot docs](https://certbot.eff.org/docs/install.html)
-
 ## Decrypt Secrets
 
 ```bash
@@ -66,6 +56,16 @@ Host todo-app
 
 > mkdir env
 > config/decrypt_secrets.sh config/prod env
+```
+
+## Configure TLS Settings
+
+Set the following environment variables in the `/env/caddy.env` file:
+
+```dotenv
+CADDY_TLS_DOMAIN=
+CADDY_TLS_EMAIL=
+CADDY_TLS_GODADDY_TOKEN=
 ```
 
 ## Deploy

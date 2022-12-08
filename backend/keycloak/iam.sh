@@ -21,7 +21,7 @@ fi
 path="./configure"
 image="todo-app/keycloak-configure"
 container="keycloak-configure"
-env_file="../../env/keycloak.env"
+env_file="../../env/keycloak-configure.env"
 network="todo-app"
 realm="todo-app"
 

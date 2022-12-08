@@ -1,14 +1,14 @@
 {
-	admin off
-	auto_https off
-	skip_install_trust
+	email {$CADDY_TLS_EMAIL}
 }
 
-:443 {
-	tls /etc/caddy/certs/public.crt /etc/caddy/certs/private.key
+*.{$CADDY_TLS_DOMAIN} {
+	tls {
+		dns godaddy {$CADDY_TLS_GODADDY_TOKEN}
+	}
 
 	@api {
-		host www.hobbydemos.com
+		host www.{$CADDY_TLS_DOMAIN}
 		path /api/*
 	}
 	handle @api {
@@ -17,28 +17,28 @@
 	}
 
 	@app {
-		host www.hobbydemos.com
+		host www.{$CADDY_TLS_DOMAIN}
 	}
 	handle @app {
 		reverse_proxy http://todo-app
 	}
 
 	@centrifugo {
-		host centrifugo.hobbydemos.com
+		host centrifugo.{$CADDY_TLS_DOMAIN}
 	}
 	handle @centrifugo {
 		reverse_proxy http://centrifugo:8000
 	}
 
 	@auth {
-		host auth.hobbydemos.com
+		host auth.{$CADDY_TLS_DOMAIN}
 	}
 	handle @auth {
 		reverse_proxy http://keycloak:8080
 	}
 
 	@grafana {
-		host grafana.hobbydemos.com
+		host grafana.{$CADDY_TLS_DOMAIN}
 	}
 	handle @grafana {
 		reverse_proxy http://grafana:3000

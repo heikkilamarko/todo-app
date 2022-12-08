@@ -6,13 +6,10 @@ services:
     deploy:
       restart_policy:
         condition: any
+    env_file:
+      - ./env/caddy.env
     ports:
       - 443:443
-    secrets:
-      - source: private.key
-        target: /etc/caddy/certs/private.key
-      - source: public.crt
-        target: /etc/caddy/certs/public.crt
 
   todo-app:
     deploy:
@@ -87,13 +84,8 @@ services:
       restart_policy:
         condition: any
 
-secrets:
-  private.key:
-    file: ./env/private.key
-  public.crt:
-    file: ./env/public.crt
-
 networks:
   todo-app:
+    name: todo-app
     driver: overlay
     attachable: true
