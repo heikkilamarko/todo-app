@@ -60,7 +60,9 @@
 		host temporal.todo-app.com
 	}
 	handle @temporal {
-		reverse_proxy http://temporal-web:8088
+		reverse_proxy http://temporal-ui:8080 {
+			header_up Authorization "x"
+		}
 	}
 
 	@minio {
