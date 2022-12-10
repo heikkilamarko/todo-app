@@ -9,9 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gorilla/mux"
-	"github.com/heikkilamarko/goutils"
-	"github.com/heikkilamarko/goutils/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 
@@ -129,32 +128,29 @@ func (s *Service) initNATS() error {
 }
 
 func (s *Service) initHTTPServer(ctx context.Context) {
-	router := mux.NewRouter()
+	router := chi.NewRouter()
 
-	jwtConfig := &middleware.JWTConfig{
+	jwtConfig := &JWTConfig{
 		Issuer:   s.Config.AuthIssuer,
 		Iss:      s.Config.AuthClaimIss,
 		Aud:      []string{s.Config.AuthClaimAud},
 		TokenKey: ContextKeyAccessToken,
+		Logger:   s.Logger,
 	}
-
-	router.Use(
-		middleware.Logger(s.Logger),
-		middleware.RequestLogger(),
-		middleware.ErrorRecovery(),
-		middleware.JWT(ctx, jwtConfig),
-	)
 
 	repo := &PostgresRepository{s.DB}
 	pub := &NATSMessagePublisher{s.NATSConn}
 
-	router.Handle("/todos/userinfo", &GetUserinfoHandler{repo, s.Logger}).Methods(http.MethodGet)
-	router.Handle("/todos/token", &GetCentrifugoTokenHandler{s.Config, s.Logger}).Methods(http.MethodGet)
-	router.Handle("/todos", &GetTodosHandler{repo, s.Logger}).Methods(http.MethodGet)
-	router.Handle("/todos", &CreateTodoHandler{pub, s.Logger}).Methods(http.MethodPost)
-	router.Handle("/todos/{id:[0-9]+}/complete", &CompleteTodoHandler{pub, s.Logger}).Methods(http.MethodPost)
+	router.Use(middleware.Recoverer)
+	router.Use(JWT(ctx, jwtConfig))
 
-	router.NotFoundHandler = goutils.NotFoundHandler()
+	router.Method(http.MethodGet, "/todos/userinfo", &GetUserinfoHandler{repo, s.Logger})
+	router.Method(http.MethodGet, "/todos/token", &GetCentrifugoTokenHandler{s.Config, s.Logger})
+	router.Method(http.MethodGet, "/todos", &GetTodosHandler{repo, s.Logger})
+	router.Method(http.MethodPost, "/todos", &CreateTodoHandler{pub, s.Logger})
+	router.Method(http.MethodPost, "/todos/{id:[0-9]+}/complete", &CompleteTodoHandler{pub, s.Logger})
+
+	router.NotFound(NotFound)
 
 	s.Server = &http.Server{
 		ReadTimeout:  5 * time.Second,

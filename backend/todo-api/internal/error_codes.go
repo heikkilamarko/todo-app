@@ -6,6 +6,6 @@ type ErrorCode struct {
 }
 
 var ErrCodeInvalidRequest = ErrorCode{
-	Code:    "E1001",
+	Code:    "400",
 	Message: "invalid request",
 }

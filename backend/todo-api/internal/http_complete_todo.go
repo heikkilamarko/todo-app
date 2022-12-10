@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog"
 )
 
@@ -15,7 +15,7 @@ type CompleteTodoRequest struct {
 func (req *CompleteTodoRequest) Bind(r *http.Request) error {
 	m := make(map[string][]string)
 
-	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		m["id"] = []string{"invalid id"}
 		return ValidationError{m}
