@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/hashicorp/cap/jwt"
 	"github.com/rs/zerolog"
@@ -35,7 +36,7 @@ func JWTMiddleware(ctx context.Context, config *JWTMiddlewareConfig) func(next h
 
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			token := TokenFromHeader(r)
+			token := tokenFromHeader(r)
 			if token == "" {
 				config.Logger.Error().Err(errors.New("token is empty")).Send()
 				WriteResponse(w, http.StatusUnauthorized, nil)
@@ -54,4 +55,12 @@ func JWTMiddleware(ctx context.Context, config *JWTMiddlewareConfig) func(next h
 			next.ServeHTTP(w, r)
 		})
 	}
+}
+
+func tokenFromHeader(r *http.Request) string {
+	a := r.Header.Get("Authorization")
+	if 7 < len(a) && strings.ToUpper(a[0:6]) == "BEARER" {
+		return a[7:]
+	}
+	return ""
 }
