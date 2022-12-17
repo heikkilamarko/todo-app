@@ -27,28 +27,11 @@ func (req *CompleteTodoRequest) Bind(r *http.Request) error {
 }
 
 type CompleteTodoHandler struct {
-	AuthZ  AuthZ
 	Pub    MessagePublisher
 	Logger *zerolog.Logger
 }
 
 func (h *CompleteTodoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	ar, err := h.AuthZ.Authorize(r.Context(), &AuthZQuery{
-		Token:      GetAccessToken(r.Context()),
-		Permission: "todo.write",
-	})
-
-	if err != nil {
-		h.Logger.Error().Err(err).Send()
-		WriteResponse(w, http.StatusUnauthorized, nil)
-		return
-	}
-
-	if !ar.Allow {
-		WriteResponse(w, http.StatusUnauthorized, nil)
-		return
-	}
-
 	req := &CompleteTodoRequest{}
 
 	if err := req.Bind(r); err != nil {

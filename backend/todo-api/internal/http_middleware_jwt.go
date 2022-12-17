@@ -9,15 +9,15 @@ import (
 	"github.com/rs/zerolog"
 )
 
-type JWTConfig struct {
-	Issuer   string
-	Iss      string
-	Aud      []string
-	TokenKey interface{}
-	Logger   *zerolog.Logger
+type JWTMiddlewareConfig struct {
+	Issuer     string
+	Iss        string
+	Aud        []string
+	ContextKey interface{}
+	Logger     *zerolog.Logger
 }
 
-func JWT(ctx context.Context, config *JWTConfig) func(next http.Handler) http.Handler {
+func JWTMiddleware(ctx context.Context, config *JWTMiddlewareConfig) func(next http.Handler) http.Handler {
 	keySet, err := jwt.NewOIDCDiscoveryKeySet(ctx, config.Issuer, "")
 	if err != nil {
 		panic(err)
@@ -49,7 +49,7 @@ func JWT(ctx context.Context, config *JWTConfig) func(next http.Handler) http.Ha
 				return
 			}
 
-			r = r.WithContext(context.WithValue(r.Context(), config.TokenKey, claims))
+			r = r.WithContext(context.WithValue(r.Context(), config.ContextKey, claims))
 
 			next.ServeHTTP(w, r)
 		})

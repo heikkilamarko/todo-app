@@ -152,22 +152,28 @@ func (s *Service) initNATS() error {
 func (s *Service) initHTTPServer(ctx context.Context) {
 	router := chi.NewRouter()
 
-	jwtConfig := &JWTConfig{
-		Issuer:   s.Config.AuthIssuer,
-		Iss:      s.Config.AuthClaimIss,
-		Aud:      []string{s.Config.AuthClaimAud},
-		TokenKey: ContextKeyAccessToken,
-		Logger:   s.Logger,
-	}
-
 	router.Use(middleware.Recoverer)
-	router.Use(JWT(ctx, jwtConfig))
+	router.Use(s.jwt(ctx))
 
-	router.Method(http.MethodGet, "/todos/userinfo", &GetUserinfoHandler{s.AuthZ, s.Repo, s.Logger})
-	router.Method(http.MethodGet, "/todos/token", &GetCentrifugoTokenHandler{s.AuthZ, s.Config, s.Logger})
-	router.Method(http.MethodGet, "/todos", &GetTodosHandler{s.AuthZ, s.Repo, s.Logger})
-	router.Method(http.MethodPost, "/todos", &CreateTodoHandler{s.AuthZ, s.Pub, s.Logger})
-	router.Method(http.MethodPost, "/todos/{id:[0-9]+}/complete", &CompleteTodoHandler{s.AuthZ, s.Pub, s.Logger})
+	router.
+		With(s.authZ(ctx, "todo.read")).
+		Method(http.MethodGet, "/todos/userinfo", &GetUserinfoHandler{s.Repo, s.Logger})
+
+	router.
+		With(s.authZ(ctx, "todo.read")).
+		Method(http.MethodGet, "/todos/token", &GetCentrifugoTokenHandler{s.Config, s.Logger})
+
+	router.
+		With(s.authZ(ctx, "todo.read")).
+		Method(http.MethodGet, "/todos", &GetTodosHandler{s.Repo, s.Logger})
+
+	router.
+		With(s.authZ(ctx, "todo.write")).
+		Method(http.MethodPost, "/todos", &CreateTodoHandler{s.Pub, s.Logger})
+
+	router.
+		With(s.authZ(ctx, "todo.write")).
+		Method(http.MethodPost, "/todos/{id:[0-9]+}/complete", &CompleteTodoHandler{s.Pub, s.Logger})
 
 	router.NotFound(NotFound)
 
@@ -205,4 +211,27 @@ func (s *Service) serve(ctx context.Context) error {
 	}
 
 	return <-errChan
+}
+
+func (s *Service) jwt(ctx context.Context) func(http.Handler) http.Handler {
+	c := JWTMiddlewareConfig{
+		Issuer:     s.Config.AuthIssuer,
+		Iss:        s.Config.AuthClaimIss,
+		Aud:        []string{s.Config.AuthClaimAud},
+		ContextKey: ContextKeyAccessToken,
+		Logger:     s.Logger,
+	}
+
+	return JWTMiddleware(ctx, &c)
+}
+
+func (s *Service) authZ(ctx context.Context, permission string) func(http.Handler) http.Handler {
+	c := AuthZMiddlewareConfig{
+		AuthZ:      s.AuthZ,
+		Permission: permission,
+		ContextKey: ContextKeyAuthZResult,
+		Logger:     s.Logger,
+	}
+
+	return AuthZMiddleware(ctx, &c)
 }
