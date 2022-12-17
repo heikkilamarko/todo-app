@@ -8,7 +8,7 @@
 		todoStore: { todos, loading }
 	} = stores;
 
-	const isReadOnly = !user.hasPermission('todos.write');
+	const isReadOnly = !user.hasPermission('todo.write');
 </script>
 
 {#each $todos as todo (todo.id)}

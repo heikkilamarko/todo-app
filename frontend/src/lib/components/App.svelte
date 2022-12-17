@@ -16,7 +16,7 @@
 
 	let disconnect = null;
 
-	const allowWrite = user.hasPermission('todos.write');
+	const allowWrite = user.hasPermission('todo.write');
 
 	onMount(async () => {
 		try {

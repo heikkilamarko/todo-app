@@ -10,7 +10,7 @@
 
 	const { auth, config, user } = stores;
 
-	let allowWrite = user.hasPermission('todos.write');
+	let allowWrite = user.hasPermission('todo.write');
 
 	let title = user.username();
 </script>

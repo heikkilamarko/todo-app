@@ -18,18 +18,29 @@ type tokenResponse struct {
 }
 
 type GetCentrifugoTokenHandler struct {
+	AuthZ  AuthZ
 	Config *Config
 	Logger *zerolog.Logger
 }
 
 func (h *GetCentrifugoTokenHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if err := AuthorizeRead(r); err != nil {
+	ar, err := h.AuthZ.Authorize(r.Context(), &AuthZQuery{
+		Token:      GetAccessToken(r.Context()),
+		Permission: "todo.read",
+	})
+
+	if err != nil {
 		h.Logger.Error().Err(err).Send()
 		WriteResponse(w, http.StatusUnauthorized, nil)
 		return
 	}
 
-	sub := GetSubject(r.Context())
+	if !ar.Allow {
+		WriteResponse(w, http.StatusUnauthorized, nil)
+		return
+	}
+
+	sub := ar.Sub
 	if sub == "" {
 		h.Logger.Error().Err(errors.New("sub claim is empty")).Send()
 		WriteResponse(w, http.StatusUnauthorized, nil)

@@ -7,14 +7,27 @@ import (
 )
 
 type GetUserinfoHandler struct {
+	AuthZ  AuthZ
 	Repo   Repository
 	Logger *zerolog.Logger
 }
 
 func (h *GetUserinfoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	roles := GetRoles(r.Context())
+	ar, err := h.AuthZ.Authorize(r.Context(), &AuthZQuery{
+		Token:      GetAccessToken(r.Context()),
+		Permission: "todo.read",
+	})
 
-	permissions, err := h.Repo.GetPermissions(r.Context(), roles)
+	if err != nil {
+		h.Logger.Error().Err(err).Send()
+		WriteResponse(w, http.StatusUnauthorized, nil)
+		return
+	}
+
+	if !ar.Allow {
+		WriteResponse(w, http.StatusUnauthorized, nil)
+		return
+	}
 
 	if err != nil {
 		h.Logger.Error().Err(err).Send()
@@ -22,7 +35,7 @@ func (h *GetUserinfoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := Userinfo{permissions}
+	data := Userinfo{ar.Permissions}
 
 	WriteResponse(w, http.StatusOK, NewDataResponse(data, nil))
 }

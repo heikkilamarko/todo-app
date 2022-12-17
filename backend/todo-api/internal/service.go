@@ -22,6 +22,9 @@ type Service struct {
 	Config   *Config
 	Logger   *zerolog.Logger
 	DB       *sql.DB
+	Repo     Repository
+	Pub      MessagePublisher
+	AuthZ    AuthZ
 	NATSConn *nats.Conn
 	Server   *http.Server
 }
@@ -39,6 +42,10 @@ func (s *Service) Run() {
 	s.Logger.Info().Msgf("application is starting up...")
 
 	if err := s.initDB(ctx); err != nil {
+		s.Logger.Fatal().Err(err).Send()
+	}
+
+	if err := s.initAuthZ(ctx); err != nil {
 		s.Logger.Fatal().Err(err).Send()
 	}
 
@@ -99,6 +106,20 @@ func (s *Service) initDB(ctx context.Context) error {
 	}
 
 	s.DB = db
+	s.Repo = &PostgresRepository{s.DB}
+
+	return nil
+}
+
+func (s *Service) initAuthZ(ctx context.Context) error {
+	authZ, err := NewOPAAuthZ(ctx)
+	if err != nil {
+		return err
+	}
+
+	s.AuthZ = authZ
+
+	// s.AuthZ = NewDBAuthZ(s.Repo)
 
 	return nil
 }
@@ -123,6 +144,7 @@ func (s *Service) initNATS() error {
 	}
 
 	s.NATSConn = conn
+	s.Pub = &NATSMessagePublisher{s.NATSConn}
 
 	return nil
 }
@@ -138,17 +160,14 @@ func (s *Service) initHTTPServer(ctx context.Context) {
 		Logger:   s.Logger,
 	}
 
-	repo := &PostgresRepository{s.DB}
-	pub := &NATSMessagePublisher{s.NATSConn}
-
 	router.Use(middleware.Recoverer)
 	router.Use(JWT(ctx, jwtConfig))
 
-	router.Method(http.MethodGet, "/todos/userinfo", &GetUserinfoHandler{repo, s.Logger})
-	router.Method(http.MethodGet, "/todos/token", &GetCentrifugoTokenHandler{s.Config, s.Logger})
-	router.Method(http.MethodGet, "/todos", &GetTodosHandler{repo, s.Logger})
-	router.Method(http.MethodPost, "/todos", &CreateTodoHandler{pub, s.Logger})
-	router.Method(http.MethodPost, "/todos/{id:[0-9]+}/complete", &CompleteTodoHandler{pub, s.Logger})
+	router.Method(http.MethodGet, "/todos/userinfo", &GetUserinfoHandler{s.AuthZ, s.Repo, s.Logger})
+	router.Method(http.MethodGet, "/todos/token", &GetCentrifugoTokenHandler{s.AuthZ, s.Config, s.Logger})
+	router.Method(http.MethodGet, "/todos", &GetTodosHandler{s.AuthZ, s.Repo, s.Logger})
+	router.Method(http.MethodPost, "/todos", &CreateTodoHandler{s.AuthZ, s.Pub, s.Logger})
+	router.Method(http.MethodPost, "/todos/{id:[0-9]+}/complete", &CompleteTodoHandler{s.AuthZ, s.Pub, s.Logger})
 
 	router.NotFound(NotFound)
 
