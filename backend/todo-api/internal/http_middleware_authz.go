@@ -10,7 +10,7 @@ import (
 type AuthZMiddlewareConfig struct {
 	AuthZ      AuthZ
 	Permission string
-	ContextKey interface{}
+	ContextKey any
 	Logger     *zerolog.Logger
 }
 

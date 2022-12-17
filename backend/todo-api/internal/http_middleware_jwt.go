@@ -13,7 +13,7 @@ type JWTMiddlewareConfig struct {
 	Issuer     string
 	Iss        string
 	Aud        []string
-	ContextKey interface{}
+	ContextKey any
 	Logger     *zerolog.Logger
 }
 
