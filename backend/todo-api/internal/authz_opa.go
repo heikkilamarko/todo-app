@@ -21,11 +21,11 @@ func NewOPAAuthZ(ctx context.Context) (*OPAAuthZ, error) {
 	q, err := rego.New(
 		rego.Query(
 			strings.Join([]string{
-				"allow=data.authz.allow",
-				"sub=data.authz.sub",
-				"username=data.authz.username",
-				"permissions=data.authz.permissions",
-			}, " ")),
+				"allow = data.authz.allow",
+				"sub = data.authz.sub",
+				"username = data.authz.username",
+				"permissions = data.authz.permissions",
+			}, ";")),
 		rego.Module("authz.rego", authzRego),
 	).PrepareForEval(ctx)
 
@@ -37,34 +37,40 @@ func NewOPAAuthZ(ctx context.Context) (*OPAAuthZ, error) {
 }
 
 func (az *OPAAuthZ) Authorize(ctx context.Context, query *AuthZQuery) (*AuthZResult, error) {
-	r, err := az.evalQuery.Eval(ctx, rego.EvalInput(query))
+	result, err := az.evalQuery.Eval(ctx, rego.EvalInput(query))
 	if err != nil {
 		return nil, err
 	}
 
-	allow, ok := r[0].Bindings["allow"].(bool)
-	if !ok {
-		return nil, errors.New("invalid authz result: 'allow' must be bool")
+	if len(result) == 0 {
+		return nil, errors.New("undefined authz result")
 	}
 
-	sub, ok := r[0].Bindings["sub"].(string)
+	bindings := result[0].Bindings
+
+	allow, ok := bindings["allow"].(bool)
 	if !ok {
-		return nil, errors.New("invalid authz result: 'sub' must be string")
+		return nil, errors.New("unexpected authz result type: 'allow' must be bool")
 	}
 
-	username, ok := r[0].Bindings["username"].(string)
+	sub, ok := bindings["sub"].(string)
 	if !ok {
-		return nil, errors.New("invalid authz result: 'username' must be string")
+		return nil, errors.New("unexpected authz result type: 'sub' must be string")
 	}
 
-	p, ok := r[0].Bindings["permissions"].([]any)
+	username, ok := bindings["username"].(string)
 	if !ok {
-		return nil, errors.New("invalid authz result: 'permissions' must be []string")
+		return nil, errors.New("unexpected authz result type: 'username' must be string")
+	}
+
+	p, ok := bindings["permissions"].([]any)
+	if !ok {
+		return nil, errors.New("unexpected authz result type: 'permissions' must be []string")
 	}
 
 	permissions, ok := lo.FromAnySlice[string](p)
 	if !ok {
-		return nil, errors.New("invalid authz result: 'permissions' must be []string")
+		return nil, errors.New("unexpected authz result type: 'permissions' must be []string")
 	}
 
 	return &AuthZResult{allow, sub, username, permissions}, nil
