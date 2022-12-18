@@ -26,13 +26,7 @@ This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://
 
 ## Decrypting Todo App Secrets
 
-Create `env` directory into the root of the repository. Secrets will be decrypted into this directory.
-
-```bash
-> mkdir ../env
-```
-
-Decrypt secrets:
+Decrypt secrets into the `../env` directory.
 
 ```bash
 # dev environment

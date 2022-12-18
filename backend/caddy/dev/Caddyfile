@@ -6,7 +6,7 @@
 
 :80 {
 	@apicors {
-		host todo-app.com
+		host {$CADDY_DOMAIN}
 		path /api/*
 		method OPTIONS
 	}
@@ -18,7 +18,7 @@
 	}
 
 	@api {
-		host todo-app.com
+		host {$CADDY_DOMAIN}
 		path /api/*
 	}
 	handle @api {
@@ -29,35 +29,35 @@
 	}
 
 	@app {
-		host todo-app.com
+		host {$CADDY_DOMAIN}
 	}
 	handle @app {
 		reverse_proxy http://todo-app
 	}
 
 	@centrifugo {
-		host centrifugo.todo-app.com
+		host centrifugo.{$CADDY_DOMAIN}
 	}
 	handle @centrifugo {
 		reverse_proxy http://centrifugo:8000
 	}
 
 	@auth {
-		host auth.todo-app.com
+		host auth.{$CADDY_DOMAIN}
 	}
 	handle @auth {
 		reverse_proxy http://keycloak:8080
 	}
 
 	@grafana {
-		host grafana.todo-app.com
+		host grafana.{$CADDY_DOMAIN}
 	}
 	handle @grafana {
 		reverse_proxy http://grafana:3000
 	}
 
 	@temporal {
-		host temporal.todo-app.com
+		host temporal.{$CADDY_DOMAIN}
 	}
 	handle @temporal {
 		reverse_proxy http://temporal-ui:8080 {
@@ -66,7 +66,7 @@
 	}
 
 	@minio {
-		host minio.todo-app.com
+		host minio.{$CADDY_DOMAIN}
 	}
 	handle @minio {
 		reverse_proxy http://minio-console:9090

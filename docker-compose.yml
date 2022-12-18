@@ -8,6 +8,8 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+    env_file:
+      - ./env/caddy.env
     volumes:
       - caddy_data:/data
       - caddy_config:/config

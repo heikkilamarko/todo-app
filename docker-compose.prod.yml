@@ -6,8 +6,6 @@ services:
     deploy:
       restart_policy:
         condition: any
-    env_file:
-      - ./env/caddy.env
     ports:
       - 443:443
 

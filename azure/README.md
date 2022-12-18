@@ -54,7 +54,6 @@ Host todo-app
 ```bash
 # In repository root directory
 
-> mkdir env
 > config/decrypt_secrets.sh config/prod env
 ```
 

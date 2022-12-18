@@ -11,6 +11,7 @@ type Config struct {
 	AuthIssuer                   string
 	AuthClaimIss                 string
 	AuthClaimAud                 string
+	AuthZBackend                 string
 }
 
 func (c *Config) Load() error {
@@ -24,6 +25,7 @@ func (c *Config) Load() error {
 	c.AuthIssuer = Env("APP_AUTH_ISSUER", "")
 	c.AuthClaimIss = Env("APP_AUTH_CLAIM_ISS", "")
 	c.AuthClaimAud = Env("APP_AUTH_CLAIM_AUD", "")
+	c.AuthZBackend = Env("APP_AUTHZ_BACKEND", "opa")
 
 	return nil
 }

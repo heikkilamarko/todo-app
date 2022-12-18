@@ -112,14 +112,18 @@ func (s *Service) initDB(ctx context.Context) error {
 }
 
 func (s *Service) initAuthZ(ctx context.Context) error {
-	authZ, err := NewOPAAuthZ(ctx)
-	if err != nil {
-		return err
+	s.Logger.Info().Msgf("using authz backend: %s", s.Config.AuthZBackend)
+
+	switch s.Config.AuthZBackend {
+	case "db":
+		s.AuthZ = NewDBAuthZ(s.Repo)
+	default:
+		authZ, err := NewOPAAuthZ(ctx)
+		if err != nil {
+			return err
+		}
+		s.AuthZ = authZ
 	}
-
-	s.AuthZ = authZ
-
-	// s.AuthZ = NewDBAuthZ(s.Repo)
 
 	return nil
 }
