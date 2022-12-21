@@ -8,8 +8,8 @@ require (
 	github.com/hashicorp/cap v0.2.0
 	github.com/jackc/pgx/v4 v4.17.2
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/nats-io/nats.go v1.21.0
-	github.com/open-policy-agent/opa v0.47.3
+	github.com/nats-io/nats.go v1.22.0
+	github.com/open-policy-agent/opa v0.47.4
 	github.com/rs/zerolog v1.28.0
 	github.com/samber/lo v1.37.0
 )
