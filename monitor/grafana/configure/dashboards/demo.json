@@ -7,31 +7,40 @@
       "list": [
         {
           "builtIn": 1,
-          "datasource": "-- Grafana --",
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
           "enable": true,
           "hide": true,
           "iconColor": "rgba(0, 211, 255, 1)",
-          "name": "Annotations \u0026 Alerts",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
           "type": "dashboard"
         }
       ]
     },
     "editable": true,
-    "gnetId": null,
+    "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
     "links": [],
+    "liveNow": false,
     "panels": [
       {
         "aliasColors": {},
         "bars": false,
         "dashLength": 10,
         "dashes": false,
-        "datasource": null,
-        "description": "",
-        "fieldConfig": {
-          "defaults": {},
-          "overrides": []
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
         },
+        "description": "",
         "fill": 1,
         "fillGradient": 0,
         "gridPos": {
@@ -58,7 +67,7 @@
           "alertThreshold": true
         },
         "percentage": false,
-        "pluginVersion": "7.5.5",
+        "pluginVersion": "9.3.2",
         "pointradius": 2,
         "points": false,
         "renderer": "flot",
@@ -68,6 +77,10 @@
         "steppedLine": false,
         "targets": [
           {
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
             "expr": "sum by (host) (rate({job=\"containers\"} | json | app = \"todo-api\" [10s]))",
             "instant": false,
             "legendFormat": "Todo API",
@@ -75,6 +88,10 @@
             "refId": "Todo API"
           },
           {
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
             "expr": "sum by (host) (rate({job=\"containers\"} | json | app = \"todo-service\" [10s]))",
             "hide": false,
             "legendFormat": "Todo Service",
@@ -82,9 +99,7 @@
           }
         ],
         "thresholds": [],
-        "timeFrom": null,
         "timeRegions": [],
-        "timeShift": null,
         "title": "Services",
         "tooltip": {
           "shared": true,
@@ -93,40 +108,30 @@
         },
         "type": "graph",
         "xaxis": {
-          "buckets": null,
           "mode": "time",
-          "name": null,
           "show": true,
           "values": []
         },
         "yaxes": [
           {
             "format": "short",
-            "label": null,
             "logBase": 1,
-            "max": null,
-            "min": null,
             "show": true
           },
           {
             "format": "short",
-            "label": null,
             "logBase": 1,
-            "max": null,
-            "min": null,
             "show": true
           }
         ],
         "yaxis": {
-          "align": false,
-          "alignLevel": null
+          "align": false
         }
       },
       {
-        "datasource": null,
-        "fieldConfig": {
-          "defaults": {},
-          "overrides": []
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
         },
         "gridPos": {
           "h": 12,
@@ -137,6 +142,9 @@
         "id": 6,
         "options": {
           "dedupStrategy": "none",
+          "enableLogDetails": true,
+          "prettifyLogMessage": false,
+          "showCommonLabels": false,
           "showLabels": false,
           "showTime": false,
           "sortOrder": "Descending",
@@ -145,18 +153,20 @@
         "pluginVersion": "7.5.5",
         "targets": [
           {
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
             "expr": "{job=\"containers\"} \n| json \n| app=\"todo-api\" or app=\"todo-service\"",
             "refId": "A"
           }
         ],
-        "timeFrom": null,
-        "timeShift": null,
         "title": "Logs",
         "type": "logs"
       }
     ],
     "refresh": "5s",
-    "schemaVersion": 27,
+    "schemaVersion": 37,
     "style": "dark",
     "tags": [],
     "templating": {
@@ -170,6 +180,7 @@
     "timezone": "",
     "title": "Demo",
     "uid": "demo",
-    "version": 1
+    "version": 1,
+    "weekStart": ""
   }
 }

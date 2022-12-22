@@ -7,7 +7,6 @@
   "typeLogoUrl": "public/app/plugins/datasource/postgres/img/postgresql_logo.svg",
   "access": "proxy",
   "url": "${PG_URL}",
-  "password": "${PG_PASSWORD}",
   "user": "${PG_USER}",
   "database": "${PG_DATABASE}",
   "basicAuth": false,
@@ -19,6 +18,9 @@
     "tlsAuthWithCACert": false,
     "tlsConfigurationMethod": "file-path",
     "tlsSkipVerify": true
+  },
+  "secureJsonData": {
+    "password": "${PG_PASSWORD}"
   },
   "readOnly": false
 }
