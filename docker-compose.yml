@@ -6,6 +6,7 @@ services:
     image: todo-app/caddy
     container_name: todo-app-caddy
     labels:
+      - "com.todo-app.service=caddy"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -23,6 +24,7 @@ services:
     image: todo-app/todo-app
     container_name: todo-app
     labels:
+      - "com.todo-app.service=todo-app"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -37,6 +39,7 @@ services:
     image: todo-app/todo-api
     container_name: todo-app-todo-api
     labels:
+      - "com.todo-app.service=todo-api"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -54,6 +57,7 @@ services:
     image: todo-app/todo-service
     container_name: todo-app-todo-service
     labels:
+      - "com.todo-app.service=todo-service"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -71,6 +75,7 @@ services:
     image: todo-app/todo-worker
     container_name: todo-app-todo-worker
     labels:
+      - "com.todo-app.service=todo-worker"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -88,6 +93,7 @@ services:
     image: todo-app/nats
     container_name: todo-app-nats
     labels:
+      - "com.todo-app.service=nats"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -106,6 +112,7 @@ services:
     image: todo-app/nats-configure
     container_name: todo-app-nats-configure
     labels:
+      - "com.todo-app.service=nats-configure"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -121,6 +128,7 @@ services:
     image: centrifugo/centrifugo
     container_name: todo-app-centrifugo
     labels:
+      - "com.todo-app.service=centrifugo"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -141,6 +149,7 @@ services:
     image: todo-app/temporal
     container_name: todo-app-temporal
     labels:
+      - "com.todo-app.service=temporal"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -159,6 +168,7 @@ services:
     image: todo-app/db
     container_name: todo-app-db
     labels:
+      - "com.todo-app.service=db"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -177,6 +187,7 @@ services:
     image: todo-app/db-migrate
     container_name: todo-app-db-migrate
     labels:
+      - "com.todo-app.service=db-migrate"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -192,6 +203,7 @@ services:
     image: minio/minio
     container_name: todo-app-minio
     labels:
+      - "com.todo-app.service=minio"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -208,6 +220,7 @@ services:
     image: minio/console
     container_name: todo-app-minio-console
     labels:
+      - "com.todo-app.service=minio-console"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -225,6 +238,7 @@ services:
     image: todo-app/minio-migrate
     container_name: todo-app-minio-migrate
     labels:
+      - "com.todo-app.service=minio-migrate"
       - "com.todo-app.monitor"
     deploy:
       restart_policy:
@@ -236,6 +250,25 @@ services:
       - todo-app
     depends_on:
       - minio
+
+  keycloak:
+    build:
+      context: ./backend/keycloak/docker
+      dockerfile: Dockerfile
+    image: todo-app/keycloak
+    container_name: todo-app-keycloak
+    labels:
+      - "com.todo-app.service=keycloak"
+      - "com.todo-app.monitor"
+    deploy:
+      restart_policy:
+        condition: on-failure
+    env_file:
+      - ./env/keycloak.env
+    networks:
+      - todo-app
+    depends_on:
+      - db
 
   loki:
     build: ./monitor/loki
@@ -285,24 +318,6 @@ services:
     depends_on:
       - db
       - loki
-
-  keycloak:
-    build:
-      context: ./backend/keycloak/docker
-      dockerfile: Dockerfile
-    image: todo-app/keycloak
-    container_name: todo-app-keycloak
-    labels:
-      - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
-    env_file:
-      - ./env/keycloak.env
-    networks:
-      - todo-app
-    depends_on:
-      - db
 
 networks:
   todo-app:

@@ -18,8 +18,8 @@ scrape_configs:
             values: ["com.todo-app.monitor"]
 
     relabel_configs:
-      - source_labels: ["__meta_docker_container_name"]
-        regex: "/(.*)"
+      - source_labels: ["__meta_docker_container_label_com_todo_app_service"]
+        regex: "(.*)"
         target_label: "service"
 
     pipeline_stages:
@@ -31,7 +31,7 @@ scrape_configs:
 
       # go services
       - match:
-          selector: '{service=~"(todo-app-todo-api|todo-app-todo-service|todo-app-todo-worker)"}'
+          selector: '{service=~"(todo-api|todo-service|todo-worker)"}'
           stages:
             - json:
                 expressions:
@@ -47,7 +47,7 @@ scrape_configs:
 
       # caddy
       - match:
-          selector: '{service=~"(todo-app|todo-app-caddy)"}'
+          selector: '{service=~"(todo-app|caddy)"}'
           stages:
             - json:
                 expressions:
@@ -65,7 +65,7 @@ scrape_configs:
 
       # keycloak
       - match:
-          selector: '{service=~"(todo-app-keycloak)"}'
+          selector: '{service=~"(keycloak)"}'
           stages:
             - json:
                 expressions:
