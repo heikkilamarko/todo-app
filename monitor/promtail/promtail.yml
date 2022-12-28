@@ -1,6 +1,5 @@
 server:
-  http_listen_port: 9080
-  grpc_listen_port: 0
+  disable: true
 
 positions:
   filename: /tmp/promtail/positions.yaml
@@ -10,11 +9,75 @@ clients:
 
 scrape_configs:
   - job_name: containers
+
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+        filters:
+          - name: label
+            values: ["com.todo-app.monitor"]
+
+    relabel_configs:
+      - source_labels: ["__meta_docker_container_name"]
+        regex: "/(.*)"
+        target_label: "service"
+
     pipeline_stages:
       - docker:
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: containers
-          __path__: /var/lib/docker/containers/*/*log
+
+      - static_labels:
+          system: todo-app
+          env: ${APP_ENV}
+
+      # go services
+      - match:
+          selector: '{service=~"(todo-app-todo-api|todo-app-todo-service|todo-app-todo-worker)"}'
+          stages:
+            - json:
+                expressions:
+                  ts: time
+                  level: level
+            - labels:
+                level:
+            - static_labels:
+                tech: go
+            - timestamp:
+                format: RFC3339Nano
+                source: ts
+
+      # caddy
+      - match:
+          selector: '{service=~"(todo-app|todo-app-caddy)"}'
+          stages:
+            - json:
+                expressions:
+                  ts: ts
+                  level: level
+            - labels:
+                level:
+            - static_labels:
+                tech: caddy
+            - timestamp:
+                format: RFC3339Nano
+                fallback_formats:
+                  - Unix
+                source: ts
+
+      # keycloak
+      - match:
+          selector: '{service=~"(todo-app-keycloak)"}'
+          stages:
+            - json:
+                expressions:
+                  ts: timestamp
+                  level: level
+            - template:
+                source: level
+                template: "{{ .Value | ToLower }}"
+            - labels:
+                level:
+            - static_labels:
+                tech: keycloak
+            - timestamp:
+                format: RFC3339Nano
+                source: ts

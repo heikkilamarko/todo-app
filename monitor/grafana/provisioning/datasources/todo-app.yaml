@@ -1,0 +1,20 @@
+apiVersion: 1
+
+datasources:
+  - name: postgres
+    uid: postgres
+    type: postgres
+    access: proxy
+    url: ${PG_URL}
+    database: ${PG_DATABASE}
+    user: ${PG_USER}
+    jsonData:
+      sslmode: disable
+    secureJsonData:
+      password: ${PG_PASSWORD}
+
+  - name: loki
+    uid: loki
+    type: loki
+    access: proxy
+    url: ${LOKI_URL}

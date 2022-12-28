@@ -2,9 +2,18 @@
 	admin off
 	auto_https off
 	skip_install_trust
+
+	log {
+		level {$CADDY_LOG_LEVEL}
+		format json {
+			time_format "rfc3339_nano"
+		}
+	}
 }
 
 {$CADDY_SITE_ADDRESS} {
+	log
+
 	handle /config {
 		header Content-Type "application/json"
 

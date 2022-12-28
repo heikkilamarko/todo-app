@@ -1,8 +1,19 @@
 {
 	email {$CADDY_TLS_EMAIL}
+
+	log {
+		level {$CADDY_LOG_LEVEL}
+		format json {
+			time_format "rfc3339_nano"
+		}
+	}
 }
 
 *.{$CADDY_TLS_DOMAIN} {
+	log
+
+	encode gzip
+
 	tls {
 		dns godaddy {$CADDY_TLS_GODADDY_TOKEN}
 	}
