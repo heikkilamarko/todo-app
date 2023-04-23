@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/rs/zerolog"
+	"golang.org/x/exp/slog"
 )
 
 type GetTodosRequest struct {
@@ -44,14 +44,14 @@ func (req *GetTodosRequest) Bind(r *http.Request) error {
 
 type GetTodosHandler struct {
 	Repo   Repository
-	Logger *zerolog.Logger
+	Logger *slog.Logger
 }
 
 func (h *GetTodosHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	req := &GetTodosRequest{}
 
 	if err := req.Bind(r); err != nil {
-		h.Logger.Error().Err(err).Send()
+		h.Logger.Error(err.Error())
 		WriteErrorResponse(w, ErrCodeInvalidRequest, err)
 		return
 	}
@@ -59,7 +59,7 @@ func (h *GetTodosHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data, err := h.Repo.GetTodos(r.Context(), req.Query)
 
 	if err != nil {
-		h.Logger.Error().Err(err).Send()
+		h.Logger.Error(err.Error())
 		WriteResponse(w, http.StatusInternalServerError, nil)
 		return
 	}

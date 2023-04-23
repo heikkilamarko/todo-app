@@ -1,12 +1,11 @@
 package internal
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/go-jose/go-jose/v3"
 	"github.com/go-jose/go-jose/v3/jwt"
-	"github.com/rs/zerolog"
+	"golang.org/x/exp/slog"
 )
 
 type tokenClaims struct {
@@ -19,7 +18,7 @@ type tokenResponse struct {
 
 type GetCentrifugoTokenHandler struct {
 	Config *Config
-	Logger *zerolog.Logger
+	Logger *slog.Logger
 }
 
 func (h *GetCentrifugoTokenHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +26,7 @@ func (h *GetCentrifugoTokenHandler) ServeHTTP(w http.ResponseWriter, r *http.Req
 
 	sub := ar.Sub
 	if sub == "" {
-		h.Logger.Error().Err(errors.New("sub claim is empty")).Send()
+		h.Logger.Error("sub claim is empty")
 		WriteResponse(w, http.StatusUnauthorized, nil)
 		return
 	}
@@ -38,14 +37,14 @@ func (h *GetCentrifugoTokenHandler) ServeHTTP(w http.ResponseWriter, r *http.Req
 	}, (&jose.SignerOptions{}).WithType("JWT"))
 
 	if err != nil {
-		h.Logger.Error().Err(err).Send()
+		h.Logger.Error(err.Error())
 		WriteResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 
 	token, err := jwt.Signed(sig).Claims(tokenClaims{sub}).CompactSerialize()
 	if err != nil {
-		h.Logger.Error().Err(err).Send()
+		h.Logger.Error(err.Error())
 		WriteResponse(w, http.StatusInternalServerError, nil)
 		return
 	}

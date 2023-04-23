@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/rs/zerolog"
+	"golang.org/x/exp/slog"
 )
 
 type CompleteTodoRequest struct {
@@ -28,20 +28,20 @@ func (req *CompleteTodoRequest) Bind(r *http.Request) error {
 
 type CompleteTodoHandler struct {
 	Pub    MessagePublisher
-	Logger *zerolog.Logger
+	Logger *slog.Logger
 }
 
 func (h *CompleteTodoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	req := &CompleteTodoRequest{}
 
 	if err := req.Bind(r); err != nil {
-		h.Logger.Error().Err(err).Send()
+		h.Logger.Error(err.Error())
 		WriteErrorResponse(w, ErrCodeInvalidRequest, err)
 		return
 	}
 
 	if err := h.Pub.TodoComplete(r.Context(), req.ID); err != nil {
-		h.Logger.Error().Err(err).Send()
+		h.Logger.Error(err.Error())
 		WriteResponse(w, http.StatusInternalServerError, nil)
 		return
 	}

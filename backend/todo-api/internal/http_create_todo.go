@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/rs/zerolog"
+	"golang.org/x/exp/slog"
 )
 
 type CreateTodoRequest struct {
@@ -28,20 +28,20 @@ func (req *CreateTodoRequest) Bind(r *http.Request) error {
 
 type CreateTodoHandler struct {
 	Pub    MessagePublisher
-	Logger *zerolog.Logger
+	Logger *slog.Logger
 }
 
 func (h *CreateTodoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	req := &CreateTodoRequest{}
 
 	if err := req.Bind(r); err != nil {
-		h.Logger.Error().Err(err).Send()
+		h.Logger.Error(err.Error())
 		WriteErrorResponse(w, ErrCodeInvalidRequest, err)
 		return
 	}
 
 	if err := h.Pub.TodoCreate(r.Context(), req.Todo); err != nil {
-		h.Logger.Error().Err(err).Send()
+		h.Logger.Error(err.Error())
 		WriteResponse(w, http.StatusInternalServerError, nil)
 		return
 	}

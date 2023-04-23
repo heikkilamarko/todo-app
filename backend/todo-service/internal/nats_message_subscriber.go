@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/nats-io/nats.go"
-	"github.com/rs/zerolog"
+	"golang.org/x/exp/slog"
 )
 
 type NATSMessageSubscriberOptions struct {
@@ -17,7 +17,7 @@ type NATSMessageSubscriberOptions struct {
 type NATSMessageSubscriber struct {
 	Options *NATSMessageSubscriberOptions
 	Conn    *nats.Conn
-	Logger  *zerolog.Logger
+	Logger  *slog.Logger
 }
 
 func (s *NATSMessageSubscriber) Subscribe(ctx context.Context) error {
@@ -32,12 +32,12 @@ func (s *NATSMessageSubscriber) Subscribe(ctx context.Context) error {
 	}
 
 	go func() {
-		s.Logger.Info().Msgf("message subscriber started")
+		s.Logger.Info("message subscriber started")
 
 		for {
 			select {
 			case <-ctx.Done():
-				s.Logger.Info().Msgf("message subscriber stopped")
+				s.Logger.Info("message subscriber stopped")
 				return
 			default:
 			}
@@ -48,18 +48,18 @@ func (s *NATSMessageSubscriber) Subscribe(ctx context.Context) error {
 			}
 
 			for _, m := range messages {
-				s.Logger.Info().Msgf("message received (%s)", m.Subject)
+				s.Logger.Info("message received", "subject", m.Subject)
 
 				handler, ok := s.Options.Handlers[m.Subject]
 				if ok {
 					if err := handler.Handle(ctx, m); err != nil {
-						s.Logger.Error().Err(err).Send()
+						s.Logger.Error(err.Error())
 					}
 				} else {
-					s.Logger.Info().Msgf("no handler found for subject '%s'", m.Subject)
+					s.Logger.Info("handler not found", "subject", m.Subject)
 				}
 
-				s.Logger.Info().Msgf("message handled (%s)", m.Subject)
+				s.Logger.Info("message handled", "subject", m.Subject)
 			}
 		}
 	}()

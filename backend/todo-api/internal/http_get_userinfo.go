@@ -3,12 +3,12 @@ package internal
 import (
 	"net/http"
 
-	"github.com/rs/zerolog"
+	"golang.org/x/exp/slog"
 )
 
 type GetUserinfoHandler struct {
 	Repo   Repository
-	Logger *zerolog.Logger
+	Logger *slog.Logger
 }
 
 func (h *GetUserinfoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

@@ -6,8 +6,8 @@ require (
 	github.com/centrifugal/gocent/v3 v3.2.0
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/nats-io/nats.go v1.25.0
-	github.com/rs/zerolog v1.29.1
 	github.com/xeipuuv/gojsonschema v1.2.0
+	golang.org/x/exp v0.0.0-20230420155640-133eef4313cb
 )
 
 require (
@@ -18,8 +18,6 @@ require (
 	github.com/jackc/pgproto3/v2 v2.3.2 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgtype v1.14.0 // indirect
-	github.com/mattn/go-colorable v0.1.12 // indirect
-	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/nats-io/nkeys v0.4.4 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f // indirect

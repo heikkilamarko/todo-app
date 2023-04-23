@@ -2,16 +2,17 @@ package internal
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
-	"github.com/rs/zerolog"
+	"golang.org/x/exp/slog"
 )
 
 type AuthZMiddlewareConfig struct {
 	AuthZ      AuthZ
 	Permission string
 	ContextKey any
-	Logger     *zerolog.Logger
+	Logger     *slog.Logger
 }
 
 func AuthZMiddleware(ctx context.Context, config *AuthZMiddlewareConfig) func(next http.Handler) http.Handler {
@@ -23,12 +24,12 @@ func AuthZMiddleware(ctx context.Context, config *AuthZMiddlewareConfig) func(ne
 			})
 
 			if err != nil {
-				config.Logger.Error().Err(err).Send()
+				config.Logger.Error(err.Error())
 				WriteResponse(w, http.StatusForbidden, nil)
 				return
 			}
 
-			config.Logger.Info().Msgf("[%s][%s] %#v", r.URL.Path, config.Permission, ar)
+			config.Logger.Info(fmt.Sprintf("[%s][%s] %#v", r.URL.Path, config.Permission, ar))
 
 			if !ar.Allow {
 				WriteResponse(w, http.StatusForbidden, nil)

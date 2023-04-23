@@ -4,14 +4,14 @@ import (
 	"context"
 
 	"github.com/nats-io/nats.go"
-	"github.com/rs/zerolog"
+	"golang.org/x/exp/slog"
 )
 
 type TodoCompleteHandler struct {
 	Parser *NATSMessageParser
 	Repo   Repository
 	Pub    MessagePublisher
-	Logger *zerolog.Logger
+	Logger *slog.Logger
 }
 
 func (h *TodoCompleteHandler) Handle(ctx context.Context, m *nats.Msg) error {
@@ -20,7 +20,7 @@ func (h *TodoCompleteHandler) Handle(ctx context.Context, m *nats.Msg) error {
 	message := &TodoCompleteMessage{}
 
 	if err := h.Parser.Parse(m, message); err != nil {
-		h.Logger.Error().Err(err).Send()
+		h.Logger.Error(err.Error())
 		return err
 	}
 

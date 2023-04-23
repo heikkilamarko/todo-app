@@ -37,6 +37,9 @@ scrape_configs:
                 expressions:
                   ts: time
                   level: level
+            - template:
+                source: level
+                template: "{{ .Value | ToLower }}"
             - labels:
                 level:
             - static_labels:

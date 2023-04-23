@@ -4,10 +4,8 @@ go 1.20
 
 require (
 	github.com/jackc/pgx/v4 v4.18.1
-	github.com/rs/zerolog v1.29.1
 	go.temporal.io/sdk v1.22.1
-	logur.dev/adapter/zerolog v0.6.0
-	logur.dev/logur v0.17.0
+	golang.org/x/exp v0.0.0-20230420155640-133eef4313cb
 )
 
 require (
@@ -27,8 +25,6 @@ require (
 	github.com/jackc/pgproto3/v2 v2.3.2 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgtype v1.14.0 // indirect
-	github.com/mattn/go-colorable v0.1.12 // indirect
-	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/robfig/cron v1.2.0 // indirect

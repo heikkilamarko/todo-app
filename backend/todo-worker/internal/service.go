@@ -8,11 +8,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/rs/zerolog"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
-	zerologadapter "logur.dev/adapter/zerolog"
-	"logur.dev/logur"
+	"golang.org/x/exp/slog"
 
 	// PostgreSQL driver
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -20,7 +18,7 @@ import (
 
 type Service struct {
 	Config *Config
-	Logger *zerolog.Logger
+	Logger *slog.Logger
 	DB     *sql.DB
 	Client client.Client
 	Worker worker.Worker
@@ -31,26 +29,30 @@ func (s *Service) Run() {
 	defer stop()
 
 	if err := s.loadConfig(); err != nil {
-		s.Logger.Fatal().Err(err).Send()
+		s.Logger.Error(err.Error())
+		os.Exit(1)
 	}
 
 	s.initLogger()
 
-	s.Logger.Info().Msgf("application is starting up...")
+	s.Logger.Info("application is starting up...")
 
 	if err := s.initDB(ctx); err != nil {
-		s.Logger.Fatal().Err(err).Send()
+		s.Logger.Error(err.Error())
+		os.Exit(1)
 	}
 
 	if err := s.initTemporal(); err != nil {
-		s.Logger.Fatal().Err(err).Send()
+		s.Logger.Error(err.Error())
+		os.Exit(1)
 	}
 
 	if err := s.serve(ctx); err != nil {
-		s.Logger.Fatal().Err(err).Send()
+		s.Logger.Error(err.Error())
+		os.Exit(1)
 	}
 
-	s.Logger.Info().Msgf("application is shut down")
+	s.Logger.Info("application is shut down")
 }
 
 func (s *Service) loadConfig() error {
@@ -65,20 +67,24 @@ func (s *Service) loadConfig() error {
 }
 
 func (s *Service) initLogger() {
-	level, err := zerolog.ParseLevel(s.Config.LogLevel)
-	if err != nil {
-		level = zerolog.WarnLevel
+	level := slog.LevelInfo
+
+	level.UnmarshalText([]byte(s.Config.LogLevel))
+
+	opts := slog.HandlerOptions{
+		Level: level,
 	}
 
-	zerolog.SetGlobalLevel(level)
+	handler := opts.NewJSONHandler(os.Stderr).
+		WithAttrs([]slog.Attr{
+			slog.String("app", s.Config.App),
+		})
 
-	logger := zerolog.New(os.Stderr).
-		With().
-		Timestamp().
-		Str("app", s.Config.App).
-		Logger()
+	logger := slog.New(handler)
 
-	s.Logger = &logger
+	slog.SetDefault(logger)
+
+	s.Logger = logger
 }
 
 func (s *Service) initDB(ctx context.Context) error {
@@ -104,7 +110,7 @@ func (s *Service) initDB(ctx context.Context) error {
 func (s *Service) initTemporal() error {
 	tc, err := client.NewClient(client.Options{
 		HostPort: s.Config.TemporalHostPort,
-		Logger:   logur.LoggerToKV(zerologadapter.New(*s.Logger)),
+		Logger:   s.Logger,
 	})
 
 	if err != nil {
@@ -129,7 +135,7 @@ func (s *Service) serve(ctx context.Context) error {
 	go func() {
 		<-ctx.Done()
 
-		s.Logger.Info().Msgf("application is shutting down...")
+		s.Logger.Info("application is shutting down...")
 
 		_ = s.DB.Close()
 		s.Client.Close()
@@ -137,7 +143,7 @@ func (s *Service) serve(ctx context.Context) error {
 		errChan <- nil
 	}()
 
-	s.Logger.Info().Msgf("application is running")
+	s.Logger.Info("application is running")
 
 	if err := s.Worker.Run(worker.InterruptCh()); err != nil {
 		return err

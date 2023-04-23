@@ -2,12 +2,11 @@ package internal
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/hashicorp/cap/jwt"
-	"github.com/rs/zerolog"
+	"golang.org/x/exp/slog"
 )
 
 type JWTMiddlewareConfig struct {
@@ -15,7 +14,7 @@ type JWTMiddlewareConfig struct {
 	Iss        string
 	Aud        []string
 	ContextKey any
-	Logger     *zerolog.Logger
+	Logger     *slog.Logger
 }
 
 func JWTMiddleware(ctx context.Context, config *JWTMiddlewareConfig) func(next http.Handler) http.Handler {
@@ -38,14 +37,14 @@ func JWTMiddleware(ctx context.Context, config *JWTMiddlewareConfig) func(next h
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			token := tokenFromHeader(r)
 			if token == "" {
-				config.Logger.Error().Err(errors.New("token is empty")).Send()
+				config.Logger.Error("token is empty")
 				WriteResponse(w, http.StatusUnauthorized, nil)
 				return
 			}
 
 			claims, err := validator.Validate(r.Context(), token, expected)
 			if err != nil {
-				config.Logger.Error().Err(err).Send()
+				config.Logger.Error(err.Error())
 				WriteResponse(w, http.StatusUnauthorized, nil)
 				return
 			}
