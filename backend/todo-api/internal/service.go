@@ -141,15 +141,18 @@ func (s *Service) initNATS() error {
 	conn, err := nats.Connect(
 		s.Config.NATSURL,
 		nats.Token(s.Config.NATSToken),
-		nats.NoReconnect(),
+		nats.MaxReconnects(-1),
 		nats.DisconnectErrHandler(
 			func(_ *nats.Conn, err error) {
-				s.Logger.Error(err.Error())
-				os.Exit(1)
+				s.Logger.Info("nats disconnected", "reason", err)
+			}),
+		nats.ReconnectHandler(
+			func(c *nats.Conn) {
+				s.Logger.Info("nats reconnected", "address", c.ConnectedUrl())
 			}),
 		nats.ErrorHandler(
 			func(_ *nats.Conn, _ *nats.Subscription, err error) {
-				s.Logger.Error(err.Error())
+				s.Logger.Error("nats error", "err", err)
 				os.Exit(1)
 			}),
 	)
