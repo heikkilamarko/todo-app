@@ -5,11 +5,11 @@
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
-		"prettier": "2.8.7"
+		"prettier": "2.8.8"
 	},
 	"dependencies": {
-		"@asyncapi/parser": "1.18.1",
+		"@asyncapi/parser": "2.0.0",
 		"chalk": "5.2.0",
-		"yaml": "2.2.1"
+		"yaml": "2.2.2"
 	}
 }

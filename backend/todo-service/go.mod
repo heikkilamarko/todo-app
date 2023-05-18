@@ -7,7 +7,7 @@ require (
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/nats-io/nats.go v1.25.0
 	github.com/xeipuuv/gojsonschema v1.2.0
-	golang.org/x/exp v0.0.0-20230420155640-133eef4313cb
+	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
 )
 
 require (

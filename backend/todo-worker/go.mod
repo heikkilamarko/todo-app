@@ -4,8 +4,8 @@ go 1.20
 
 require (
 	github.com/jackc/pgx/v4 v4.18.1
-	go.temporal.io/sdk v1.22.1
-	golang.org/x/exp v0.0.0-20230420155640-133eef4313cb
+	go.temporal.io/sdk v1.22.2
+	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
 )
 
 require (

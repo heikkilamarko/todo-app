@@ -71,11 +71,11 @@ func (s *Service) initLogger() {
 
 	level.UnmarshalText([]byte(s.Config.LogLevel))
 
-	opts := slog.HandlerOptions{
+	opts := &slog.HandlerOptions{
 		Level: level,
 	}
 
-	handler := opts.NewJSONHandler(os.Stderr).
+	handler := slog.NewJSONHandler(os.Stderr, opts).
 		WithAttrs([]slog.Attr{
 			slog.String("app", s.Config.App),
 		})

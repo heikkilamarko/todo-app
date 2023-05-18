@@ -1,6 +1,6 @@
 import { parseArgs } from 'node:util';
 import { readFile, writeFile } from 'node:fs/promises';
-import parser from '@asyncapi/parser';
+import { Parser } from '@asyncapi/parser';
 import chalk from 'chalk';
 import YAML from 'yaml';
 
@@ -37,9 +37,11 @@ async function generate({ name, apiFile, outputDir }) {
 
 	const apiContent = await readFile(apiFile, 'utf8');
 
-	let {
+	const { document } = await new Parser().parse(apiContent);
+
+	const {
 		_json: { channels }
-	} = await parser.parse(apiContent);
+	} = document;
 
 	const messages = Object.entries(channels)
 		.filter(([_, c]) => c.publish)
