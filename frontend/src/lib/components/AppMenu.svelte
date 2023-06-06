@@ -7,6 +7,7 @@
 	import PowerIcon from 'bootstrap-icons/icons/power.svg';
 	import { stores } from '$lib/shared/stores.js';
 	import SvgIcon from './SvgIcon.svelte';
+	import ColorModeMenuItem from './ColorModeMenuItem.svelte';
 
 	const { auth, config, user } = stores;
 
@@ -15,7 +16,7 @@
 	let title = user.username();
 </script>
 
-<div class="btn-group position-fixed m-2 top-0 end-0">
+<div class="btn-group position-fixed z-3 m-2 top-0 end-0">
 	<button
 		type="button"
 		class="btn btn-outline-primary dropdown-toggle rounded-pill px-3"
@@ -26,12 +27,7 @@
 		{title}
 	</button>
 	<ul class="dropdown-menu">
-		<li>
-			<a class="dropdown-item" href="/about">
-				<SvgIcon icon={InfoCircleIcon} class="text-primary pe-2" />
-				About
-			</a>
-		</li>
+		<ColorModeMenuItem />
 		<li><hr class="dropdown-divider" /></li>
 		<li>
 			<a class="dropdown-item" href={config.profileUrl} target="_blank" rel="noreferrer">
@@ -59,6 +55,12 @@
 			</a>
 		</li>
 		<li><hr class="dropdown-divider" /></li>
+		<li>
+			<a class="dropdown-item" href="/about">
+				<SvgIcon icon={InfoCircleIcon} class="text-primary pe-2" />
+				About
+			</a>
+		</li>
 		<li>
 			<a class="dropdown-item" href="/" on:click|preventDefault={() => auth.signOut()}>
 				<SvgIcon icon={PowerIcon} class="text-primary pe-2" />

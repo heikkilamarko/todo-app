@@ -1,7 +1,6 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import { stores } from '$lib/shared/stores.js';
-	import AppMenu from './AppMenu.svelte';
 	import Header from './Header.svelte';
 	import ConnectionStatus from './ConnectionStatus.svelte';
 	import TodoForm from './TodoForm.svelte';
@@ -30,8 +29,6 @@
 
 	onDestroy(() => disconnect?.());
 </script>
-
-<AppMenu />
 
 <main class="container">
 	<Header>Todo App</Header>

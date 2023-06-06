@@ -5,6 +5,7 @@
 	import { startup } from '$lib/startup.js';
 	import Toaster from '$lib/components/Toaster.svelte';
 	import ErrorPage from './ErrorPage.svelte';
+	import AppMenu from '$lib/components/AppMenu.svelte';
 
 	let status, message;
 
@@ -20,6 +21,7 @@
 </script>
 
 {#if status === 200}
+	<AppMenu />
 	<slot />
 	<Toaster />
 {:else if status === 500}
