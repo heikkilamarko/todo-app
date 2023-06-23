@@ -1,11 +1,10 @@
 module todo-worker
 
-go 1.20
+go 1.21rc2
 
 require (
 	github.com/jackc/pgx/v4 v4.18.1
-	go.temporal.io/sdk v1.23.0
-	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
+	go.temporal.io/sdk v1.23.1
 )
 
 require (

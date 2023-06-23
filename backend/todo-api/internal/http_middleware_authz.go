@@ -3,9 +3,8 @@ package internal
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
-
-	"golang.org/x/exp/slog"
 )
 
 type AuthZMiddlewareConfig struct {

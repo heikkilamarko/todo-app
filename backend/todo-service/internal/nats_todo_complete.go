@@ -2,9 +2,9 @@ package internal
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/nats-io/nats.go"
-	"golang.org/x/exp/slog"
 )
 
 type TodoCompleteHandler struct {

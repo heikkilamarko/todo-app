@@ -1,9 +1,8 @@
 package internal
 
 import (
+	"log/slog"
 	"net/http"
-
-	"golang.org/x/exp/slog"
 )
 
 type GetUserinfoHandler struct {

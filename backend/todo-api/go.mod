@@ -1,17 +1,16 @@
 module todo-api
 
-go 1.20
+go 1.21rc2
 
 require (
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-jose/go-jose/v3 v3.0.0
-	github.com/hashicorp/cap v0.3.0
+	github.com/hashicorp/cap v0.3.1
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/nats-io/nats.go v1.26.0
+	github.com/nats-io/nats.go v1.27.1
 	github.com/open-policy-agent/opa v0.53.1
 	github.com/samber/lo v1.38.1
-	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
 )
 
 require (
@@ -53,6 +52,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.14.0 // indirect
 	go.opentelemetry.io/otel/trace v1.14.0 // indirect
 	golang.org/x/crypto v0.6.0 // indirect
+	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/oauth2 v0.5.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect

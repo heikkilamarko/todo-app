@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"database/sql"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,7 +13,6 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/nats-io/nats.go"
-	"golang.org/x/exp/slog"
 
 	// PostgreSQL driver
 	_ "github.com/jackc/pgx/v4/stdlib"

@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"database/sql"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,7 +11,6 @@ import (
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
-	"golang.org/x/exp/slog"
 
 	// PostgreSQL driver
 	_ "github.com/jackc/pgx/v4/stdlib"

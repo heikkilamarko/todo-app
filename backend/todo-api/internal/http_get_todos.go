@@ -1,10 +1,9 @@
 package internal
 
 import (
+	"log/slog"
 	"net/http"
 	"strconv"
-
-	"golang.org/x/exp/slog"
 )
 
 type GetTodosRequest struct {

@@ -1,11 +1,11 @@
 package internal
 
 import (
+	"log/slog"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	"golang.org/x/exp/slog"
 )
 
 type CompleteTodoRequest struct {

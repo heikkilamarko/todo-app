@@ -2,9 +2,8 @@ package internal
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
-
-	"golang.org/x/exp/slog"
 )
 
 type CreateTodoRequest struct {

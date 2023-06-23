@@ -2,11 +2,11 @@ package internal
 
 import (
 	"context"
+	"log/slog"
 	"net/http"
 	"strings"
 
 	"github.com/hashicorp/cap/jwt"
-	"golang.org/x/exp/slog"
 )
 
 type JWTMiddlewareConfig struct {

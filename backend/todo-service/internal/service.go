@@ -4,13 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"embed"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	"github.com/nats-io/nats.go"
-	"golang.org/x/exp/slog"
 
 	// PostgreSQL driver
 	_ "github.com/jackc/pgx/v4/stdlib"

@@ -1,11 +1,11 @@
 package internal
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/go-jose/go-jose/v3"
 	"github.com/go-jose/go-jose/v3/jwt"
-	"golang.org/x/exp/slog"
 )
 
 type tokenClaims struct {
