@@ -9,20 +9,26 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	c, err := client.NewClient(client.Options{})
 	if err != nil {
-		log.Fatalln("unable to create temporal client", err)
+		log.Fatalln("create temporal client:", err)
 	}
 	defer c.Close()
 
-	options := client.StartWorkflowOptions{
-		ID:           internal.WorkflowID,
-		TaskQueue:    internal.TaskQueueWorker,
-		CronSchedule: "*/1 * * * *",
-	}
-
-	_, err = c.ExecuteWorkflow(context.Background(), options, internal.RemoveTodosWorkflow)
+	_, err = c.ScheduleClient().Create(ctx, client.ScheduleOptions{
+		ID: internal.ScheduleID,
+		Spec: client.ScheduleSpec{
+			CronExpressions: []string{"*/1 * * * *"},
+		},
+		Action: &client.ScheduleWorkflowAction{
+			ID:        internal.WorkflowID,
+			Workflow:  internal.RemoveTodosWorkflow,
+			TaskQueue: internal.TaskQueue,
+		},
+	})
 	if err != nil {
-		log.Fatalln("unable to start cron workflow", err)
+		log.Fatalln("create schedule:", err)
 	}
 }

@@ -9,16 +9,16 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+
 	c, err := client.NewClient(client.Options{})
 	if err != nil {
-		log.Fatalln("unable to create temporal client", err)
+		log.Fatalln("create temporal client:", err)
 	}
 	defer c.Close()
 
-	err = c.CancelWorkflow(context.Background(), internal.WorkflowID, "")
+	err = c.ScheduleClient().GetHandle(ctx, internal.ScheduleID).Delete(ctx)
 	if err != nil {
-		log.Fatalln("unable to cancel workflow execution", err)
+		log.Fatalln("delete schedule:", err)
 	}
-
-	log.Printf("workflow execution cancelled (ID: '%s')", internal.WorkflowID)
 }

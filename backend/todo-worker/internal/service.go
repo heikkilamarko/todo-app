@@ -119,7 +119,7 @@ func (s *Service) initTemporal() error {
 
 	a := Activities{s.DB}
 
-	tw := worker.New(tc, TaskQueueWorker, worker.Options{})
+	tw := worker.New(tc, TaskQueue, worker.Options{})
 	tw.RegisterWorkflow(RemoveTodosWorkflow)
 	tw.RegisterActivity(a.RemoveTodos)
 

@@ -1,6 +1,7 @@
 package internal
 
 const (
-	TaskQueueWorker = "TASK_QUEUE_WORKER"
-	WorkflowID      = "REMOVE_TODOS"
+	ScheduleID = "REMOVE_TODOS"
+	WorkflowID = "REMOVE_TODOS"
+	TaskQueue  = "REMOVE_TODOS"
 )
