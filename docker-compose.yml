@@ -270,6 +270,25 @@ services:
     depends_on:
       - db
 
+  keycloak-configure:
+    build:
+      context: ./backend/keycloak/configure
+      dockerfile: Dockerfile
+    image: todo-app/keycloak-configure
+    container_name: todo-app-keycloak-configure
+    labels:
+      - "com.todo-app.service=keycloak-configure"
+      - "com.todo-app.monitor"
+    deploy:
+      restart_policy:
+        condition: on-failure
+    env_file:
+      - ./env/keycloak-configure.env
+    networks:
+      - todo-app
+    depends_on:
+      - keycloak
+
   loki:
     build: ./monitor/loki
     image: todo-app/loki

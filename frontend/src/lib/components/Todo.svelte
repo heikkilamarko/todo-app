@@ -1,6 +1,5 @@
 <script>
 	import { fly } from 'svelte/transition';
-	import CheckLgIcon from 'bootstrap-icons/icons/check-lg.svg';
 	import { stores } from '$lib/shared/stores.js';
 
 	export let todo;
@@ -39,11 +38,10 @@
 		{#if !isReadOnly}
 			<button
 				type="button"
-				class="btn btn-outline-primary rounded-pill px-3"
+				class="btn btn-sm btn-outline-primary rounded-pill px-3"
 				disabled={!canComplete}
 				on:click={handleComplete}
 			>
-				<CheckLgIcon />
 				Complete
 			</button>
 		{/if}

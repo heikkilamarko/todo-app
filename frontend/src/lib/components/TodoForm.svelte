@@ -1,5 +1,4 @@
 <script>
-	import PlusLgIcon from 'bootstrap-icons/icons/plus-lg.svg';
 	import Offcanvas from './Offcanvas.svelte';
 	import { stores } from '$lib/shared/stores.js';
 
@@ -36,7 +35,6 @@
 </script>
 
 <button class="btn btn-primary rounded-pill px-3" type="button" on:click={toggleOffcanvas}>
-	<PlusLgIcon />
 	New Todo
 </button>
 
@@ -69,7 +67,6 @@
 				</div>
 			</div>
 			<button type="submit" class="btn btn-primary rounded-pill px-3" disabled={!canCreate}>
-				<PlusLgIcon />
 				Create
 			</button>
 		</form>
