@@ -108,7 +108,7 @@ func (s *Service) initDB(ctx context.Context) error {
 }
 
 func (s *Service) initTemporal() error {
-	tc, err := client.NewClient(client.Options{
+	tc, err := client.Dial(client.Options{
 		HostPort: s.Config.TemporalHostPort,
 		Logger:   s.Logger,
 	})
