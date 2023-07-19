@@ -1,6 +1,6 @@
 module todo-worker
 
-go 1.21rc2
+go 1.21rc3
 
 require (
 	github.com/jackc/pgx/v4 v4.18.1
