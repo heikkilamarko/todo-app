@@ -3,19 +3,19 @@ package internal
 import (
 	"encoding/json"
 
-	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
 )
 
 type NATSMessageParser struct {
 	Validator *SchemaValidator
 }
 
-func (p *NATSMessageParser) Parse(m *nats.Msg, model any) error {
-	if err := p.Validator.Validate(m.Subject, m.Data); err != nil {
+func (p *NATSMessageParser) Parse(msg jetstream.Msg, model any) error {
+	if err := p.Validator.Validate(msg.Subject(), msg.Data()); err != nil {
 		return err
 	}
 
-	if err := json.Unmarshal(m.Data, model); err != nil {
+	if err := json.Unmarshal(msg.Data(), model); err != nil {
 		return err
 	}
 

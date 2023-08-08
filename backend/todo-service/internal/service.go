@@ -147,8 +147,8 @@ func (s *Service) initMessageSubscriber() {
 	pub := NewCentrifugoMessagePublisher(s.Config)
 
 	options := &NATSMessageSubscriberOptions{
-		Subject:   "todo.*",
-		Durable:   "todo",
+		Stream:    "todo",
+		Consumer:  "todo",
 		BatchSize: 1,
 		Handlers: map[string]NATSMessageHandler{
 			"todo.create":   &TodoCreateHandler{parser, repo, pub, s.Logger},

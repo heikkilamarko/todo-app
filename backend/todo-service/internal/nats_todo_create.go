@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
 )
 
 type TodoCreateHandler struct {
@@ -14,12 +14,12 @@ type TodoCreateHandler struct {
 	Logger *slog.Logger
 }
 
-func (h *TodoCreateHandler) Handle(ctx context.Context, m *nats.Msg) error {
-	_ = m.Ack()
+func (h *TodoCreateHandler) Handle(ctx context.Context, msg jetstream.Msg) error {
+	_ = msg.Ack()
 
 	message := &TodoCreateMessage{}
 
-	if err := h.Parser.Parse(m, message); err != nil {
+	if err := h.Parser.Parse(msg, message); err != nil {
 		h.Logger.Error(err.Error())
 		return err
 	}

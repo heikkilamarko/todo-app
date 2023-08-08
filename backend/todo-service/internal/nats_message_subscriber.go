@@ -5,11 +5,12 @@ import (
 	"log/slog"
 
 	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
 )
 
 type NATSMessageSubscriberOptions struct {
-	Subject   string
-	Durable   string
+	Stream    string
+	Consumer  string
 	BatchSize int
 	Handlers  map[string]NATSMessageHandler
 }
@@ -21,12 +22,12 @@ type NATSMessageSubscriber struct {
 }
 
 func (s *NATSMessageSubscriber) Subscribe(ctx context.Context) error {
-	js, err := s.Conn.JetStream()
+	js, err := jetstream.New(s.Conn)
 	if err != nil {
 		return err
 	}
 
-	sub, err := js.PullSubscribe(s.Options.Subject, s.Options.Durable)
+	con, err := js.Consumer(ctx, s.Options.Stream, s.Options.Consumer)
 	if err != nil {
 		return err
 	}
@@ -42,24 +43,24 @@ func (s *NATSMessageSubscriber) Subscribe(ctx context.Context) error {
 			default:
 			}
 
-			messages, err := sub.Fetch(s.Options.BatchSize)
+			batch, err := con.Fetch(s.Options.BatchSize)
 			if err != nil {
 				continue
 			}
 
-			for _, m := range messages {
-				s.Logger.Info("message received", "subject", m.Subject)
+			for msg := range batch.Messages() {
+				s.Logger.Info("message received", "subject", msg.Subject())
 
-				handler, ok := s.Options.Handlers[m.Subject]
+				handler, ok := s.Options.Handlers[msg.Subject()]
 				if ok {
-					if err := handler.Handle(ctx, m); err != nil {
+					if err := handler.Handle(ctx, msg); err != nil {
 						s.Logger.Error(err.Error())
 					}
 				} else {
-					s.Logger.Info("handler not found", "subject", m.Subject)
+					s.Logger.Info("handler not found", "subject", msg.Subject())
 				}
 
-				s.Logger.Info("message handled", "subject", m.Subject)
+				s.Logger.Info("message handled", "subject", msg.Subject())
 			}
 		}
 	}()
