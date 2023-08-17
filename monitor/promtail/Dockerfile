@@ -1,3 +1,3 @@
-FROM grafana/promtail:2.8.2
+FROM grafana/promtail:2.8.4
 COPY ./promtail.yml /etc/promtail/config.yml
 CMD ["-config.file=/etc/promtail/config.yml", "-config.expand-env=true"]

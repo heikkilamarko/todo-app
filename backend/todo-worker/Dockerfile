@@ -1,4 +1,4 @@
-FROM golang:1.21-rc-alpine AS build
+FROM golang AS build
 COPY . .
 ENV GOPATH=""
 ENV CGO_ENABLED=0

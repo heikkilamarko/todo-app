@@ -28,8 +28,8 @@
 
 <div
 	class="card my-4"
-	in:fly|local={{ x: 100, duration: 600 }}
-	out:fly|local={{ x: 500, duration: 300 }}
+	in:fly={{ x: 100, duration: 600 }}
+	out:fly={{ x: 500, duration: 300 }}
 >
 	<div class="card-body">
 		<h4 class="card-title">{todo.name}</h4>
