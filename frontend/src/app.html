@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content="Todo App" />
 		<meta name="theme-color" content="#6610f2" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.ico" />
@@ -13,7 +13,7 @@
 		<title>Todo App</title>
 		%sveltekit.head%
 	</head>
-	<body>
-		<div>%sveltekit.body%</div>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

@@ -2,7 +2,7 @@
 set -e
 
 # fail fast
-curl -s $MINIO_URL > /dev/null
+# curl -s $MINIO_URL > /dev/null
 
 set +o history
 
