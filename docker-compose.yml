@@ -17,7 +17,10 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     networks:
-      - todo-app
+      todo-app:
+        aliases:
+          - www.todo-app.com
+          - auth.todo-app.com
 
   todo-app:
     build: ./frontend

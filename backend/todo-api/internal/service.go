@@ -234,8 +234,7 @@ func (s *Service) serve(ctx context.Context) error {
 func (s *Service) jwt(ctx context.Context) func(http.Handler) http.Handler {
 	c := JWTMiddlewareConfig{
 		Issuer:     s.Config.AuthIssuer,
-		Iss:        s.Config.AuthClaimIss,
-		Aud:        []string{s.Config.AuthClaimAud},
+		Audience:   []string{s.Config.AuthAudience},
 		ContextKey: ContextKeyAccessToken,
 		Logger:     s.Logger,
 	}

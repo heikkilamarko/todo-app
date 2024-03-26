@@ -11,8 +11,7 @@ import (
 
 type JWTMiddlewareConfig struct {
 	Issuer     string
-	Iss        string
-	Aud        []string
+	Audience   []string
 	ContextKey any
 	Logger     *slog.Logger
 }
@@ -29,8 +28,8 @@ func JWTMiddleware(ctx context.Context, config *JWTMiddlewareConfig) func(next h
 	}
 
 	expected := jwt.Expected{
-		Issuer:    config.Iss,
-		Audiences: config.Aud,
+		Issuer:    config.Issuer,
+		Audiences: config.Audience,
 	}
 
 	return func(next http.Handler) http.Handler {
