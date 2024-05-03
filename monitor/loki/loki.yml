@@ -3,41 +3,31 @@ auth_enabled: false
 server:
   http_listen_port: 3100
 
-ingester:
-  lifecycler:
-    ring:
-      kvstore:
-        store: memberlist
-      replication_factor: 1
-  wal:
-    dir: /loki/wal
+common:
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: inmemory
+  replication_factor: 1
+  path_prefix: /loki
 
 schema_config:
   configs:
-    - from: 2020-01-01
+    - from: 2020-05-15
       store: tsdb
-      object_store: aws
+      object_store: s3
       schema: v13
       index:
         prefix: index_
         period: 24h
 
 storage_config:
+  tsdb_shipper:
+    active_index_directory: /loki/index
+    cache_location: /loki/index-cache
   aws:
     endpoint: ${MINIO_URL}
     bucketnames: ${MINIO_BUCKET_NAME}
     access_key_id: ${MINIO_ROOT_USER}
     secret_access_key: ${MINIO_ROOT_PASSWORD}
     s3forcepathstyle: true
-
-  tsdb_shipper:
-    active_index_directory: /loki/index
-    cache_location: /loki/index-cache
-
-compactor:
-  working_directory: /loki/compactor
-  compaction_interval: 5m
-
-limits_config:
-  reject_old_samples: true
-  reject_old_samples_max_age: 168h

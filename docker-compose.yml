@@ -283,6 +283,8 @@ services:
     env_file:
       - ./env/minio.env
       - ./env/loki.env
+    volumes:
+      - loki:/loki
     networks:
       - todo-app
     depends_on:
@@ -331,6 +333,7 @@ volumes:
   nats:
   minio:
   grafana:
+  loki:
   promtail:
   caddy_data:
   caddy_config:
