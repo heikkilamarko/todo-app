@@ -15,9 +15,9 @@ ingester:
 schema_config:
   configs:
     - from: 2020-01-01
-      store: boltdb-shipper
+      store: tsdb
       object_store: aws
-      schema: v11
+      schema: v13
       index:
         prefix: index_
         period: 24h
@@ -30,17 +30,14 @@ storage_config:
     secret_access_key: ${MINIO_ROOT_PASSWORD}
     s3forcepathstyle: true
 
-  boltdb_shipper:
+  tsdb_shipper:
     active_index_directory: /loki/index
     cache_location: /loki/index-cache
-    shared_store: aws
 
 compactor:
   working_directory: /loki/compactor
-  shared_store: s3
   compaction_interval: 5m
 
 limits_config:
-  enforce_metric_name: false
   reject_old_samples: true
   reject_old_samples_max_age: 168h
