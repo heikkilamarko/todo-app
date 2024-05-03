@@ -290,17 +290,17 @@ services:
     depends_on:
       - minio
 
-  promtail:
-    build: ./monitor/promtail
-    image: todo-app/promtail
-    container_name: todo-app-promtail
+  alloy:
+    build: ./monitor/alloy
+    image: todo-app/alloy
+    container_name: todo-app-alloy
     deploy:
       restart_policy:
         condition: on-failure
     env_file:
-      - ./env/promtail.env
+      - ./env/alloy.env
     volumes:
-      - promtail:/tmp/promtail
+      - alloy:/var/lib/alloy/data
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - todo-app
@@ -334,6 +334,6 @@ volumes:
   minio:
   grafana:
   loki:
-  promtail:
+  alloy:
   caddy_data:
   caddy_config:

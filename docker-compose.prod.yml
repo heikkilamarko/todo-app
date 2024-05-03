@@ -57,7 +57,7 @@ services:
       restart_policy:
         condition: any
 
-  promtail:
+  alloy:
     deploy:
       restart_policy:
         condition: any

@@ -34,7 +34,7 @@ See [Configuration and Secrets Management](config/) for details.
   - username: `admin`
   - password: `S3c_r3t!`
 - [Loki](https://grafana.com/oss/loki/)
-- [Promtail](https://grafana.com/docs/loki/latest/clients/promtail/)
+- [Alloy](https://grafana.com/oss/alloy-opentelemetry-collector/)
 - [MinIO](https://min.io/)
   - URL: http://minio.todo-app.com
   - username: `console`

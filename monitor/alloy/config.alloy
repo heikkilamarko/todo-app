@@ -1,0 +1,141 @@
+discovery.docker "containers" {
+	host             = "unix:///var/run/docker.sock"
+	refresh_interval = "5s"
+
+	filter {
+		name   = "label"
+		values = ["com.todo-app.monitor"]
+	}
+}
+
+loki.process "containers" {
+	forward_to = [loki.write.default.receiver]
+
+	stage.docker { }
+
+	stage.static_labels {
+		values = {
+			env    = env("APP_ENV"),
+			system = "todo-app",
+		}
+	}
+
+	stage.match {
+		selector = "{service=~\"(todo-api|todo-service|todo-worker)\"}"
+
+		stage.json {
+			expressions = {
+				level = "level",
+				ts    = "time",
+			}
+		}
+
+		stage.template {
+			source   = "level"
+			template = "{{ .Value | ToLower }}"
+		}
+
+		stage.labels {
+			values = {
+				level = null,
+			}
+		}
+
+		stage.static_labels {
+			values = {
+				tech = "go",
+			}
+		}
+
+		stage.timestamp {
+			source = "ts"
+			format = "RFC3339Nano"
+		}
+	}
+
+	stage.match {
+		selector = "{service=~\"(todo-app|caddy)\"}"
+
+		stage.json {
+			expressions = {
+				level = "level",
+				ts    = "ts",
+			}
+		}
+
+		stage.labels {
+			values = {
+				level = null,
+			}
+		}
+
+		stage.static_labels {
+			values = {
+				tech = "caddy",
+			}
+		}
+
+		stage.timestamp {
+			source           = "ts"
+			format           = "RFC3339Nano"
+			fallback_formats = ["Unix"]
+		}
+	}
+
+	stage.match {
+		selector = "{service=~\"(keycloak)\"}"
+
+		stage.json {
+			expressions = {
+				level = "level",
+				ts    = "timestamp",
+			}
+		}
+
+		stage.template {
+			source   = "level"
+			template = "{{ .Value | ToLower }}"
+		}
+
+		stage.labels {
+			values = {
+				level = null,
+			}
+		}
+
+		stage.static_labels {
+			values = {
+				tech = "keycloak",
+			}
+		}
+
+		stage.timestamp {
+			source = "ts"
+			format = "RFC3339Nano"
+		}
+	}
+}
+
+discovery.relabel "containers" {
+	targets = []
+
+	rule {
+		source_labels = ["__meta_docker_container_label_com_todo_app_service"]
+		target_label  = "service"
+	}
+}
+
+loki.source.docker "containers" {
+	host             = "unix:///var/run/docker.sock"
+	targets          = discovery.docker.containers.targets
+	forward_to       = [loki.process.containers.receiver]
+	relabel_rules    = discovery.relabel.containers.rules
+	refresh_interval = "5s"
+}
+
+loki.write "default" {
+	endpoint {
+		url = env("LOKI_URL")
+	}
+	external_labels = {}
+}
