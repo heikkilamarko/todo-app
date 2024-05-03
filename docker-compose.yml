@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   caddy:
     build: ./backend/caddy/dev
@@ -211,30 +209,13 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-    command: server /data
+    command: server /data --console-address ":9001"
     env_file:
       - ./env/minio.env
     volumes:
       - minio:/data
     networks:
       - todo-app
-
-  minio-console:
-    image: minio/console
-    container_name: todo-app-minio-console
-    labels:
-      - "com.todo-app.service=minio-console"
-      - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
-    command: server
-    env_file:
-      - ./env/minio-console.env
-    networks:
-      - todo-app
-    depends_on:
-      - minio
 
   minio-migrate:
     build: ./monitor/minio/migrate

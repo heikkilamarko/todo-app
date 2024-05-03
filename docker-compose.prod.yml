@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   caddy:
     build: ./backend/caddy/prod
@@ -50,11 +48,6 @@ services:
         condition: any
 
   minio:
-    deploy:
-      restart_policy:
-        condition: any
-
-  minio-console:
     deploy:
       restart_policy:
         condition: any

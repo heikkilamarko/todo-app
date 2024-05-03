@@ -12,20 +12,20 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "3.0.1",
-		"@sveltejs/kit": "2.5.4",
+		"@sveltejs/kit": "2.5.7",
 		"prettier": "3.2.5",
-		"prettier-plugin-svelte": "3.2.2",
-		"sass": "1.72.0",
-		"svelte": "4.2.12",
-		"svelte-check": "3.6.8",
-		"typescript": "5.4.3",
-		"vite": "5.2.6"
+		"prettier-plugin-svelte": "3.2.3",
+		"sass": "1.76.0",
+		"svelte": "4.2.15",
+		"svelte-check": "3.7.1",
+		"typescript": "5.4.5",
+		"vite": "5.2.11"
 	},
 	"dependencies": {
 		"bootstrap": "5.3.3",
 		"bootstrap-icons": "1.11.3",
-		"centrifuge": "5.0.2",
-		"keycloak-js": "24.0.2",
-		"ky": "1.2.3"
+		"centrifuge": "5.1.1",
+		"keycloak-js": "24.0.3",
+		"ky": "1.2.4"
 	}
 }

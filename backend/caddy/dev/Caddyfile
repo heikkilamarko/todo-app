@@ -80,6 +80,6 @@
 		host minio.{$CADDY_DOMAIN}
 	}
 	handle @minio {
-		reverse_proxy http://minio-console:9090
+		reverse_proxy http://minio:9001
 	}
 }

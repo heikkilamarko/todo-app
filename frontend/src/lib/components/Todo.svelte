@@ -26,11 +26,7 @@
 	$: canComplete = !$loading;
 </script>
 
-<div
-	class="card my-4"
-	in:fly={{ x: 100, duration: 600 }}
-	out:fly={{ x: 500, duration: 300 }}
->
+<div class="card my-4" in:fly={{ x: 100, duration: 600 }} out:fly={{ x: 500, duration: 300 }}>
 	<div class="card-body">
 		<h4 class="card-title">{todo.name}</h4>
 		<p class="text-muted" title={createdAtIso}>{createdAtLoc}</p>
