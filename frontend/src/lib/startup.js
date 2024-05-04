@@ -1,5 +1,6 @@
 import { stores } from './shared/stores.js';
 import config from './shared/config.js';
+import logging from './shared/logging.js';
 import auth from './shared/auth.js';
 import user from './shared/user.js';
 import toasterStore from './stores/toasterStore.js';
@@ -13,11 +14,13 @@ export async function startup() {
 	if (startupOk) return;
 	await initStores();
 	startupOk = true;
+	console.info('app startup ready');
 }
 
 async function initStores() {
 	try {
 		stores.config = await config();
+		stores.logging = logging();
 		stores.auth = await auth();
 		stores.user = await user();
 		stores.toasterStore = toasterStore();
@@ -26,6 +29,6 @@ async function initStores() {
 		stores.notificationStore = notificationStore();
 	} catch (err) {
 		console.error(err);
-		throw new Error('An error occurred while starting the application');
+		throw new Error('app startup error');
 	}
 }

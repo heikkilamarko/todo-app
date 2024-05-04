@@ -16,7 +16,8 @@ function devConfig() {
 			clientId: env.PUBLIC_AUTH_CLIENT_ID
 		},
 		profileUrl: env.PUBLIC_PROFILE_URL,
-		dashboardUrl: env.PUBLIC_DASHBOARD_URL
+		dashboardUrl: env.PUBLIC_DASHBOARD_URL,
+		loggingUrl: env.PUBLIC_LOGGING_URL
 	};
 }
 

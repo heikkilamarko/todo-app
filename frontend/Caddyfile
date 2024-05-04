@@ -27,7 +27,8 @@
 					"clientId": "{$PUBLIC_AUTH_CLIENT_ID}"
 				}				,
 				"profileUrl": "{$PUBLIC_PROFILE_URL}",
-				"dashboardUrl": "{$PUBLIC_DASHBOARD_URL}"
+				"dashboardUrl": "{$PUBLIC_DASHBOARD_URL}",
+				"loggingUrl": "{$PUBLIC_LOGGING_URL}"
 			}			`
 		}
 	}

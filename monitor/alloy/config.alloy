@@ -1,3 +1,15 @@
+faro.receiver "default" {
+	server {
+		listen_address       = "0.0.0.0"
+		listen_port          = 12347
+		cors_allowed_origins = ["*"]
+	}
+
+	output {
+		logs = [loki.process.ui.receiver]
+	}
+}
+
 discovery.docker "containers" {
 	host             = "unix:///var/run/docker.sock"
 	refresh_interval = "5s"
@@ -5,6 +17,18 @@ discovery.docker "containers" {
 	filter {
 		name   = "label"
 		values = ["com.todo-app.monitor"]
+	}
+}
+
+loki.process "ui" {
+	forward_to = [loki.write.default.receiver]
+
+	stage.static_labels {
+		values = {
+			env     = env("APP_ENV"),
+			system  = "todo-app",
+			service = "ui",
+		}
 	}
 }
 
