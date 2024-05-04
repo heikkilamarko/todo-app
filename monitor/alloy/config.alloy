@@ -10,16 +10,6 @@ faro.receiver "default" {
 	}
 }
 
-discovery.docker "containers" {
-	host             = "unix:///var/run/docker.sock"
-	refresh_interval = "5s"
-
-	filter {
-		name   = "label"
-		values = ["com.todo-app.monitor"]
-	}
-}
-
 loki.process "ui" {
 	forward_to = [loki.write.default.receiver]
 
@@ -29,6 +19,34 @@ loki.process "ui" {
 			system  = "todo-app",
 			service = "ui",
 		}
+	}
+
+	stage.logfmt {
+		mapping = {
+			level = "level",
+			ts    = "timestamp",
+		}
+	}
+
+	stage.labels {
+		values = {
+			level = "",
+		}
+	}
+
+	stage.timestamp {
+		source = "ts"
+		format = "2006-01-02 15:04:05.999999999 -0700 MST"
+	}
+}
+
+discovery.docker "containers" {
+	host             = "unix:///var/run/docker.sock"
+	refresh_interval = "5s"
+
+	filter {
+		name   = "label"
+		values = ["com.todo-app.monitor"]
 	}
 }
 
@@ -61,7 +79,7 @@ loki.process "containers" {
 
 		stage.labels {
 			values = {
-				level = null,
+				level = "",
 			}
 		}
 
@@ -89,7 +107,7 @@ loki.process "containers" {
 
 		stage.labels {
 			values = {
-				level = null,
+				level = "",
 			}
 		}
 
@@ -123,7 +141,7 @@ loki.process "containers" {
 
 		stage.labels {
 			values = {
-				level = null,
+				level = "",
 			}
 		}
 
