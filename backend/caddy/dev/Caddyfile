@@ -53,6 +53,13 @@
 		reverse_proxy http://grafana:3000
 	}
 
+	@alloy {
+		host alloy.{$CADDY_DOMAIN}
+	}
+	handle @alloy {
+		reverse_proxy http://alloy:12345
+	}
+
 	@faro {
 		host faro.{$CADDY_DOMAIN}
 	}

@@ -57,6 +57,7 @@ See [Configuration and Secrets Management](config/) for details.
 127.0.0.1    centrifugo.todo-app.com
 127.0.0.1    temporal.todo-app.com
 127.0.0.1    grafana.todo-app.com
+127.0.0.1    alloy.todo-app.com
 127.0.0.1    faro.todo-app.com
 127.0.0.1    minio.todo-app.com
 ```
