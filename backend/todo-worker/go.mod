@@ -3,7 +3,7 @@ module todo-worker
 go 1.22.3
 
 require (
-	github.com/jackc/pgx/v5 v5.5.5
+	github.com/jackc/pgx/v5 v5.6.0
 	go.temporal.io/sdk v1.26.1
 )
 
