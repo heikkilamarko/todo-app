@@ -236,9 +236,7 @@ services:
       - minio
 
   keycloak:
-    build:
-      context: ./backend/keycloak/docker
-      dockerfile: Dockerfile
+    build: ./backend/keycloak/docker
     image: todo-app/keycloak
     container_name: todo-app-keycloak
     labels:

@@ -1,6 +1,6 @@
 module todo-service
 
-go 1.22.3
+go 1.22.4
 
 require (
 	github.com/centrifugal/gocent/v3 v3.2.0
