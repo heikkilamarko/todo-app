@@ -1,5 +1,5 @@
-github.com/centrifugal/gocent/v3 v3.2.0 h1:s+gxnvGWKIOZYGW8SAfGUUShY0r0DuRpnKqhh3h1Ps0=
-github.com/centrifugal/gocent/v3 v3.2.0/go.mod h1:8YWDQG3sX0X1g+BaotihbhawPs6zyYGUxUEk8Ng5a2g=
+github.com/centrifugal/gocent/v3 v3.3.0 h1:xVkqMMtBiGcvV3OGqlTlayWdJoorNoVBQ3X9THKLe14=
+github.com/centrifugal/gocent/v3 v3.3.0/go.mod h1:8YWDQG3sX0X1g+BaotihbhawPs6zyYGUxUEk8Ng5a2g=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/jackc/pgpassfile v1.0.0 h1:/6Hmqy13Ss2zCq62VdNG8tM1wchn8zjSGOBJ6icpsIM=
 github.com/jackc/pgpassfile v1.0.0/go.mod h1:CEx0iS5ambNFdcRtxPj5JhEz+xB6uRky5eyVu/W2HEg=
