@@ -8,7 +8,7 @@
 		"prettier": "3.3.3"
 	},
 	"dependencies": {
-		"@asyncapi/parser": "3.2.1",
+		"@asyncapi/parser": "3.2.2",
 		"chalk": "5.3.0",
 		"yaml": "2.5.0"
 	}

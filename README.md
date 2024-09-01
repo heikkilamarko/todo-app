@@ -8,7 +8,7 @@ Todo App is a **hobby project** that is primarily focused around being a playgro
 
 ## Secrets Management
 
-This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://github.com/mozilla/sops#22encrypting-using-age) for managing secrets.
+This repository uses [SOPS](https://getsops.io/) with [age](https://github.com/mozilla/sops#22encrypting-using-age) for managing secrets.
 
 See [Configuration and Secrets Management](config/) for details.
 
@@ -67,7 +67,7 @@ See [Configuration and Secrets Management](config/) for details.
 3. Run Docker Compose
 
 ```bash
-> docker compose up --build -d
+docker compose up --build -d
 ```
 
 4. Open the App in browser: http://todo-app.com

@@ -1,11 +1,11 @@
 module todo-service
 
-go 1.23rc2
+go 1.23.0
 
 require (
 	github.com/centrifugal/gocent/v3 v3.3.0
 	github.com/jackc/pgx/v5 v5.6.0
-	github.com/nats-io/nats.go v1.36.0
+	github.com/nats-io/nats.go v1.37.0
 	github.com/xeipuuv/gojsonschema v1.2.0
 )
 

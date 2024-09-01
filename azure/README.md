@@ -5,12 +5,12 @@
 ```bash
 # Generate SSH key pair
 
-> ssh-keygen -t rsa -b 4096 -f <keyfile>
+ssh-keygen -t rsa -b 4096 -f <keyfile>
 
 # Outputs:
 
-- <keyfile>        # private key file
-- <keyfile>.pub    # public key file
+<keyfile>        # private key file
+<keyfile>.pub    # public key file
 ```
 
 ```bash
@@ -30,8 +30,8 @@ Host todo-app
 ## Create and Set Docker Context
 
 ```bash
-> docker context create todo-app --docker "host=ssh://todo-app"
-> docker context use todo-app
+docker context create todo-app --docker "host=ssh://todo-app"
+docker context use todo-app
 ```
 
 ## Run Terraform
@@ -42,11 +42,11 @@ Host todo-app
 # Before running the below commands, set
 # values ​​to variables in 'terraform.tfvars'
 
-> terraform init
-> terraform apply
+terraform init
+terraform apply
 
 # Test SSH connection
-> ssh todo-app
+ssh todo-app
 ```
 
 ## Decrypt Secrets
@@ -54,7 +54,7 @@ Host todo-app
 ```bash
 # In repository root directory
 
-> config/decrypt_secrets.sh config/prod env
+config/decrypt_secrets.sh config/prod env
 ```
 
 ## Configure TLS Settings
@@ -72,8 +72,8 @@ CADDY_TLS_GODADDY_TOKEN=
 ```bash
 # In repository root directory
 
-> docker compose -f docker-compose.yml -f docker-compose.prod.yml build
-> docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml todo-app
+docker compose -f docker-compose.yml -f docker-compose.prod.yml build
+docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml todo-app
 ```
 
 ## Configure Keycloak

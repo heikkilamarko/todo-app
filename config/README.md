@@ -1,6 +1,6 @@
 # Configuration and Secrets Management
 
-This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://github.com/mozilla/sops#22encrypting-using-age) for managing secrets.
+This repository uses [SOPS](https://getsops.io/) with [age](https://github.com/mozilla/sops#22encrypting-using-age) for managing secrets.
 
 [age docs](https://age-encryption.org/)
 
@@ -8,20 +8,20 @@ This repository uses [SOPS](https://github.com/mozilla/sops) with [age](https://
 
 ## Installing and Configuring SOPS
 
-1. Install [SOPS](https://github.com/mozilla/sops).
+1. Install [SOPS](https://getsops.io/).
 2. Copy the `keys.txt` file to the [correct location](https://github.com/mozilla/sops#22encrypting-using-age) on your computer.
 
 ## Encrypting Secrets
 
 ```bash
 # Encrypt a file
-> sops -e <file> > <encrypted_file>
+sops -e <file> > <encrypted_file>
 
 # Encrypt a file (in-place)
-> sops -e -i <file>
+sops -e -i <file>
 
 # Encrypt all files (in-place) in a directory
-> ./encrypt_secrets.sh <directory>
+./encrypt_secrets.sh <directory>
 ```
 
 ## Decrypting Todo App Secrets
@@ -30,10 +30,10 @@ Decrypt secrets into the `../env` directory.
 
 ```bash
 # dev environment
-> ./decrypt_secrets.sh dev ../env
+./decrypt_secrets.sh dev ../env
 
 # prod environment
-> ./decrypt_secrets.sh prod ../env
+./decrypt_secrets.sh prod ../env
 ```
 
 ## Tips
@@ -50,8 +50,8 @@ export EDITOR="code --wait"
 ### Installing SOPS on Linux
 
 ```bash
-> sudo wget https://github.com/mozilla/sops/releases/download/VERSION/sops-VERSION.linux -O /usr/local/bin/sops
-> sudo chmod +x /usr/local/bin/sops
+sudo wget https://github.com/mozilla/sops/releases/download/VERSION/sops-VERSION.linux -O /usr/local/bin/sops
+sudo chmod +x /usr/local/bin/sops
 ```
 
-Substitute `VERSION` with the version of SOPS you want to use. For example: `v3.7.3`
+Substitute `VERSION` with the version of SOPS you want to use. For example: `v3.9.0`
