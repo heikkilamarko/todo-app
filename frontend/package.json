@@ -11,22 +11,22 @@
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-static": "3.0.4",
-		"@sveltejs/kit": "2.5.25",
+		"@sveltejs/adapter-static": "3.0.5",
+		"@sveltejs/kit": "2.6.4",
 		"prettier": "3.3.3",
-		"prettier-plugin-svelte": "3.2.6",
-		"sass": "1.77.8",
+		"prettier-plugin-svelte": "3.2.7",
+		"sass": "1.79.4",
 		"svelte": "4.2.19",
-		"svelte-check": "3.8.6",
-		"typescript": "5.5.4",
-		"vite": "5.4.2"
+		"svelte-check": "4.0.4",
+		"typescript": "5.6.3",
+		"vite": "5.4.8"
 	},
 	"dependencies": {
-		"@grafana/faro-web-sdk": "1.9.1",
+		"@grafana/faro-web-sdk": "1.10.2",
 		"bootstrap": "5.3.3",
 		"bootstrap-icons": "1.11.3",
 		"centrifuge": "5.2.2",
 		"keycloak-js": "25.0.4",
-		"ky": "1.7.1"
+		"ky": "1.7.2"
 	}
 }
