@@ -2,7 +2,7 @@
 	import { fade, fly } from 'svelte/transition';
 	import { backOut } from 'svelte/easing';
 
-	export let toast;
+	let { toast } = $props();
 
 	function getToastType(type) {
 		switch (type) {
@@ -15,7 +15,7 @@
 		}
 	}
 
-	$: toastType = getToastType(toast.type);
+	let toastType = $derived(getToastType(toast.type));
 </script>
 
 <div

@@ -2,12 +2,12 @@
 	import { createEventDispatcher, onDestroy } from 'svelte';
 	import { fly } from 'svelte/transition';
 
-	export let title;
+	let { title, children } = $props();
 
 	const dispatch = createEventDispatcher();
 	const close = () => dispatch('close');
 
-	let offcanvasEl;
+	let offcanvasEl = $state();
 
 	function handleKeydown(e) {
 		if (e.key === 'Escape') {
@@ -39,7 +39,7 @@
 	}
 </script>
 
-<svelte:window on:keydown={handleKeydown} />
+<svelte:window onkeydown={handleKeydown} />
 
 <div
 	class="offcanvas offcanvas-end show"
@@ -51,10 +51,10 @@
 >
 	<div class="offcanvas-header">
 		<h5 id="offcanvas-label" class="offcanvas-title">{title}</h5>
-		<button type="button" class="btn-close text-reset" aria-label="Close" on:click={close} />
+		<button type="button" class="btn-close text-reset" aria-label="Close" onclick={close}></button>
 	</div>
 	<div class="offcanvas-body">
-		<slot />
+		{@render children?.()}
 	</div>
 </div>
 

@@ -1,4 +1,5 @@
 <script>
+	import { preventDefault } from 'svelte/legacy';
 	import Offcanvas from './Offcanvas.svelte';
 	import { stores } from '$lib/shared/stores.js';
 
@@ -8,7 +9,7 @@
 		todoStore: { loading, createTodo }
 	} = stores;
 
-	let showOffcanvas = false;
+	let showOffcanvas = $state(false);
 
 	async function handleSubmit() {
 		try {
@@ -31,16 +32,16 @@
 		showOffcanvas = !showOffcanvas;
 	}
 
-	$: canCreate = $isValid && !$loading;
+	let canCreate = $derived($isValid && !$loading);
 </script>
 
-<button class="btn btn-primary rounded-pill px-3" type="button" on:click={toggleOffcanvas}>
+<button class="btn btn-primary rounded-pill px-3" type="button" onclick={toggleOffcanvas}>
 	New Todo
 </button>
 
 {#if showOffcanvas}
 	<Offcanvas title="New Todo" on:close={closeOffcanvas}>
-		<form spellcheck="false" autocomplete="off" on:submit|preventDefault={handleSubmit}>
+		<form spellcheck="false" autocomplete="off" onsubmit={preventDefault(handleSubmit)}>
 			<div class="mb-3">
 				<label for="name" class="form-label">Name <span class="text-danger">*</span></label>
 				<input
@@ -53,7 +54,8 @@
 			</div>
 			<div class="mb-3">
 				<label for="description" class="form-label">Description</label>
-				<textarea class="form-control" id="description" rows="5" bind:value={$description} />
+				<textarea class="form-control" id="description" rows="5" bind:value={$description}
+				></textarea>
 			</div>
 			<div class="mb-3">
 				<div class="form-check">

@@ -6,7 +6,7 @@
 		notificationStore: { connected }
 	} = stores;
 
-	$: show = $connected === false;
+	let show = $derived($connected === false);
 </script>
 
 {#if show}

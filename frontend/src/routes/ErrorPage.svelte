@@ -1,6 +1,12 @@
 <script>
-	export let status = 500;
-	export let message = 'An error occurred while running the application';
+	/**
+	 * @typedef {Object} Props
+	 * @property {number} [status]
+	 * @property {string} [message]
+	 */
+
+	/** @type {Props} */
+	let { status = 500, message = 'An error occurred while running the application' } = $props();
 </script>
 
 <main class="container py-3">

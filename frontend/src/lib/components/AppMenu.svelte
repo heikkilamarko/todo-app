@@ -1,4 +1,5 @@
 <script>
+	import { preventDefault } from 'svelte/legacy';
 	import InfoCircleIcon from 'bootstrap-icons/icons/info-circle.svg';
 	import GithubIcon from 'bootstrap-icons/icons/github.svg';
 	import GridIcon from 'bootstrap-icons/icons/grid.svg';
@@ -62,7 +63,7 @@
 			</a>
 		</li>
 		<li>
-			<a class="dropdown-item" href="/" on:click|preventDefault={() => auth.signOut()}>
+			<a class="dropdown-item" href="/" onclick={preventDefault(() => auth.signOut())}>
 				<SvgIcon icon={PowerIcon} class="text-primary pe-2" />
 				Sign out
 			</a>

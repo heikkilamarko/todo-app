@@ -1,13 +1,21 @@
 <script>
 	import '../app.scss';
-	import 'bootstrap/js/dist/dropdown';
+	import 'bootstrap/js/dist/dropdown.js';
 	import { onMount } from 'svelte';
 	import { startup } from '$lib/startup.js';
 	import Toaster from '$lib/components/Toaster.svelte';
 	import ErrorPage from './ErrorPage.svelte';
 	import AppMenu from '$lib/components/AppMenu.svelte';
+	/**
+	 * @typedef {Object} Props
+	 * @property {import('svelte').Snippet} [children]
+	 */
 
-	let status, message;
+	/** @type {Props} */
+	let { children } = $props();
+
+	let status = $state(),
+		message = $state();
 
 	onMount(async () => {
 		try {
@@ -22,7 +30,7 @@
 
 {#if status === 200}
 	<AppMenu />
-	<slot />
+	{@render children?.()}
 	<Toaster />
 {:else if status === 500}
 	<ErrorPage {status} {message} />

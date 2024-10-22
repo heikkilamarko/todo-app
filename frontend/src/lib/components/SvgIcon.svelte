@@ -1,9 +1,9 @@
 <script>
-	let clazz;
-	export { clazz as class };
-	export let icon;
+	let { class: clazz, icon } = $props();
+
+	const SvelteComponent = $derived(icon);
 </script>
 
 <span class={clazz}>
-	<svelte:component this={icon} />
+	<SvelteComponent />
 </span>

@@ -2,9 +2,14 @@
 	import { fly } from 'svelte/transition';
 	import { stores } from '$lib/shared/stores.js';
 
-	export let todo;
+	/**
+	 * @typedef {Object} Props
+	 * @property {any} todo
+	 * @property {boolean} [isReadOnly]
+	 */
 
-	export let isReadOnly = false;
+	/** @type {Props} */
+	let { todo, isReadOnly = false } = $props();
 
 	const {
 		toasterStore: { showInfo, showError },
@@ -20,10 +25,10 @@
 		}
 	}
 
-	$: createdAtLoc = todo.created_at.toLocaleString();
-	$: createdAtIso = todo.created_at.toISOString();
+	let createdAtLoc = $derived(todo.created_at.toLocaleString());
+	let createdAtIso = $derived(todo.created_at.toISOString());
 
-	$: canComplete = !$loading;
+	let canComplete = $derived(!$loading);
 </script>
 
 <div class="card my-4" in:fly={{ x: 100, duration: 600 }} out:fly={{ x: 500, duration: 300 }}>
@@ -36,7 +41,7 @@
 				type="button"
 				class="btn btn-sm btn-outline-primary rounded-pill px-3"
 				disabled={!canComplete}
-				on:click={handleComplete}
+				onclick={handleComplete}
 			>
 				Complete
 			</button>
