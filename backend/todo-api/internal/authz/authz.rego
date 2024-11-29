@@ -10,7 +10,7 @@ role_permissions := {
 default allow := false
 
 allow if {
-	p := permissions[_]
+	some p in permissions
 	p == input.permission
 }
 

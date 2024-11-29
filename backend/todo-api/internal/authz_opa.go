@@ -10,7 +10,7 @@ import (
 	"github.com/samber/lo"
 )
 
-//go:embed rego/authz.rego
+//go:embed authz/authz.rego
 var authzRego string
 
 type OPAAuthZ struct {
