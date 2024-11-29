@@ -3,24 +3,20 @@
 	import Offcanvas from './Offcanvas.svelte';
 	import { stores } from '$lib/shared/stores.js';
 
-	const {
-		toasterStore: { showInfo, showError },
-		todoFormStore: { name, description, closeOnCreate, todo, isValid, reset },
-		todoStore: { loading, createTodo }
-	} = stores;
+	const { toasterStore, todoFormStore, todoStore } = stores;
 
 	let showOffcanvas = $state(false);
 
 	async function handleSubmit() {
 		try {
-			await createTodo($todo);
-			showInfo('todo create job started');
-			reset();
-			if ($closeOnCreate) {
+			await todoStore.createTodo(todoFormStore.todo);
+			toasterStore.showInfo('todo create job started');
+			todoFormStore.reset();
+			if (todoFormStore.closeOnCreate) {
 				closeOffcanvas();
 			}
 		} catch (error) {
-			showError(`todo create job failed\n${error}`);
+			toasterStore.showError(`todo create job failed\n${error}`);
 		}
 	}
 
@@ -32,7 +28,7 @@
 		showOffcanvas = !showOffcanvas;
 	}
 
-	let canCreate = $derived($isValid && !$loading);
+	let canCreate = $derived(todoFormStore.isValid && !todoStore.loading);
 </script>
 
 <button class="btn btn-primary rounded-pill px-3" type="button" onclick={toggleOffcanvas}>
@@ -49,12 +45,16 @@
 					class="form-control"
 					id="name"
 					placeholder="Name..."
-					bind:value={$name}
+					bind:value={todoFormStore.name}
 				/>
 			</div>
 			<div class="mb-3">
 				<label for="description" class="form-label">Description</label>
-				<textarea class="form-control" id="description" rows="5" bind:value={$description}
+				<textarea
+					class="form-control"
+					id="description"
+					rows="5"
+					bind:value={todoFormStore.description}
 				></textarea>
 			</div>
 			<div class="mb-3">
@@ -63,7 +63,7 @@
 						id="close-on-save-check"
 						class="form-check-input"
 						type="checkbox"
-						bind:checked={$closeOnCreate}
+						bind:checked={todoFormStore.closeOnCreate}
 					/>
 					<label class="form-check-label" for="close-on-save-check"> Close on Create </label>
 				</div>

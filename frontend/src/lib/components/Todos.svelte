@@ -3,18 +3,15 @@
 	import Todo from './Todo.svelte';
 	import Empty from './Empty.svelte';
 
-	const {
-		user,
-		todoStore: { todos, loading }
-	} = stores;
+	const { user, todoStore } = stores;
 
 	const isReadOnly = !user.hasPermission('todo.write');
 </script>
 
-{#each $todos as todo (todo.id)}
+{#each todoStore.todos as todo (todo.id)}
 	<Todo {todo} {isReadOnly} />
 {:else}
-	{#if !$loading}
+	{#if !todoStore.loading}
 		<Empty />
 	{/if}
 {/each}

@@ -1,9 +1,6 @@
 import Keycloak from 'keycloak-js';
 import { stores } from './stores.js';
 
-// About the 'keycloak-js' eval warning during build, see:
-// https://github.com/keycloak/keycloak/issues/10710
-
 export default async function auth() {
 	/** @type {Keycloak} */
 	let keycloak;

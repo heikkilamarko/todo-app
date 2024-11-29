@@ -6,28 +6,21 @@
 	import TodoForm from './TodoForm.svelte';
 	import Todos from './Todos.svelte';
 
-	const {
-		user,
-		toasterStore: { showError },
-		todoStore: { getTodos },
-		notificationStore: { connect }
-	} = stores;
-
-	let disconnect = null;
+	const { user, toasterStore, todoStore, notificationStore } = stores;
 
 	const allowWrite = user.hasPermission('todo.write');
 
 	onMount(async () => {
 		try {
-			await getTodos();
+			await todoStore.getTodos();
 		} catch (error) {
-			showError(`todo loading failed\n${error}`);
+			toasterStore.showError(`todo loading failed\n${error}`);
 		}
 
-		disconnect = await connect();
+		await notificationStore.connect();
 	});
 
-	onDestroy(() => disconnect?.());
+	onDestroy(() => notificationStore.disconnect());
 </script>
 
 <main class="container">

@@ -11,24 +11,21 @@
 	/** @type {Props} */
 	let { todo, isReadOnly = false } = $props();
 
-	const {
-		toasterStore: { showInfo, showError },
-		todoStore: { loading, completeTodo }
-	} = stores;
+	const { toasterStore, todoStore } = stores;
 
 	async function handleComplete() {
 		try {
-			await completeTodo(todo.id);
-			showInfo('todo complete job started');
+			await todoStore.completeTodo(todo.id);
+			toasterStore.showInfo('todo complete job started');
 		} catch (error) {
-			showError(`todo complete job failed\n${error}`);
+			toasterStore.showError(`todo complete job failed\n${error}`);
 		}
 	}
 
 	let createdAtLoc = $derived(todo.created_at.toLocaleString());
 	let createdAtIso = $derived(todo.created_at.toISOString());
 
-	let canComplete = $derived(!$loading);
+	let canComplete = $derived(!todoStore.loading);
 </script>
 
 <div class="card my-4" in:fly={{ x: 100, duration: 600 }} out:fly={{ x: 500, duration: 300 }}>

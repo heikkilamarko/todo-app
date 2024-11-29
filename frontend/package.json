@@ -12,12 +12,12 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "3.0.6",
-		"@sveltejs/kit": "2.8.1",
+		"@sveltejs/kit": "2.8.5",
 		"@sveltejs/vite-plugin-svelte": "4.0.1",
-		"prettier": "3.3.3",
+		"prettier": "3.4.1",
 		"prettier-plugin-svelte": "3.3.2",
 		"sass": "1.81.0",
-		"svelte": "5.2.7",
+		"svelte": "5.2.10",
 		"svelte-check": "4.1.0",
 		"typescript": "5.7.2",
 		"vite": "5.4.11"
