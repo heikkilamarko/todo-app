@@ -7,5 +7,13 @@ export default defineConfig({
 		proxy: {
 			'/api': 'http://todo-app.com'
 		}
+	},
+	css: {
+		preprocessorOptions: {
+			scss: {
+				quietDeps: true,
+				silenceDeprecations: ['import', 'legacy-js-api']
+			}
+		}
 	}
 });
