@@ -3,11 +3,11 @@ import * as api from '$lib/shared/api.js';
 import { stores } from '$lib/shared/stores.js';
 
 export class NotificationStore {
+	centrifuge;
 	connected = $state(null);
 
 	async connect() {
 		let token;
-		let centrifuge;
 
 		const { config, toasterStore, todoStore } = stores;
 
@@ -58,8 +58,9 @@ export class NotificationStore {
 		try {
 			this.centrifuge?.disconnect();
 		} catch (error) {
-			this.connected = false;
 			toasterStore.showError(`real-time connection error\n${error}`);
+		} finally {
+			this.connected = false;
 		}
 	}
 }
