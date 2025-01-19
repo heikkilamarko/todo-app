@@ -1,59 +1,94 @@
-asyncapi: 2.2.0
+asyncapi: 3.0.0
 info:
   title: Todo Service
   version: 1.0.0
   description: |
-    Subscribes to the following messages:
+    Subscribes to the following NATS subjects:
     - `todo.create`
     - `todo.complete`
+
+defaultContentType: application/json
+
 servers:
   nats:
-    url: nats://nats:4222
+    host: nats://nats:4222
     protocol: nats
+
 channels:
-  todo.create:
-    publish:
-      message:
-        $ref: "#/components/messages/TodoCreate"
-  todo.complete:
-    publish:
-      message:
-        $ref: "#/components/messages/TodoComplete"
+  todoCreate:
+    address: todo.create
+    messages:
+      todoCreate:
+        $ref: "#/components/messages/todoCreate"
+
+  todoComplete:
+    address: todo.complete
+    messages:
+      todoComplete:
+        $ref: "#/components/messages/todoComplete"
+
+operations:
+  receiveTodoCreate:
+    action: receive
+    channel:
+      $ref: "#/channels/todoCreate"
+    messages:
+      - $ref: "#/channels/todoCreate/messages/todoCreate"
+
+  receiveTodoComplete:
+    action: receive
+    channel:
+      $ref: "#/channels/todoComplete"
+    messages:
+      - $ref: "#/channels/todoComplete/messages/todoComplete"
+
 components:
   messages:
-    TodoCreate:
+    todoCreate:
+      name: todoCreate
+      title: Todo Create
       payload:
-        type: object
-        required:
-          - todo
-        properties:
-          todo:
-            type: object
-            required:
-              - name
-            properties:
-              name:
-                type: string
-                description: Name
-                example: Demo
-                minLength: 1
-                maxLength: 100
-              description:
-                description: Description
-                anyOf:
-                  - type: string
-                    example: Prepare the demo
-                    minLength: 1
-                    maxLength: 1000
-                  - type: "null"
-    TodoComplete:
+        $ref: "#/components/schemas/todoCreate"
+
+    todoComplete:
+      name: todoComplete
+      title: Todo Complete
       payload:
-        type: object
-        required:
-          - id
-        properties:
-          id:
-            type: integer
-            description: ID
-            example: 1
-            minimum: 1
+        $ref: "#/components/schemas/todoComplete"
+
+  schemas:
+    todoCreate:
+      type: object
+      required:
+        - todo
+      properties:
+        todo:
+          type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              description: Name
+              example: Demo
+              minLength: 1
+              maxLength: 100
+            description:
+              description: Description
+              anyOf:
+                - type: string
+                  example: Prepare the demo
+                  minLength: 1
+                  maxLength: 1000
+                - type: "null"
+
+    todoComplete:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: ID
+          example: 1
+          minimum: 1

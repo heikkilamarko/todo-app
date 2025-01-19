@@ -1,6 +1,6 @@
 import { parseArgs } from 'node:util';
 import { readFile, writeFile } from 'node:fs/promises';
-import { Parser } from '@asyncapi/parser';
+import { Parser, fromFile } from '@asyncapi/parser';
 import chalk from 'chalk';
 import YAML from 'yaml';
 
@@ -35,20 +35,18 @@ async function generate({ name, apiFile, outputDir }) {
 	console.log(chalk.cyanBright(`    ${apiFile}`));
 	console.log(chalk.yellowBright('output'));
 
-	const apiContent = await readFile(apiFile, 'utf8');
-
-	const { document } = await new Parser().parse(apiContent);
+	const parser = new Parser();
 
 	const {
-		_json: { channels }
-	} = document;
+		document: {
+			_json: { operations }
+		}
+	} = await fromFile(parser, apiFile).parse();
 
-	const messages = Object.entries(channels)
-		.filter(([_, c]) => c.publish)
-		.map(([name, c]) => ({
-			file: `${outputDir}/${name}.json`,
-			schema: JSON.stringify(c.publish.message.payload, null, 2)
-		}));
+	const messages = Object.entries(operations).map(([_, o]) => ({
+		file: `${outputDir}/${o.channel.address}.json`,
+		schema: JSON.stringify(o.messages[0].payload, null, 2)
+	}));
 
 	for (const m of messages) {
 		await writeFile(m.file, m.schema);
