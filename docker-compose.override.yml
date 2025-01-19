@@ -15,18 +15,3 @@ services:
       - todo-app
     depends_on:
       - temporal
-
-  temporal-admin-tools:
-    image: temporalio/admin-tools
-    container_name: todo-app-temporal-admin-tools
-    deploy:
-      restart_policy:
-        condition: on-failure
-    env_file:
-      - ./env/temporal-cli.env
-    stdin_open: true
-    tty: true
-    networks:
-      - todo-app
-    depends_on:
-      - temporal

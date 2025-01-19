@@ -146,8 +146,7 @@ services:
         hard: 65535
 
   temporal:
-    build: ./backend/temporal
-    image: todo-app/temporal
+    image: temporalio/auto-setup
     container_name: todo-app-temporal
     labels:
       - "com.todo-app.service=temporal"

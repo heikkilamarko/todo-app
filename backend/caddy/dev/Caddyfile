@@ -71,9 +71,7 @@
 		host temporal.{$CADDY_DOMAIN}
 	}
 	handle @temporal {
-		reverse_proxy http://temporal-ui:8080 {
-			header_up Authorization "x"
-		}
+		reverse_proxy http://temporal-ui:8080
 	}
 
 	@minio {
