@@ -5,7 +5,7 @@
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
-		"prettier": "3.5.1"
+		"prettier": "3.5.2"
 	},
 	"dependencies": {
 		"@asyncapi/parser": "3.4.0",
