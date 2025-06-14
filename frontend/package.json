@@ -12,18 +12,18 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "3.0.8",
-		"@sveltejs/kit": "2.21.1",
-		"@sveltejs/vite-plugin-svelte": "5.0.3",
+		"@sveltejs/kit": "2.21.5",
+		"@sveltejs/vite-plugin-svelte": "5.1.0",
 		"prettier": "3.5.3",
 		"prettier-plugin-svelte": "3.4.0",
-		"sass": "1.89.0",
-		"svelte": "5.31.0",
+		"sass": "1.89.2",
+		"svelte": "5.34.2",
 		"svelte-check": "4.2.1",
 		"typescript": "5.8.3",
 		"vite": "6.3.5"
 	},
 	"dependencies": {
-		"@grafana/faro-web-sdk": "1.18.1",
+		"@grafana/faro-web-sdk": "1.18.2",
 		"bootstrap": "5.3.6",
 		"bootstrap-icons": "1.13.1",
 		"centrifuge": "5.3.5",
