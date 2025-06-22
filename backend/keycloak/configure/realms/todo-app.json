@@ -763,11 +763,11 @@
       "redirectUris": [
         "http://localhost:5173/*",
         "http://127.0.0.1:5173/*",
-        "http://todo-app.com/*",
+        "https://www.todo-app.com/*",
         "https://www.hobbydemos.com/*"
       ],
       "webOrigins": [
-        "http://todo-app.com",
+        "https://www.todo-app.com",
         "http://localhost:5173",
         "https://www.hobbydemos.com",
         "http://127.0.0.1:5173"

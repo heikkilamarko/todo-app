@@ -1,14 +1,8 @@
 services:
-  caddy:
-    ports:
-      - 80:80
-
   temporal-ui:
     image: temporalio/ui
     container_name: todo-app-temporal-ui
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/temporal-ui.env
     networks:

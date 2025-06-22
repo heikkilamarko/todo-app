@@ -5,7 +5,11 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	server: {
 		proxy: {
-			'/api': 'http://todo-app.com'
+			'/api': {
+				target: 'https://www.todo-app.com',
+				changeOrigin: true,
+				secure: false
+			}
 		}
 	},
 	css: {

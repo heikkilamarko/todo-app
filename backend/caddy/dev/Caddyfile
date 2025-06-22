@@ -1,6 +1,5 @@
 {
 	admin off
-	auto_https off
 	skip_install_trust
 
 	log {
@@ -11,13 +10,15 @@
 	}
 }
 
-:80 {
+*.{$CADDY_DOMAIN} {
 	log
 
 	encode gzip
 
+	tls internal
+
 	@api {
-		host {$CADDY_DOMAIN}
+		host www.{$CADDY_DOMAIN}
 		path /api/*
 	}
 	handle @api {
@@ -26,7 +27,7 @@
 	}
 
 	@app {
-		host {$CADDY_DOMAIN}
+		host www.{$CADDY_DOMAIN}
 	}
 	handle @app {
 		reverse_proxy http://todo-app

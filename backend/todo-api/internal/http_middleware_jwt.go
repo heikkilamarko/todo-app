@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"crypto/tls"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -17,6 +18,14 @@ type JWTMiddlewareConfig struct {
 }
 
 func JWTMiddleware(ctx context.Context, config *JWTMiddlewareConfig) func(next http.Handler) http.Handler {
+	http.DefaultClient = &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
+
 	keySet, err := jwt.NewOIDCDiscoveryKeySet(ctx, config.Issuer, "")
 	if err != nil {
 		panic(err)

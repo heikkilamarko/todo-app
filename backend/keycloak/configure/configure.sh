@@ -3,7 +3,7 @@ set -e
 
 # get access token
 
-token=$(curl -X POST --fail \
+token=$(curl -k -X POST --fail \
 	-H "Content-Type: application/x-www-form-urlencoded" \
 	-d "grant_type=password&client_id=admin-cli&username=$KEYCLOAK_ADMIN&password=$KEYCLOAK_ADMIN_PASSWORD" \
 	"$KEYCLOAK_URL/realms/master/protocol/openid-connect/token" \
@@ -11,7 +11,7 @@ token=$(curl -X POST --fail \
 
 # import realm
 
-curl -X POST --fail \
+curl -k -X POST --fail \
 	-H "Authorization: Bearer $token" \
 	-H "Content-Type: application/json" \
 	-d "@realms/$KEYCLOAK_REALM.json" \
@@ -21,7 +21,7 @@ curl -X POST --fail \
 
 if [ -d "users" ]; then
 	for f in $(find users -maxdepth 2 -type f); do
-		curl -X POST --fail \
+		curl -k -X POST --fail \
 			-H "Authorization: Bearer $token" \
 			-H "Content-Type: application/json" \
 			-d "@$f" \

@@ -6,11 +6,11 @@ services:
     labels:
       - "com.todo-app.service=caddy"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/caddy.env
+    ports:
+      - 443:443
     volumes:
       - caddy_data:/data
       - caddy_config:/config
@@ -27,9 +27,7 @@ services:
     labels:
       - "com.todo-app.service=todo-app"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/todo-app.env
     networks:
@@ -42,9 +40,7 @@ services:
     labels:
       - "com.todo-app.service=todo-api"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/todo-api.env
     networks:
@@ -60,9 +56,7 @@ services:
     labels:
       - "com.todo-app.service=todo-service"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/todo-service.env
     networks:
@@ -78,9 +72,7 @@ services:
     labels:
       - "com.todo-app.service=todo-worker"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/todo-worker.env
     networks:
@@ -96,9 +88,7 @@ services:
     labels:
       - "com.todo-app.service=nats"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/nats.env
     ports:
@@ -115,9 +105,7 @@ services:
     labels:
       - "com.todo-app.service=nats-configure"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/nats-configure.env
     networks:
@@ -131,9 +119,7 @@ services:
     labels:
       - "com.todo-app.service=centrifugo"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/centrifugo.env
     ports:
@@ -151,9 +137,7 @@ services:
     labels:
       - "com.todo-app.service=temporal"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/temporal.env
     ports:
@@ -170,9 +154,7 @@ services:
     labels:
       - "com.todo-app.service=db"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/postgres.env
     ports:
@@ -189,9 +171,7 @@ services:
     labels:
       - "com.todo-app.service=db-migrate"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/migrate.env
     networks:
@@ -205,9 +185,7 @@ services:
     labels:
       - "com.todo-app.service=minio"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     command: server /data --console-address ":9001"
     env_file:
       - ./env/minio.env
@@ -223,9 +201,7 @@ services:
     labels:
       - "com.todo-app.service=minio-migrate"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/minio.env
       - ./env/minio-migrate.env
@@ -241,9 +217,7 @@ services:
     labels:
       - "com.todo-app.service=keycloak"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/keycloak.env
     networks:
@@ -260,9 +234,7 @@ services:
     labels:
       - "com.todo-app.service=keycloak-configure"
       - "com.todo-app.monitor"
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/keycloak-configure.env
     networks:
@@ -274,9 +246,7 @@ services:
     build: ./monitor/loki
     image: todo-app/loki
     container_name: todo-app-loki
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/minio.env
       - ./env/loki.env
@@ -291,9 +261,7 @@ services:
     build: ./monitor/alloy
     image: todo-app/alloy
     container_name: todo-app-alloy
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/alloy.env
     volumes:
@@ -308,9 +276,7 @@ services:
     build: ./monitor/grafana
     image: todo-app/grafana
     container_name: todo-app-grafana
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
     env_file:
       - ./env/grafana.env
     volumes:

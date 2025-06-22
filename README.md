@@ -19,31 +19,31 @@ See [Configuration and Secrets Management](config/) for details.
 ## Real-Time Messaging
 
 - [Centrifugo](https://centrifugal.dev/)
-  - URL: http://centrifugo.todo-app.com
+  - URL: https://centrifugo.todo-app.com
   - password: `S3c_r3t!`
 
 ## Workflow Engine
 
 - [Temporal](https://temporal.io/)
-  - URL: http://temporal.todo-app.com
+  - URL: https://temporal.todo-app.com
 
 ## Monitoring Stack
 
 - [Grafana](https://grafana.com/oss/grafana/)
-  - URL: http://grafana.todo-app.com
+  - URL: https://grafana.todo-app.com
   - username: `admin`
   - password: `S3c_r3t!`
 - [Loki](https://grafana.com/oss/loki/)
 - [Alloy](https://grafana.com/oss/alloy-opentelemetry-collector/)
 - [MinIO](https://min.io/)
-  - URL: http://minio.todo-app.com
+  - URL: https://minio.todo-app.com
   - username: `console`
   - password: `S3c_r3t!`
 
 ## Identity and Access Management
 
 - [Keycloak](https://www.keycloak.org/)
-  - URL: http://auth.todo-app.com
+  - URL: https://auth.todo-app.com
   - username: `admin`
   - password: `S3c_r3t!`
 
@@ -52,7 +52,7 @@ See [Configuration and Secrets Management](config/) for details.
 1. Add the following entries to your `/etc/hosts` file:
 
 ```
-127.0.0.1    todo-app.com
+127.0.0.1    www.todo-app.com
 127.0.0.1    auth.todo-app.com
 127.0.0.1    centrifugo.todo-app.com
 127.0.0.1    temporal.todo-app.com
@@ -70,7 +70,7 @@ See [Configuration and Secrets Management](config/) for details.
 docker compose up --build -d
 ```
 
-4. Open the App in browser: http://todo-app.com
+4. Open the App in browser: https://www.todo-app.com
    - Normal user:
      - username: `demouser`
      - password: `S3c_r3t!`
