@@ -2,13 +2,6 @@
 	import { fly } from 'svelte/transition';
 	import { stores } from '$lib/shared/stores.js';
 
-	/**
-	 * @typedef {Object} Props
-	 * @property {any} todo
-	 * @property {boolean} [isReadOnly]
-	 */
-
-	/** @type {Props} */
 	let { todo, isReadOnly = false } = $props();
 
 	const { toasterStore, todoStore } = stores;

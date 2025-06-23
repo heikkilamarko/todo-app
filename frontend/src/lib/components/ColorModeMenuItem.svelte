@@ -1,10 +1,9 @@
 <script>
-	import { run, preventDefault } from 'svelte/legacy';
-	import LightModeIcon from 'bootstrap-icons/icons/sun-fill.svg';
-	import DarkModeIcon from 'bootstrap-icons/icons/moon-fill.svg';
-	import SvgIcon from './SvgIcon.svelte';
-
 	let colorMode = $state(getColorMode());
+
+	$effect(() => {
+		setColorMode(colorMode);
+	});
 
 	function getColorMode() {
 		const storedColorMode = localStorage.getItem('app_color_mode');
@@ -17,22 +16,19 @@
 		document.documentElement.setAttribute('data-bs-theme', mode);
 	}
 
-	function toggleColorMode() {
+	function toggleColorMode(e) {
+		e.preventDefault();
 		colorMode = colorMode === 'light' ? 'dark' : 'light';
 	}
-
-	run(() => {
-		setColorMode(colorMode);
-	});
 </script>
 
 <li>
-	<a class="dropdown-item" href="/" onclick={preventDefault(toggleColorMode)}>
+	<a class="dropdown-item" href="/" onclick={toggleColorMode}>
 		{#if colorMode === 'light'}
-			<SvgIcon icon={DarkModeIcon} class="text-primary pe-2" />
+			<span class="bi--icon bi--moon-fill text-primary pe-2"></span>
 			Dark
 		{:else}
-			<SvgIcon icon={LightModeIcon} class="text-primary pe-2" />
+			<span class="bi--icon bi--sun-fill text-primary pe-2"></span>
 			Light
 		{/if}
 	</a>

@@ -2,7 +2,6 @@ import Keycloak from 'keycloak-js';
 import { stores } from './stores.js';
 
 export default async function auth() {
-	/** @type {Keycloak} */
 	let keycloak;
 
 	function isSignedIn() {

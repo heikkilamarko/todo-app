@@ -1,5 +1,4 @@
 <script>
-	import HouseDoorFillIcon from 'bootstrap-icons/icons/house-door-fill.svg';
 	import Header from '$lib/components/Header.svelte';
 </script>
 
@@ -12,7 +11,7 @@
 		neque, numquam dolore beatae veniam! Corporis quibusdam recusandae accusamus possimus sint.
 	</p>
 	<a class="btn btn-primary rounded-pill px-3" href="/">
-		<HouseDoorFillIcon />
+		<span class="bi--icon bi--house-door-fill"></span>
 		Home
 	</a>
 </main>

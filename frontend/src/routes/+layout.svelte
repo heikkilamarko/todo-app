@@ -6,12 +6,7 @@
 	import Toaster from '$lib/components/Toaster.svelte';
 	import ErrorPage from './ErrorPage.svelte';
 	import AppMenu from '$lib/components/AppMenu.svelte';
-	/**
-	 * @typedef {Object} Props
-	 * @property {import('svelte').Snippet} [children]
-	 */
 
-	/** @type {Props} */
 	let { children } = $props();
 
 	let status = $state(),

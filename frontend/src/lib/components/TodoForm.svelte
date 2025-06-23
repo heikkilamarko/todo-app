@@ -1,13 +1,13 @@
 <script>
-	import { preventDefault } from 'svelte/legacy';
-	import Offcanvas from './Offcanvas.svelte';
 	import { stores } from '$lib/shared/stores.js';
+	import Offcanvas from './Offcanvas.svelte';
 
 	const { toasterStore, todoFormStore, todoStore } = stores;
 
 	let showOffcanvas = $state(false);
 
-	async function handleSubmit() {
+	async function handleSubmit(e) {
+		e.preventDefault();
 		try {
 			await todoStore.createTodo(todoFormStore.todo);
 			toasterStore.showInfo('todo create job started');
@@ -32,12 +32,13 @@
 </script>
 
 <button class="btn btn-primary rounded-pill px-3" type="button" onclick={toggleOffcanvas}>
+	<span class="bi--icon bi--plus-lg"></span>
 	New Todo
 </button>
 
 {#if showOffcanvas}
 	<Offcanvas title="New Todo" on:close={closeOffcanvas}>
-		<form spellcheck="false" autocomplete="off" onsubmit={preventDefault(handleSubmit)}>
+		<form spellcheck="false" autocomplete="off" onsubmit={handleSubmit}>
 			<div class="mb-3">
 				<label for="name" class="form-label">Name <span class="text-danger">*</span></label>
 				<input
