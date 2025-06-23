@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # https://docs.docker.com/engine/install/ubuntu/
 
@@ -15,9 +16,9 @@ echo \
 sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
-sudo usermod -aG docker $USER
-
-sudo docker swarm init
+sudo usermod -aG docker "$VM_ADMIN_USERNAME"
 
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
+
+sudo reboot

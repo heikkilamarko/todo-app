@@ -1,10 +1,8 @@
 # Hosting Todo App in Azure VM
 
-## Configure SSH
+## Generate SSH Key Pair
 
 ```bash
-# Generate SSH key pair
-
 ssh-keygen -t rsa -b 4096 -f <keyfile>
 
 # Outputs:
@@ -13,11 +11,25 @@ ssh-keygen -t rsa -b 4096 -f <keyfile>
 <keyfile>.pub    # public key file
 ```
 
-```bash
-# ~/.ssh/config
+## Create Azure Resources
 
+Before running the below commands, set values ​​to variables in `infra/terraform.tfvars`.
+
+```bash
+terraform -chdir=infra init
+```
+
+```bash
+terraform -chdir=infra apply
+```
+
+## Configure SSH
+
+Add the following configuration to your `~/.ssh/config` file:
+
+```bash
 Host todo-app
-  HostName <azure_vm_hostname>
+  HostName <AZURE_VM_PUBLIC_IP>
   Port 22
   User azureuser
   IdentityFile <keyfile>
@@ -27,33 +39,23 @@ Host todo-app
   ControlPersist 10m
 ```
 
-## Create and Set Docker Context
+## Check SSH Access to the VM
 
 ```bash
-docker context create todo-app --docker "host=ssh://todo-app"
-docker context use todo-app
+ssh todo-app
 ```
 
-## Run Terraform
+## Install Docker on the VM
 
 ```bash
-# In 'infra' directory
-
-# Before running the below commands, set
-# values ​​to variables in 'terraform.tfvars'
-
-terraform init
-terraform apply
-
-# Test SSH connection
-ssh todo-app
+./vm_install.sh
 ```
 
 ## Decrypt Secrets
 
-```bash
-# In repository root directory
+To decrypt the secrets, run the following command in the repository root directory:
 
+```bash
 config/decrypt_secrets.sh config/prod env
 ```
 
@@ -67,15 +69,30 @@ CADDY_TLS_EMAIL=
 CADDY_TLS_GODADDY_TOKEN=
 ```
 
-## Deploy
+## Configure DNS
+
+Create DNS A records for the domain $CADDY_DOMAIN pointing to the public IP address of the VM.
+
+## Create and Set Docker Context
 
 ```bash
-# In repository root directory
-
-docker compose -f docker-compose.yml -f docker-compose.prod.yml build
-docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml todo-app
+docker context create todo-app --docker "host=ssh://todo-app"
 ```
 
-## Configure Keycloak
+```bash
+docker context use todo-app
+```
 
-Import the Keycloak realm. See [Configuring Keycloak](../backend/keycloak/) for details.
+## Deploy
+
+In the repository root directory, run the following command to build and deploy the application:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
+```
+
+## Destroy Azure Resources
+
+```bash
+terraform -chdir=infra destroy
+```
