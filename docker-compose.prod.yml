@@ -1,9 +1,3 @@
 services:
   caddy:
     build: ./backend/caddy/prod
-
-networks:
-  todo-app:
-    name: todo-app
-    driver: overlay
-    attachable: true

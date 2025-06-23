@@ -1,4 +1,7 @@
 {
+	admin off
+	skip_install_trust
+
 	email {$CADDY_TLS_EMAIL}
 
 	log {
@@ -9,7 +12,7 @@
 	}
 }
 
-*.{$CADDY_TLS_DOMAIN} {
+*.{$CADDY_DOMAIN} {
 	log
 
 	encode gzip
@@ -19,7 +22,7 @@
 	}
 
 	@api {
-		host www.{$CADDY_TLS_DOMAIN}
+		host www.{$CADDY_DOMAIN}
 		path /api/*
 	}
 	handle @api {
@@ -28,35 +31,35 @@
 	}
 
 	@app {
-		host www.{$CADDY_TLS_DOMAIN}
+		host www.{$CADDY_DOMAIN}
 	}
 	handle @app {
 		reverse_proxy http://todo-app
 	}
 
 	@centrifugo {
-		host centrifugo.{$CADDY_TLS_DOMAIN}
+		host centrifugo.{$CADDY_DOMAIN}
 	}
 	handle @centrifugo {
 		reverse_proxy http://centrifugo:8000
 	}
 
 	@auth {
-		host auth.{$CADDY_TLS_DOMAIN}
+		host auth.{$CADDY_DOMAIN}
 	}
 	handle @auth {
 		reverse_proxy http://keycloak:8080
 	}
 
 	@grafana {
-		host grafana.{$CADDY_TLS_DOMAIN}
+		host grafana.{$CADDY_DOMAIN}
 	}
 	handle @grafana {
 		reverse_proxy http://grafana:3000
 	}
 
 	@faro {
-		host faro.{$CADDY_TLS_DOMAIN}
+		host faro.{$CADDY_DOMAIN}
 	}
 	handle @faro {
 		reverse_proxy http://alloy:12347

@@ -147,6 +147,17 @@ services:
     depends_on:
       - db
 
+  temporal-ui:
+    image: temporalio/ui
+    container_name: todo-app-temporal-ui
+    restart: on-failure
+    env_file:
+      - ./env/temporal-ui.env
+    networks:
+      - todo-app
+    depends_on:
+      - temporal
+
   db:
     build: ./backend/db/postgres
     image: todo-app/db
