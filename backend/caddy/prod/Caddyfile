@@ -18,7 +18,7 @@
 	encode gzip
 
 	tls {
-		dns godaddy {$CADDY_TLS_GODADDY_TOKEN}
+		dns cloudflare {$CADDY_CLOUDFLARE_API_TOKEN}
 	}
 
 	@api {

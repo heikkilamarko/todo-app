@@ -66,7 +66,7 @@ Set the following environment variables in the `/env/caddy.env` file:
 ```dotenv
 CADDY_DOMAIN=
 CADDY_TLS_EMAIL=
-CADDY_TLS_GODADDY_TOKEN=
+CADDY_CLOUDFLARE_API_TOKEN=
 ```
 
 ## Configure DNS
