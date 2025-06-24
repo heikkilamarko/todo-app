@@ -25,10 +25,10 @@
 <li>
 	<a class="dropdown-item" href="/" onclick={toggleColorMode}>
 		{#if colorMode === 'light'}
-			<span class="bi--icon bi--moon-fill text-primary pe-2"></span>
+			<span class="icon--bi icon--bi--moon-fill text-primary pe-2"></span>
 			Dark
 		{:else}
-			<span class="bi--icon bi--sun-fill text-primary pe-2"></span>
+			<span class="icon--bi icon--bi--sun-fill text-primary pe-2"></span>
 			Light
 		{/if}
 	</a>

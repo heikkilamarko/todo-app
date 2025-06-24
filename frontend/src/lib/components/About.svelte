@@ -11,7 +11,7 @@
 		neque, numquam dolore beatae veniam! Corporis quibusdam recusandae accusamus possimus sint.
 	</p>
 	<a class="btn btn-primary rounded-pill px-3" href="/">
-		<span class="bi--icon bi--house-door-fill"></span>
+		<span class="icon--bi icon--bi--house-door-fill"></span>
 		Home
 	</a>
 </main>

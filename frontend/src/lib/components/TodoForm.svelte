@@ -32,7 +32,7 @@
 </script>
 
 <button class="btn btn-primary rounded-pill px-3" type="button" onclick={toggleOffcanvas}>
-	<span class="bi--icon bi--plus-lg"></span>
+	<span class="icon--bi icon--bi--plus-lg"></span>
 	New Todo
 </button>
 

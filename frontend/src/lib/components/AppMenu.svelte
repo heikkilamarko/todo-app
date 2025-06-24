@@ -21,7 +21,7 @@
 		data-bs-toggle="dropdown"
 		aria-expanded="false"
 	>
-		<span class="bi--icon bi--person-fill pe-2"></span>
+		<span class="icon--bi icon--bi--person-fill pe-2"></span>
 		{title}
 	</button>
 	<ul class="dropdown-menu">
@@ -29,14 +29,14 @@
 		<li><hr class="dropdown-divider" /></li>
 		<li>
 			<a class="dropdown-item" href={config.profileUrl} target="_blank" rel="noreferrer">
-				<span class="bi--icon bi--person text-primary pe-2"></span>
+				<span class="icon--bi icon--bi--person text-primary pe-2"></span>
 				Profile
 			</a>
 		</li>
 		{#if allowWrite}
 			<li>
 				<a class="dropdown-item" href={config.dashboardUrl} target="_blank" rel="noreferrer">
-					<span class="bi--icon bi--grid text-primary pe-2"></span>
+					<span class="icon--bi icon--bi--grid text-primary pe-2"></span>
 					Dashboard
 				</a>
 			</li>
@@ -48,20 +48,20 @@
 				target="_blank"
 				rel="noreferrer"
 			>
-				<span class="bi--icon bi--github text-primary pe-2"></span>
+				<span class="icon--bi icon--bi--github text-primary pe-2"></span>
 				GitHub
 			</a>
 		</li>
 		<li><hr class="dropdown-divider" /></li>
 		<li>
 			<a class="dropdown-item" href="/about">
-				<span class="bi--icon bi--info-circle text-primary pe-2"></span>
+				<span class="icon--bi icon--bi--info-circle text-primary pe-2"></span>
 				About
 			</a>
 		</li>
 		<li>
 			<a class="dropdown-item" href="/" onclick={handleSignOut}>
-				<span class="bi--icon bi--power text-primary pe-2"></span>
+				<span class="icon--bi icon--bi--power text-primary pe-2"></span>
 				Sign out
 			</a>
 		</li>
