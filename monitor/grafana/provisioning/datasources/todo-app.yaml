@@ -6,9 +6,9 @@ datasources:
     type: postgres
     access: proxy
     url: ${PG_URL}
-    database: ${PG_DATABASE}
     user: ${PG_USER}
     jsonData:
+      database: ${PG_DATABASE}
       sslmode: disable
     secureJsonData:
       password: ${PG_PASSWORD}

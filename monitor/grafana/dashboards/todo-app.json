@@ -52,7 +52,6 @@
         "footer": { "fields": "", "reducer": ["sum"], "show": false },
         "showHeader": true
       },
-      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": { "type": "postgres", "uid": "postgres" },
